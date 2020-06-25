@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fromyama/controllers/login/loginController.dart';
 import 'package:fromyama/screens/dashboard/mainDash.dart';
-
-const SERVER_IP = 'https://92a1d28ff629.ngrok.io';
+import 'package:fromyama/utils/requests.dart';
 
 class LoginForm extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();

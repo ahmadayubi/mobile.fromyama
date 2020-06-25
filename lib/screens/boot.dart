@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fromyama/controllers/boot/bootController.dart';
 import 'package:fromyama/screens/dashboard/mainDash.dart';
 import 'package:fromyama/screens/login/loginForm.dart';
-
-const SERVER_IP = 'https://92a1d28ff629.ngrok.io';
+import 'package:fromyama/utils/requests.dart';
 
 class Boot extends StatelessWidget {
   @override

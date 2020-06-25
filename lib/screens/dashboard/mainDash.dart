@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fromyama/utils/requests.dart';
+import 'package:fromyama/data/shopifyOrder.dart';
+import 'package:fromyama/widgets/etsyOrderWidget.dart';
+import 'package:fromyama/widgets/shopifyOrderWidget.dart';
+import 'package:fromyama/widgets/amazonOrderWidget.dart';
+import 'package:fromyama/widgets/etsyOrderWidget.dart';
 
-const SERVER_IP = 'https://92a1d28ff629.ngrok.io';
 final storage = FlutterSecureStorage();
 
 class MainDash extends StatefulWidget {
@@ -27,10 +31,29 @@ class _MainDashState extends State<MainDash> {
                   case ConnectionState.waiting:
                     return CircularProgressIndicator();
                   default:
+                    List<ShopifyOrder> sOrderList = [];
+                    for (int i = 0; i < snapshot.data['products'].length; i++) {
+                      var temp =
+                          ShopifyOrder.fromJson(snapshot.data['products'][i]);
+                      sOrderList.add(temp);
+                    }
+
                     if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
                     } else {
-                      return Text(snapshot.data['products'][0]['product']);
+                      return new ListView.builder(
+                        itemCount: snapshot.data['products'].length,
+                        itemBuilder: (BuildContext context, int index) {
+                          if (index >= snapshot.data['products'].length / 2) {
+                            return shopifyOrderWidget(sOrderList[index]);
+                          } else if (index <
+                                  snapshot.data['products'].length / 2 &&
+                              index >= 2) {
+                            return etsyOrderWidget(sOrderList[index]);
+                          }
+                          return amazonOrderWidget(sOrderList[index]);
+                        },
+                      );
                     }
                 }
               },
