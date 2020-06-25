@@ -3,9 +3,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fromyama/utils/requests.dart';
 import 'package:fromyama/data/shopifyOrder.dart';
 import 'package:fromyama/widgets/etsyOrderWidget.dart';
+import 'package:fromyama/widgets/fyLoading.dart';
 import 'package:fromyama/widgets/shopifyOrderWidget.dart';
 import 'package:fromyama/widgets/amazonOrderWidget.dart';
-import 'package:fromyama/widgets/etsyOrderWidget.dart';
 
 final storage = FlutterSecureStorage();
 
@@ -29,7 +29,7 @@ class _MainDashState extends State<MainDash> {
                 switch (snapshot.connectionState) {
                   case ConnectionState.none:
                   case ConnectionState.waiting:
-                    return CircularProgressIndicator();
+                    return FYLoading();
                   default:
                     List<ShopifyOrder> sOrderList = [];
                     for (int i = 0; i < snapshot.data['products'].length; i++) {
@@ -45,13 +45,16 @@ class _MainDashState extends State<MainDash> {
                         itemCount: snapshot.data['products'].length,
                         itemBuilder: (BuildContext context, int index) {
                           if (index >= snapshot.data['products'].length / 2) {
-                            return shopifyOrderWidget(sOrderList[index]);
+                            return shopifyOrderWidget(
+                                sOrderList[index], context, widget._token);
                           } else if (index <
                                   snapshot.data['products'].length / 2 &&
                               index >= 2) {
-                            return etsyOrderWidget(sOrderList[index]);
+                            return etsyOrderWidget(
+                                sOrderList[index], context, widget._token);
                           }
-                          return amazonOrderWidget(sOrderList[index]);
+                          return amazonOrderWidget(
+                              sOrderList[index], context, widget._token);
                         },
                       );
                     }

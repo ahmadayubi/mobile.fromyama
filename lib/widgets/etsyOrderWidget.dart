@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:fromyama/data/shopifyOrder.dart';
+import 'package:fromyama/screens/dashboard/etsyOrderDetails.dart';
+import 'package:fromyama/screens/dashboard/mainDash.dart';
+import 'package:fromyama/widgets/slideLeft.dart';
 
-Widget etsyOrderWidget(ShopifyOrder order) {
-  return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Row(
-      children: [
-        Image(
-          image: AssetImage('assets/images/etsy_small.png'),
-          width: 20,
-          height: 20,
-        ),
-        Text(
-          order.customerName,
-          style: TextStyle(
-            color: Colors.green,
-          ),
-        ),
-        Text(order.orderID),
-      ],
+Widget etsyOrderWidget(ShopifyOrder order, BuildContext context, String token) {
+  return ListTile(
+    title: Text(order.orderID),
+    subtitle: Text(order.total.toString()),
+    leading: Image(
+      image: AssetImage('assets/images/shopify_small.png'),
+      width: 20,
+      height: 20,
     ),
+    onTap: () {
+      Navigator.push(
+        context,
+        SlideLeft(
+          exitPage: MainDash(token),
+          enterPage: EtsyOrderDetails(order.total),
+        ),
+      );
+    },
   );
 }
