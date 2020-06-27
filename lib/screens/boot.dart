@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fromyama/controllers/boot/bootController.dart';
+import 'package:fromyama/screens/dashboard/approveEmployee.dart';
 import 'package:fromyama/screens/dashboard/mainDash.dart';
 import 'package:fromyama/screens/login/loginForm.dart';
+import 'package:fromyama/screens/platform/addShopify.dart';
+import 'package:fromyama/screens/signup/signUpUser.dart';
 import 'package:fromyama/utils/requests.dart';
 import 'package:fromyama/widgets/fyLoading.dart';
 
@@ -24,7 +27,8 @@ class Boot extends StatelessWidget {
                   } else if (snapshot.data == "") {
                     return LoginForm();
                   } else {
-                    return MainDash(snapshot.data);
+                    return ApproveEmployee(snapshot.data);
+                    //return MainDash(snapshot.data);
                   }
               }
             },

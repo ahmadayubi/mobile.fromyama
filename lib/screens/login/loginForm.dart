@@ -15,20 +15,21 @@ class LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: <Widget>[
-          TextField(
-            controller: _emailController,
-            decoration: InputDecoration(labelText: 'email'),
-          ),
-          TextField(
-            controller: _passwordController,
-            obscureText: true,
-            decoration: InputDecoration(labelText: 'Password'),
-          ),
-          FlatButton(
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: <Widget>[
+            TextField(
+              controller: _emailController,
+              decoration: InputDecoration(labelText: 'email'),
+            ),
+            TextField(
+              controller: _passwordController,
+              obscureText: true,
+              decoration: InputDecoration(labelText: 'Password'),
+            ),
+            FlatButton(
               onPressed: () async {
                 var email = _emailController.text;
                 var password = _passwordController.text;
@@ -42,37 +43,10 @@ class LoginForm extends StatelessWidget {
                       "No account was found matching that email and password");
                 }
               },
-              child: Text("Log In")),
-/*                       FlatButton(
-                          onPressed: () async {
-                            var email = _emailController.text;
-                            var password = _passwordController.text;
-
-                            if (email.length < 4)
-                              displayDialog(context, "Invalid email",
-                                  "The email should be at least 4 characters long");
-                            else if (password.length < 4)
-                              displayDialog(context, "Invalid Password",
-                                  "The password should be at least 4 characters long");
-                            else {
-                              var res = await attemptSignUp(
-                                  SERVER_IP, email, password);
-                              if (res == 201)
-                                displayDialog(context, "Success",
-                                    "The user was created. Log in now.");
-                              else if (res == 409)
-                                displayDialog(
-                                    context,
-                                    "That email is already registered",
-                                    "Please try to sign up using another email or log in if you already have an account.");
-                              else {
-                                displayDialog(context, "Error",
-                                    "An unknown error occurred.");
-                              }
-                            }
-                          },
-                          child: Text("Sign Up")) */
-        ],
+              child: Text("Log In"),
+            ),
+          ],
+        ),
       ),
     );
   }

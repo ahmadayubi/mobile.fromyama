@@ -9,9 +9,9 @@ Widget etsyOrderWidget(ShopifyOrder order, BuildContext context, String token) {
     title: Text(order.orderID),
     subtitle: Text(order.total.toString()),
     leading: Image(
-      image: AssetImage('assets/images/shopify_small.png'),
-      width: 20,
-      height: 20,
+      image: AssetImage('assets/images/etsy_small.png'),
+      width: 40,
+      height: 40,
     ),
     onTap: () {
       Navigator.push(

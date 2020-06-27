@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class LoginForm extends StatefulWidget {
+class LoginFormOld extends StatefulWidget {
   @override
   _LoginFormState createState() => _LoginFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _LoginFormState extends State<LoginFormOld> {
   final _formKey = GlobalKey<FormState>();
 
   @override

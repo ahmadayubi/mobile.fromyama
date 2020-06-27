@@ -11,8 +11,8 @@ Widget shopifyOrderWidget(
     subtitle: Text(order.total.toString()),
     leading: Image(
       image: AssetImage('assets/images/shopify_small.png'),
-      width: 20,
-      height: 20,
+      width: 40,
+      height: 40,
     ),
     onTap: () {
       Navigator.push(

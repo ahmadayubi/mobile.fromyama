@@ -31,6 +31,10 @@ class _MainDashState extends State<MainDash> {
                   case ConnectionState.waiting:
                     return FYLoading();
                   default:
+                    //user is not authorized by the company yet
+                    if (snapshot.data['status_code'] == 403) {
+                      return Text("Not Yet Authorized By The Company.");
+                    }
                     List<ShopifyOrder> sOrderList = [];
                     for (int i = 0; i < snapshot.data['products'].length; i++) {
                       var temp =
