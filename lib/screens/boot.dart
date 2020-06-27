@@ -4,6 +4,7 @@ import 'package:fromyama/screens/dashboard/approveEmployee.dart';
 import 'package:fromyama/screens/dashboard/mainDash.dart';
 import 'package:fromyama/screens/login/loginForm.dart';
 import 'package:fromyama/screens/platform/addShopify.dart';
+import 'package:fromyama/screens/signup/signUpCompany.dart';
 import 'package:fromyama/screens/signup/signUpUser.dart';
 import 'package:fromyama/utils/requests.dart';
 import 'package:fromyama/widgets/fyLoading.dart';
@@ -27,7 +28,7 @@ class Boot extends StatelessWidget {
                   } else if (snapshot.data == "") {
                     return LoginForm();
                   } else {
-                    return ApproveEmployee(snapshot.data);
+                    return SignUpCompany();
                     //return MainDash(snapshot.data);
                   }
               }
