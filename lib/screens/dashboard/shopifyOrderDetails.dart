@@ -108,8 +108,8 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                       children: widget._order.items.map<Widget>(
                         (item) {
                           return Padding(
-                            padding:
-                                const EdgeInsets.only(left: 8.0, right: 20),
+                            padding: const EdgeInsets.only(
+                                left: 8.0, right: 20, top: 10),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -352,32 +352,31 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                         height: 100,
                         child: FlatButton(
                           color: Colors.green,
-                          onPressed: () async {
-                            if (_locationValue == null) {
-                              print(widget._order.total);
-                            } else {
-                              Map fulfillment = {
-                                'location_id': _locationValue,
-                                'tracking_number':
-                                    _trackingNumberController.text,
-                                'tracking_company': _postalServiceValue,
-                                'notify_customer': "true"
-                              };
-                              if (_trackingNumberController.text == "") {
-                                fulfillment.remove('tracking_company');
-                                fulfillment.remove('tracking_number');
-                              }
-                              var fulfillStatus = await postAuthData(
-                                  '$SERVER_IP/shopify/order/fulfill/${widget._order.order_id}',
-                                  fulfillment,
-                                  widget._token);
-                              if (fulfillStatus['status_code'] == 200) {
-                                setState(() {
-                                  _fulfilled = true;
-                                });
-                              }
-                            }
-                          },
+                          onPressed: _locationValue == null
+                              ? null
+                              : () async {
+                                  Map fulfillment = {
+                                    'location_id': _locationValue,
+                                    'tracking_number':
+                                        _trackingNumberController.text,
+                                    'tracking_company': _postalServiceValue,
+                                    'notify_customer': "true"
+                                  };
+                                  if (_trackingNumberController.text == "") {
+                                    fulfillment.remove('tracking_company');
+                                    fulfillment.remove('tracking_number');
+                                  }
+                                  var fulfillStatus = await postAuthData(
+                                      '$SERVER_IP/shopify/order/fulfill/${widget._order.order_id}',
+                                      fulfillment,
+                                      widget._token);
+                                  if (fulfillStatus['status_code'] == 200) {
+                                    setState(() {
+                                      _fulfilled = true;
+                                    });
+                                  }
+                                },
+                          disabledColor: Colors.grey,
                           child: Text(
                             "Fulfill",
                             style: TextStyle(
