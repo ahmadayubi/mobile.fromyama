@@ -26,6 +26,7 @@ class _MainDashState extends State<MainDash> {
   }
 
   List<dynamic> _orders = [];
+  bool _checked = false;
 
   Future<void> _getData() async {
     setState(() {
@@ -34,11 +35,17 @@ class _MainDashState extends State<MainDash> {
   }
 
   void getOrders() async {
-    var result = await getAuthData('$SERVER_IP/order/all', widget._token);
+    _checked = true;
+    var result =
+        await getAuthData('$SERVER_IP/order/unfulfilled/all', widget._token);
     setState(() {
-      _orders = result['products']
-          .map((order) => ShopifyOrder.fromJson(order))
-          .toList();
+      _orders = result['orders'].map((order) {
+        switch (order['type']) {
+          case "Shopify":
+            return ShopifyOrder.fromJson(order);
+            break;
+        }
+      }).toList();
     });
   }
 
@@ -72,7 +79,14 @@ class _MainDashState extends State<MainDash> {
                               }),
                           onRefresh: _getData,
                         )
-                      : Center(child: CircularProgressIndicator()),
+                      : _checked
+                          ? RefreshIndicator(
+                              child: ListView(
+                                children: [Center(child: Text("No Orders"))],
+                              ),
+                              onRefresh: _getData,
+                            )
+                          : Center(child: CircularProgressIndicator()),
                 ),
               ],
             ),

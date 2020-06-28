@@ -6,7 +6,7 @@ import 'package:fromyama/widgets/slideLeft.dart';
 
 Widget etsyOrderWidget(ShopifyOrder order, BuildContext context, String token) {
   return ListTile(
-    title: Text(order.orderID),
+    title: Text(order.name),
     subtitle: Text(order.total.toString()),
     leading: Image(
       image: AssetImage('assets/images/etsy_small.png'),
@@ -18,7 +18,7 @@ Widget etsyOrderWidget(ShopifyOrder order, BuildContext context, String token) {
         context,
         SlideLeft(
           exitPage: MainDash(token),
-          enterPage: EtsyOrderDetails(order.total),
+          enterPage: EtsyOrderDetails(2),
         ),
       );
     },

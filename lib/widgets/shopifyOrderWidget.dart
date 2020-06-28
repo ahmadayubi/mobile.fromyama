@@ -7,7 +7,7 @@ import 'package:fromyama/widgets/slideLeft.dart';
 Widget shopifyOrderWidget(
     ShopifyOrder order, BuildContext context, String token) {
   return ListTile(
-    title: Text(order.orderID),
+    title: Text(order.name),
     subtitle: Text(order.total.toString()),
     leading: Image(
       image: AssetImage('assets/images/shopify_small.png'),
@@ -19,7 +19,7 @@ Widget shopifyOrderWidget(
         context,
         SlideLeft(
           exitPage: MainDash(token),
-          enterPage: ShopifyOrderDetails("2544028844195", token),
+          enterPage: ShopifyOrderDetails(order, token),
         ),
       );
     },

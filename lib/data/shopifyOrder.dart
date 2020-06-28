@@ -1,17 +1,41 @@
 class ShopifyOrder {
-  final String orderID;
-  final String customerName;
-  final int total;
+  final String order_id;
+  final String created_at;
+  final String total;
+  final String subtotal;
+  final String tax;
+  final String currency;
+  final String name;
+  final String financial_status;
+  final List items;
+  final Map<String, dynamic> shipping_info;
 
-  ShopifyOrder(this.orderID, this.customerName, this.total);
+  ShopifyOrder(
+      this.order_id,
+      this.total,
+      this.created_at,
+      this.currency,
+      this.financial_status,
+      this.items,
+      this.name,
+      this.shipping_info,
+      this.subtotal,
+      this.tax);
 
   ShopifyOrder.fromJson(Map<String, dynamic> json)
-      : orderID = json['_id'],
-        customerName = json['product'],
-        total = json['quantity'];
+      : order_id = json['order_id'].toString(),
+        created_at = json['created_at'],
+        total = json['total'],
+        subtotal = json['subtotal'],
+        tax = json['tax'],
+        currency = json['currency'],
+        name = json['name'],
+        financial_status = json['financial_status'],
+        items = json['items'],
+        shipping_info = json['shipping_info'];
 
   Map<String, dynamic> toJson() => {
-        'order_id': orderID,
-        'customer_name': customerName,
+        'order_id': order_id,
+        'created_at': created_at,
       };
 }
