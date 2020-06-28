@@ -20,6 +20,28 @@ class MainDash extends StatefulWidget {
 }
 
 class _MainDashState extends State<MainDash> {
+  void initState() {
+    super.initState();
+    getOrders();
+  }
+
+  List<dynamic> _orders = [];
+
+  Future<void> _getData() async {
+    setState(() {
+      getOrders();
+    });
+  }
+
+  void getOrders() async {
+    var result = await getAuthData('$SERVER_IP/order/all', widget._token);
+    setState(() {
+      _orders = result['products']
+          .map((order) => ShopifyOrder.fromJson(order))
+          .toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
         body: Center(
@@ -39,51 +61,18 @@ class _MainDashState extends State<MainDash> {
                   child: Text("Logout"),
                 ),
                 Expanded(
-                  child: FutureBuilder(
-                    future: getAuthData('$SERVER_IP/order/all', widget._token),
-                    builder: (context, snapshot) {
-                      switch (snapshot.connectionState) {
-                        case ConnectionState.none:
-                        case ConnectionState.waiting:
-                          return FYLoading();
-                        default:
-                          //user is not authorized by the company yet
-                          if (snapshot.data['status_code'] == 403) {
-                            return Text("Not Yet Authorized By The Company.");
-                          }
-                          List<ShopifyOrder> sOrderList = [];
-                          for (int i = 0;
-                              i < snapshot.data['products'].length;
-                              i++) {
-                            var temp = ShopifyOrder.fromJson(
-                                snapshot.data['products'][i]);
-                            sOrderList.add(temp);
-                          }
-
-                          if (snapshot.hasError) {
-                            return Text('Error: ${snapshot.error}');
-                          } else {
-                            return new ListView.builder(
-                              itemCount: snapshot.data['products'].length,
+                  child: _orders.length != 0
+                      ? RefreshIndicator(
+                          child: ListView.builder(
+                              padding: EdgeInsets.all(8),
+                              itemCount: _orders.length,
                               itemBuilder: (BuildContext context, int index) {
-                                if (index >=
-                                    snapshot.data['products'].length / 2) {
-                                  return shopifyOrderWidget(sOrderList[index],
-                                      context, widget._token);
-                                } else if (index <
-                                        snapshot.data['products'].length / 2 &&
-                                    index >= 2) {
-                                  return etsyOrderWidget(sOrderList[index],
-                                      context, widget._token);
-                                }
-                                return amazonOrderWidget(
-                                    sOrderList[index], context, widget._token);
-                              },
-                            );
-                          }
-                      }
-                    },
-                  ),
+                                return shopifyOrderWidget(
+                                    _orders[index], context, widget._token);
+                              }),
+                          onRefresh: _getData,
+                        )
+                      : Center(child: CircularProgressIndicator()),
                 ),
               ],
             ),
