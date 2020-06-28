@@ -7,7 +7,7 @@ import 'package:fromyama/screens/platform/addShopify.dart';
 import 'package:fromyama/screens/signup/signUpCompany.dart';
 import 'package:fromyama/screens/signup/signUpUser.dart';
 import 'package:fromyama/utils/requests.dart';
-import 'package:fromyama/widgets/fyLoading.dart';
+import 'package:fromyama/screens/loading/fyLoading.dart';
 
 class Boot extends StatelessWidget {
   @override
@@ -28,8 +28,8 @@ class Boot extends StatelessWidget {
                   } else if (snapshot.data == "") {
                     return LoginForm();
                   } else {
-                    return SignUpCompany();
-                    //return MainDash(snapshot.data);
+                    //return SignUpCompany();
+                    return MainDash(snapshot.data);
                   }
               }
             },

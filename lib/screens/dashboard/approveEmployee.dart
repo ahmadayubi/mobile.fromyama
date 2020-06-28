@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fromyama/utils/requests.dart';
-import 'package:fromyama/widgets/fyLoading.dart';
+import 'package:fromyama/screens/loading/fyLoading.dart';
 import 'package:fromyama/widgets/slideLeft.dart';
 
 class ApproveEmployee extends StatelessWidget {

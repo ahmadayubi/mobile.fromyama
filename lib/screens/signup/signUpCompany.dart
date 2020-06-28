@@ -6,7 +6,7 @@ class SignUpCompany extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _companyController = TextEditingController();
-  final TextEditingController _name = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
 
   void displayDialog(context, title, text) => showDialog(
         context: context,
@@ -20,7 +20,7 @@ class SignUpCompany extends StatelessWidget {
       body: Column(
         children: [
           TextField(
-            controller: _name,
+            controller: _nameController,
             decoration: InputDecoration(labelText: 'Full Name'),
           ),
           TextField(
@@ -41,7 +41,9 @@ class SignUpCompany extends StatelessWidget {
               var email = _emailController.text;
               var password = _passwordController.text;
               var companyName = _companyController.text;
+              var name = _nameController.text;
               var response = await postData('$SERVER_IP/company/register', {
+                'name': name,
                 'email': email,
                 'password': password,
                 'company_name': companyName

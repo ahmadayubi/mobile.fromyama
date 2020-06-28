@@ -19,7 +19,7 @@ Widget shopifyOrderWidget(
         context,
         SlideLeft(
           exitPage: MainDash(token),
-          enterPage: ShopifyOrderDetails(order.total),
+          enterPage: ShopifyOrderDetails("2544028844195", token),
         ),
       );
     },
