@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fromyama/data/shopifyOrder.dart';
 import 'package:fromyama/screens/dashboard/mainDash.dart';
+import 'package:fromyama/screens/loading/dotLoading.dart';
 import 'package:fromyama/utils/requests.dart';
 import 'package:fromyama/screens/loading/fyLoading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -82,6 +83,7 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
             Expanded(
               flex: 1,
               child: ListView(
+                padding: const EdgeInsets.only(left: 20, right: 20),
                 children: [
                   Stack(
                     children: [
@@ -253,7 +255,7 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                             switch (locationData.connectionState) {
                               case ConnectionState.none:
                               case ConnectionState.waiting:
-                                return CircularProgressIndicator();
+                                return DotLoading();
                               default:
                                 //_locations.addAll(locationData.data['locations']);
                                 return DropdownButton<String>(

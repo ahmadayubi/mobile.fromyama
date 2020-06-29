@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fromyama/screens/loading/dotLoading.dart';
 
 class FYLoading extends StatelessWidget {
   @override
@@ -10,7 +11,7 @@ class FYLoading extends StatelessWidget {
             Image(
               image: AssetImage('assets/images/fromyama.png'),
             ),
-            Text("Crunching The Numbers..."),
+            DotLoading(),
           ],
         ),
       ),
