@@ -9,6 +9,10 @@ class Routes {
 
   Routes() {
     runApp(new MaterialApp(
+      theme: ThemeData(
+        textTheme: TextTheme(
+            headline6: TextStyle(fontFamily: "SFCR", color: Colors.grey[800])),
+      ),
       title: 'FromYama',
       routes: routes,
       initialRoute: '/',

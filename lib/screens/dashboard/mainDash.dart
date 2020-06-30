@@ -67,11 +67,13 @@ class _MainDashState extends State<MainDash> {
           titleSpacing: 0.0,
           backgroundColor: Colors.white,
           iconTheme: IconThemeData(color: Colors.black),
-          title: Text("Orders",
-              style: TextStyle(
-                color: Colors.black,
-                fontFamily: "SFM",
-              )),
+          title: Text(
+            "Orders",
+            style: TextStyle(
+              color: Colors.black,
+              fontFamily: "SFM",
+            ),
+          ),
         ),
         drawer: MainDrawer(user, widget._token),
         backgroundColor: new Color(0xfff9efe7),

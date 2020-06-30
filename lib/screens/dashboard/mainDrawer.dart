@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fromyama/data/user.dart';
+import 'package:fromyama/screens/dashboard/approveEmployee.dart';
 import 'package:fromyama/screens/loading/dotLoading.dart';
 import 'package:fromyama/screens/login/loginForm.dart';
 import 'package:fromyama/screens/platform/addShopify.dart';
+import 'package:fromyama/screens/signup/signUpCompany.dart';
+import 'package:fromyama/screens/signup/signUpForm.dart';
+import 'package:fromyama/screens/signup/signUpUser.dart';
 
 final storage = FlutterSecureStorage();
 
@@ -18,107 +22,242 @@ class MainDrawer extends StatelessWidget {
     return Drawer(
       child: user == null
           ? DotLoading()
-          : ListView(
+          : Column(
               children: [
-                DrawerHeader(
-                  child: Column(
+                Expanded(
+                  child: ListView(
                     children: [
-                      Text(
-                        "Welcome Back, ",
-                        style: TextStyle(
-                          fontFamily: 'Kaoly',
-                          fontSize: 20,
+                      Container(
+                        padding: const EdgeInsets.only(
+                            top: 30, left: 10, bottom: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Welcome Back, ",
+                              style: TextStyle(
+                                fontFamily: 'SFM',
+                                fontSize: 20,
+                              ),
+                            ),
+                            Text(
+                              user.name,
+                              style: TextStyle(
+                                fontFamily: 'SFM',
+                                fontSize: 35,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 2,
+                            ),
+                            Divider(
+                              color: Colors.grey[700],
+                              height: 2,
+                              endIndent: 10,
+                            ),
+                          ],
                         ),
-                        textAlign: TextAlign.left,
                       ),
-                      Text(
-                        user.name,
-                        style: TextStyle(
-                          fontFamily: 'Kaoly',
-                          fontSize: 20,
+                      ListTile(
+                        leading: Icon(Icons.home),
+                        title: Text(
+                          '${user.company}\nID ${user.company_id}',
+                          style: TextStyle(
+                            fontFamily: 'SFCM',
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                      ListTile(
+                        leading: Icon(Icons.email),
+                        title: Text(
+                          user.email,
+                          style: TextStyle(
+                            fontFamily: 'SFCM',
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
+                      ListTile(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      ApproveEmployee(_token)));
+                        },
+                        leading: Icon(
+                          Icons.add_circle,
+                          color: new Color(0xffD6E198),
+                        ),
+                        title: Text(
+                          'Accept Employees',
+                          style: TextStyle(
+                            fontFamily: 'SFCM',
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
+                      user.platforms.contains('Shopify')
+                          ? ListTile(
+                              leading: Icon(
+                                Icons.check_circle,
+                                color: new Color(0xffD6E198),
+                              ),
+                              title: Text(
+                                "Shopify Store Added",
+                                style: TextStyle(
+                                  fontFamily: 'SFCM',
+                                  fontSize: 15,
+                                ),
+                              ),
+                            )
+                          : ListTile(
+                              leading: Icon(
+                                Icons.add_circle,
+                                color: Colors.yellow,
+                              ),
+                              title: Text(
+                                "Add Shopify Store",
+                                style: TextStyle(
+                                  fontFamily: 'SFCM',
+                                  fontSize: 15,
+                                ),
+                              ),
+                              onTap: () => {
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            AddShopify(_token)))
+                              },
+                            ),
+                      user.platforms.contains('Amazon')
+                          ? ListTile(
+                              leading: Icon(
+                                Icons.check_circle,
+                                color: new Color(0xffD6E198),
+                              ),
+                              title: Text(
+                                "Amazon Store Added",
+                                style: TextStyle(
+                                  fontFamily: 'SFCM',
+                                  fontSize: 15,
+                                ),
+                              ),
+                            )
+                          : ListTile(
+                              leading: Icon(
+                                Icons.add_circle,
+                                color: Colors.yellow,
+                              ),
+                              title: Text(
+                                "Add Amazon Store",
+                                style: TextStyle(
+                                  fontFamily: 'SFCM',
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ),
+                      user.platforms.contains('Etsy')
+                          ? ListTile(
+                              leading: Icon(
+                                Icons.check_circle,
+                                color: new Color(0xffD6E198),
+                              ),
+                              title: Text(
+                                "Etsy Store Added",
+                                style: TextStyle(
+                                  fontFamily: 'SFCM',
+                                  fontSize: 15,
+                                ),
+                              ),
+                            )
+                          : ListTile(
+                              leading: Icon(
+                                Icons.add_circle,
+                                color: Colors.yellow,
+                              ),
+                              title: Text(
+                                "Add Etsy Store",
+                                style: TextStyle(
+                                  fontFamily: 'SFCM',
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ),
+                      ListTile(
+                        leading: Icon(Icons.settings),
+                        title: Text(
+                          'Settings',
+                          style: TextStyle(
+                            fontFamily: 'SFCM',
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
+                      ListTile(
+                        leading: Icon(Icons.exit_to_app),
+                        title: Text(
+                          "Logout",
+                          style: TextStyle(
+                            fontFamily: 'SFCM',
+                            fontSize: 15,
+                          ),
+                        ),
+                        onTap: () async {
+                          await storage.deleteAll();
+                          Navigator.pushReplacement(context,
+                              MaterialPageRoute(builder: (_) {
+                            return LoginForm();
+                          }));
+                        },
+                      ),
+                      ListTile(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SignUpForm()));
+                        },
+                        leading: Icon(
+                          Icons.add_circle,
+                          color: new Color(0xffD6E198),
+                        ),
+                        title: Text(
+                          'Employee Sign up Page TEMP',
+                          style: TextStyle(
+                            fontFamily: 'SFCM',
+                            fontSize: 15,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  decoration: BoxDecoration(color: new Color(0xfffaebd7)),
                 ),
-                ListTile(
-                  leading: Icon(Icons.home),
-                  title: Text(user.company),
+                Divider(
+                  endIndent: 15,
+                  indent: 15,
+                  height: 2,
+                  color: Colors.grey[700],
                 ),
-                ListTile(
-                  leading: Icon(Icons.email),
-                  title: Text(user.email),
-                ),
-                ListTile(
-                  leading: Icon(Icons.perm_identity),
-                  title: Text(user.user_id),
-                ),
-                user.platforms.contains('Shopify')
-                    ? ListTile(
-                        leading: Icon(
-                          Icons.check_circle,
-                          color: Colors.green,
-                        ),
-                        title: Text("Shopify Store Added"),
-                      )
-                    : ListTile(
-                        leading: Icon(
-                          Icons.add_circle,
-                          color: Colors.yellow,
-                        ),
-                        title: Text("Add Shopify Store"),
-                        onTap: () => {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AddShopify(_token)))
-                        },
+                Container(
+                  child: Row(
+                    children: [
+                      Image(
+                        image: AssetImage('assets/images/fromyama.png'),
+                        width: 90,
+                        height: 90,
                       ),
-                user.platforms.contains('Amazon')
-                    ? ListTile(
-                        leading: Icon(
-                          Icons.check_circle,
-                          color: Colors.green,
+                      Text(
+                        "FromYama 2020",
+                        style: TextStyle(
+                          fontFamily: "SFCM",
+                          fontSize: 15,
                         ),
-                        title: Text("Amazon Store Added"),
                       )
-                    : ListTile(
-                        leading: Icon(
-                          Icons.add_circle,
-                          color: Colors.yellow,
-                        ),
-                        title: Text("Add Amazon Store"),
-                      ),
-                user.platforms.contains('Etsy')
-                    ? ListTile(
-                        leading: Icon(
-                          Icons.check_circle,
-                          color: Colors.green,
-                        ),
-                        title: Text("Etsy Store Added"),
-                      )
-                    : ListTile(
-                        leading: Icon(
-                          Icons.add_circle,
-                          color: Colors.yellow,
-                        ),
-                        title: Text("Add Etsy Store"),
-                      ),
-                ListTile(
-                  leading: Icon(Icons.settings),
-                  title: Text('Settings'),
-                ),
-                ListTile(
-                  leading: Icon(Icons.exit_to_app),
-                  title: Text("Logout"),
-                  onTap: () async {
-                    await storage.deleteAll();
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (_) {
-                      return LoginForm();
-                    }));
-                  },
+                    ],
+                  ),
                 ),
               ],
             ),

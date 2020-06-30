@@ -36,6 +36,13 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
   var _locationValue;
   var _postalServiceValue;
   bool _enableTracking = false;
+  bool _fulfillable = false;
+
+  void fuilfillable(bool val) {
+    setState(() {
+      _fulfillable = val;
+    });
+  }
 
   Future<Map<String, dynamic>> _locationFuture;
   final TextEditingController _trackingNumberController =
@@ -55,17 +62,17 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
               children: [
                 Image(
                   image: AssetImage('assets/images/shopify_small.png'),
-                  width: 40,
-                  height: 40,
+                  width: 35,
+                  height: 35,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 10),
                   child: Text(
                     "${widget._order.name}",
                     style: TextStyle(
-                      fontSize: 30,
+                      fontSize: 25,
                       fontFamily: "SFM",
-                      color: Colors.black,
+                      color: Colors.grey[800],
                     ),
                   ),
                 ),
@@ -90,8 +97,8 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                         : "PENDING",
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 21,
-                      fontFamily: "SFM",
+                      fontSize: 19,
+                      fontFamily: "SFCM",
                     ),
                   ),
                 ),
@@ -101,23 +108,25 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
         ), //Text("${widget._order.name}"),
       ),
       backgroundColor: new Color(0xfff9efe7),
-      body: SafeArea(
+      body: Container(
+        margin: const EdgeInsets.all(10),
         child: Column(
           children: [
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
+              child: GlowingOverscrollIndicator(
+                axisDirection: AxisDirection.down,
+                color: new Color(0xffD6E198),
                 child: ListView(
                   children: [
-                    ReceiptWidget(widget._order),
+                    ReceiptWidget(widget._order, fuilfillable),
                     SizedBox(
-                      height: 10,
+                      height: 15,
                     ),
                     widget._order.shipping_info == null
-                        ? Text("")
+                        ? SizedBox()
                         : AddressWidget(widget._order.shipping_info),
                     SizedBox(
-                      height: 10,
+                      height: 15,
                     ),
                     Container(
                       decoration: BoxDecoration(
@@ -125,13 +134,13 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                         boxShadow: [
                           BoxShadow(
                             color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 2,
-                            blurRadius: 4,
-                            offset: Offset(0, 1), // changes position of shadow
+                            spreadRadius: 0.1,
+                            blurRadius: 2,
+                            offset: Offset(1, 1), // changes position of shadow
                           ),
                         ],
                       ),
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(10),
                       child: Column(
                         children: [
                           Row(
@@ -139,8 +148,9 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                               Text(
                                 "Shipping From",
                                 style: TextStyle(
-                                  fontFamily: "SFM",
-                                  fontSize: 25,
+                                  fontFamily: "SFCM",
+                                  fontSize: 20,
+                                  color: Colors.grey[800],
                                 ),
                               ),
                             ],
@@ -158,10 +168,11 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                             children: [
                               Expanded(
                                 child: Text(
-                                  "SOURCE: ",
+                                  "Source: ",
                                   style: TextStyle(
-                                    fontSize: 20,
-                                    fontFamily: "SF",
+                                    fontSize: 17,
+                                    fontFamily: "SFCR",
+                                    color: Colors.grey[800],
                                   ),
                                 ),
                                 flex: 1,
@@ -183,10 +194,11 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                                           iconSize: 24,
                                           elevation: 16,
                                           style: TextStyle(
-                                              color: Colors.deepPurple),
+                                              color: Colors.grey[800],
+                                              fontFamily: "SFCR"),
                                           underline: Container(
                                             height: 2,
-                                            color: Colors.deepPurpleAccent,
+                                            color: Colors.grey[500],
                                           ),
                                           onChanged: (String newLocation) {
                                             setState(() {
@@ -215,10 +227,11 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                               Expanded(
                                 flex: 1,
                                 child: Text(
-                                  "SHIPPING INFO: ",
+                                  "Carrier: ",
                                   style: TextStyle(
-                                    fontSize: 20,
-                                    fontFamily: "SF",
+                                    fontSize: 17,
+                                    fontFamily: "SFCR",
+                                    color: Colors.grey[800],
                                   ),
                                 ),
                               ),
@@ -230,10 +243,12 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                                   icon: Icon(Icons.arrow_downward),
                                   iconSize: 24,
                                   elevation: 16,
-                                  style: TextStyle(color: Colors.deepPurple),
+                                  style: TextStyle(
+                                      color: Colors.grey[800],
+                                      fontFamily: "SFCR"),
                                   underline: Container(
                                     height: 2,
-                                    color: Colors.deepPurpleAccent,
+                                    color: Colors.grey[500],
                                   ),
                                   onChanged: (String newService) {
                                     setState(() {
@@ -259,10 +274,16 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                               ),
                             ],
                           ),
+                          SizedBox(
+                            height: 5,
+                          ),
                           TextField(
                             controller: _trackingNumberController,
                             enabled: _enableTracking,
                             decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                focusColor: Colors.grey[500],
+                                hoverColor: Colors.grey[500],
                                 labelText:
                                     'Tracking Number, Leave Blank if None'),
                           ),
@@ -270,7 +291,7 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                       ),
                     ),
                     SizedBox(
-                      height: 10,
+                      height: 15,
                     ),
                     Center(
                       child: AnimatedSwitcher(
@@ -283,10 +304,11 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                               )
                             : SizedBox(
                                 width: double.infinity,
-                                height: 100,
+                                height: 75,
                                 child: FlatButton(
-                                  color: new Color(0xffD6E198),
-                                  onPressed: _locationValue == null
+                                  color: new Color(0xffbbd984),
+                                  onPressed: _locationValue == null ||
+                                          !_fulfillable
                                       ? null
                                       : () async {
                                           Map fulfillment = {
@@ -320,8 +342,8 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                                     "Fulfill",
                                     style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 35,
-                                      fontFamily: "SF",
+                                      fontSize: 30,
+                                      fontFamily: "SFCR",
                                     ),
                                   ),
                                 ),

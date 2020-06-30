@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fromyama/screens/loading/dotLoading.dart';
 import 'package:fromyama/utils/requests.dart';
 import 'package:fromyama/screens/loading/fyLoading.dart';
 import 'package:fromyama/widgets/slideLeft.dart';
@@ -10,13 +11,23 @@ class ApproveEmployee extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        titleSpacing: 0.0,
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text("All Employees",
+            style: TextStyle(
+              color: Colors.black,
+              fontFamily: "SFM",
+            )),
+      ),
       body: FutureBuilder(
         future: getAuthData('$SERVER_IP/company/employee/all', _token),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
             case ConnectionState.waiting:
-              return FYLoading();
+              return DotLoading();
             default:
               var employees = snapshot.data['employees'];
               return ListView.builder(
@@ -32,7 +43,13 @@ class ApproveEmployee extends StatelessWidget {
                         case ConnectionState.none:
                         case ConnectionState.waiting:
                           return ListTile(
-                            title: Text("Loading Employee..."),
+                            title: Text(
+                              "Loading Employee...",
+                              style: TextStyle(
+                                color: Colors.grey[800],
+                                fontFamily: "SFCM",
+                              ),
+                            ),
                             subtitle: Text("..."),
                             leading: Icon(
                               Icons.cloud_download,
@@ -42,12 +59,21 @@ class ApproveEmployee extends StatelessWidget {
                           );
                         default:
                           return ListTile(
-                            title: Text(newSnapshot.data['email']),
-                            subtitle: Text(employeeID),
+                            title: Text(
+                              newSnapshot.data['email'],
+                              style: TextStyle(fontFamily: "SFCM"),
+                            ),
+                            subtitle: Text(
+                              employeeID,
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontFamily: "SFCR",
+                              ),
+                            ),
                             leading: newSnapshot.data['is_approved']
                                 ? Icon(
                                     Icons.check_circle,
-                                    color: Colors.green,
+                                    color: new Color(0xffbbd984),
                                     size: 40.0,
                                   )
                                 : Icon(

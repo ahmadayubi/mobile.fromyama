@@ -27,9 +27,9 @@ Widget shopifyOrderWidget(
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 2,
-                blurRadius: 4,
-                offset: Offset(0, 1), // changes position of shadow
+                spreadRadius: 0.1,
+                blurRadius: 2,
+                offset: Offset(1, 1), // changes position of shadow
               ),
             ],
           ),
@@ -45,8 +45,9 @@ Widget shopifyOrderWidget(
                     Text(
                       '${order.name}',
                       style: TextStyle(
-                        fontSize: 30,
+                        fontSize: 25,
                         fontFamily: "SFM",
+                        color: Colors.grey[800], //new Color(0xff1a1a1a),
                       ),
                     ),
                     Container(
@@ -64,8 +65,8 @@ Widget shopifyOrderWidget(
                           order.financial_status == 'paid' ? "PAID" : "PENDING",
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 21,
-                            fontFamily: "SFM",
+                            fontSize: 18,
+                            fontFamily: "SFCM",
                           ),
                         ),
                       ),
@@ -101,15 +102,16 @@ Widget shopifyOrderWidget(
                             Text(
                               "${order.shipping_info == null ? "No Name" : order.shipping_info['name']}",
                               style: TextStyle(
-                                fontSize: 22,
-                                fontFamily: "SFM",
-                              ),
+                                  fontSize: 22,
+                                  fontFamily: "SFCR",
+                                  color: Colors.grey[800]),
                             ),
                             Text(
                               'PLACED ${order.created_at.split('T')[0]} @ ${order.created_at.split('T')[1].split('-')[0]}',
                               style: TextStyle(
                                 fontSize: 15,
-                                fontFamily: "SFM",
+                                fontFamily: "SFCM",
+                                color: Colors.grey[700],
                               ),
                             ),
                           ],

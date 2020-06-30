@@ -3,8 +3,9 @@ import 'package:fromyama/data/shopifyOrder.dart';
 
 class ReceiptWidget extends StatefulWidget {
   final ShopifyOrder _order;
+  final Function _allChecked;
 
-  ReceiptWidget(this._order);
+  ReceiptWidget(this._order, this._allChecked);
 
   @override
   _ReceiptWidgetState createState() => _ReceiptWidgetState();
@@ -17,7 +18,6 @@ class _ReceiptWidgetState extends State<ReceiptWidget> {
     super.initState();
     _checked = new List<bool>.filled(widget._order.items.length, false,
         growable: false);
-    print(_checked);
   }
 
   @override
@@ -28,13 +28,13 @@ class _ReceiptWidgetState extends State<ReceiptWidget> {
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 4,
-            offset: Offset(0, 1), // changes position of shadow
+            spreadRadius: 0.1,
+            blurRadius: 2,
+            offset: Offset(1, 1), // changes position of shadow
           ),
         ],
       ),
-      padding: const EdgeInsets.all(9),
+      padding: const EdgeInsets.all(15),
       child: Column(
         children: [
           Row(
@@ -42,8 +42,8 @@ class _ReceiptWidgetState extends State<ReceiptWidget> {
               Text(
                 "Order Summary",
                 style: TextStyle(
-                  fontFamily: "SFM",
-                  fontSize: 25,
+                  fontFamily: "SFCM",
+                  fontSize: 20,
                 ),
               ),
             ],
@@ -61,7 +61,7 @@ class _ReceiptWidgetState extends State<ReceiptWidget> {
             children: widget._order.items.map<Widget>(
               (item) {
                 return Padding(
-                  padding: const EdgeInsets.only(top: 8, bottom: 8),
+                  padding: const EdgeInsets.only(top: 5, bottom: 5),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -73,19 +73,29 @@ class _ReceiptWidgetState extends State<ReceiptWidget> {
                                 _checked[widget._order.items.indexOf(item)] =
                                     !_checked[
                                         widget._order.items.indexOf(item)];
+                                for (int i = 0; i < _checked.length; i++) {
+                                  if (!(_checked[i])) {
+                                    widget._allChecked(false);
+                                    return;
+                                  }
+                                }
+                                widget._allChecked(true);
                               },
                             ),
                             child: _checked[widget._order.items.indexOf(item)]
                                 ? Icon(
                                     Icons.check_circle_outline,
                                     size: 40.0,
-                                    color: Colors.black,
+                                    color: Colors.grey[800],
                                   )
                                 : Icon(
                                     Icons.adjust,
                                     size: 40.0,
-                                    color: Colors.black,
+                                    color: Colors.grey[800],
                                   ),
+                          ),
+                          SizedBox(
+                            width: 10,
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,15 +103,15 @@ class _ReceiptWidgetState extends State<ReceiptWidget> {
                               Text(
                                 '${item['title']}',
                                 style: TextStyle(
-                                  fontFamily: "SFM",
-                                  fontSize: 20,
+                                  fontFamily: "SFCR",
+                                  fontSize: 19,
                                 ),
                               ),
                               Text(
                                 'SKU:${item['sku']}',
                                 style: TextStyle(
-                                  fontFamily: "SFM",
-                                  fontSize: 18,
+                                  fontFamily: "SFCR",
+                                  fontSize: 15,
                                   color: Colors.grey,
                                 ),
                               ),
@@ -112,9 +122,9 @@ class _ReceiptWidgetState extends State<ReceiptWidget> {
                       Text(
                         'x ${item['quantity']}',
                         style: TextStyle(
-                          fontFamily: "SFM",
-                          fontSize: 35,
-                          color: Colors.black,
+                          fontFamily: "SFCM",
+                          fontSize: 20,
+                          color: Colors.grey[800],
                         ),
                       ),
                     ],
@@ -140,9 +150,9 @@ class _ReceiptWidgetState extends State<ReceiptWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "SubTotal:",
+                    "Subtotal:",
                     style: TextStyle(
-                      fontFamily: "SF",
+                      fontFamily: "SFCR",
                       fontSize: 17,
                       color: Colors.grey,
                     ),
@@ -150,7 +160,7 @@ class _ReceiptWidgetState extends State<ReceiptWidget> {
                   Text(
                     widget._order.subtotal,
                     style: TextStyle(
-                      fontFamily: "SF",
+                      fontFamily: "SFCR",
                       fontSize: 17,
                       color: Colors.grey,
                     ),
@@ -163,7 +173,7 @@ class _ReceiptWidgetState extends State<ReceiptWidget> {
                   Text(
                     "Tax:",
                     style: TextStyle(
-                      fontFamily: "SFM",
+                      fontFamily: "SFCR",
                       fontSize: 17,
                       color: Colors.grey,
                     ),
@@ -171,7 +181,7 @@ class _ReceiptWidgetState extends State<ReceiptWidget> {
                   Text(
                     widget._order.tax,
                     style: TextStyle(
-                      fontFamily: "SFM",
+                      fontFamily: "SFCR",
                       fontSize: 17,
                       color: Colors.grey,
                     ),
@@ -185,14 +195,14 @@ class _ReceiptWidgetState extends State<ReceiptWidget> {
                   Text(
                     "Order Total:",
                     style: TextStyle(
-                      fontFamily: "SFM",
+                      fontFamily: "SFCM",
                       fontSize: 20,
                     ),
                   ),
                   Text(
                     '${widget._order.total} ${widget._order.currency}',
                     style: TextStyle(
-                      fontFamily: "SFM",
+                      fontFamily: "SFCM",
                       fontSize: 20,
                     ),
                   ),

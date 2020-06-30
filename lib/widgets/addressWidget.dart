@@ -13,13 +13,13 @@ class AddressWidget extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 4,
-            offset: Offset(0, 1), // changes position of shadow
+            spreadRadius: 0.1,
+            blurRadius: 2,
+            offset: Offset(1, 1), // changes position of shadow
           ),
         ],
       ),
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -28,8 +28,9 @@ class AddressWidget extends StatelessWidget {
               Text(
                 "Shipping To",
                 style: TextStyle(
-                  fontFamily: "SFM",
-                  fontSize: 25,
+                  fontFamily: "SFCM",
+                  fontSize: 20,
+                  color: Colors.grey[800],
                 ),
               ),
             ],
@@ -45,9 +46,9 @@ class AddressWidget extends StatelessWidget {
           RichText(
             text: TextSpan(
               style: TextStyle(
-                fontFamily: "SFM",
-                fontSize: 20,
-                color: Colors.black,
+                fontFamily: "SFCR",
+                fontSize: 17,
+                color: Colors.grey[800],
               ),
               children: <TextSpan>[
                 TextSpan(text: '${address['name']}'),
