@@ -6,55 +6,129 @@ import 'package:fromyama/widgets/slideLeft.dart';
 
 Widget shopifyOrderWidget(
     ShopifyOrder order, BuildContext context, String token) {
-  return InkWell(
-    onTap: () => {
-      Navigator.push(
-        context,
-        SlideLeft(
-          exitPage: MainDash(token),
-          enterPage: ShopifyOrderDetails(order, token),
-        ),
-      )
-    },
-    child: Container(
-      padding: const EdgeInsets.all(9),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
+  return Padding(
+    padding: const EdgeInsets.fromLTRB(1, 10, 1, 5),
+    child: Tooltip(
+      message: "${order.total} ${order.currency}",
+      child: InkWell(
+        splashColor: new Color(0xffD6E198),
+        onTap: () => {
+          Navigator.push(
+            context,
+            SlideLeft(
+              exitPage: MainDash(token),
+              enterPage: ShopifyOrderDetails(order, token),
+            ),
+          )
+        },
+        child: Ink(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 2,
+                blurRadius: 4,
+                offset: Offset(0, 1), // changes position of shadow
+              ),
+            ],
+          ),
+          padding: const EdgeInsets.all(9),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.only(right: 10),
-                child: Image(
-                  image: AssetImage('assets/images/shopify_small.png'),
-                  width: 45,
-                  height: 45,
+                padding: const EdgeInsets.fromLTRB(8.0, 8, 8, 2),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '${order.name}',
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontFamily: "SFM",
+                      ),
+                    ),
+                    Container(
+                      decoration: ShapeDecoration(
+                        color: order.financial_status == 'paid'
+                            ? new Color(0xffD6E198)
+                            : new Color(0xf2c993),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(15, 2, 15, 2),
+                        child: Text(
+                          order.financial_status == 'paid' ? "PAID" : "PENDING",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 21,
+                            fontFamily: "SFM",
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Divider(
+                color: Colors.grey,
+                height: 6,
+                thickness: 1,
+                indent: 10,
+                endIndent: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    '${order.name}',
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 15, top: 5),
+                        child: Image(
+                          image: AssetImage('assets/images/shopify_small.png'),
+                          width: 50,
+                          height: 50,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "${order.shipping_info == null ? "No Name" : order.shipping_info['name']}",
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontFamily: "SFM",
+                              ),
+                            ),
+                            Text(
+                              'PLACED ${order.created_at.split('T')[0]} @ ${order.created_at.split('T')[1].split('-')[0]}',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontFamily: "SFM",
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    'Total: ${order.total} ${order.currency} \nPlaced: ${order.created_at.split('T')[0]} @ ${order.created_at.split('T')[1].split('-')[0]}',
-                    style: TextStyle(
-                      fontSize: 12,
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.keyboard_backspace,
+                      textDirection: TextDirection.rtl,
                     ),
                   ),
                 ],
               ),
             ],
           ),
-          Icon(
-            Icons.keyboard_backspace,
-            textDirection: TextDirection.rtl,
-          ),
-        ],
+        ),
       ),
     ),
   );

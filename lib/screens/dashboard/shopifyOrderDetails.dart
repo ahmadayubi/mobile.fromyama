@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:fromyama/data/shopifyOrder.dart';
 import 'package:fromyama/screens/dashboard/mainDash.dart';
 import 'package:fromyama/screens/loading/dotLoading.dart';
@@ -6,6 +7,9 @@ import 'package:fromyama/utils/requests.dart';
 import 'package:fromyama/screens/loading/fyLoading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:convert';
+
+import 'package:fromyama/widgets/addressWidget.dart';
+import 'package:fromyama/widgets/receiptWidget.dart';
 
 class ShopifyOrderDetails extends StatefulWidget {
   final ShopifyOrder _order;
@@ -40,226 +44,189 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: new Color(0xfffaebd7),
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.black),
+        backgroundColor: Colors.white,
+        titleSpacing: 0.0,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
               children: [
+                Image(
+                  image: AssetImage('assets/images/shopify_small.png'),
+                  width: 40,
+                  height: 40,
+                ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.keyboard_backspace),
-                        tooltip: 'Increase volume by 10',
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                      Image(
-                        image: AssetImage('assets/images/shopify_small.png'),
-                        width: 50,
-                        height: 50,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0, top: 8.0),
-                        child: Text(
-                          widget._order.name,
-                          style: TextStyle(
-                            fontSize: 40,
-                            fontFamily: 'SF',
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ],
+                  padding: const EdgeInsets.only(left: 10),
+                  child: Text(
+                    "${widget._order.name}",
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontFamily: "SFM",
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ],
             ),
-            Expanded(
-              flex: 1,
-              child: ListView(
-                padding: const EdgeInsets.only(left: 20, right: 20),
-                children: [
-                  Stack(
-                    children: [
-                      Image(
-                        image: AssetImage('assets/images/receipt_top.png'),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 5, top: 40.0),
-                        child: Text(
-                          "Order Summary:",
-                          style: TextStyle(
-                            fontSize: 25,
-                            fontFamily: 'SF',
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ],
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: Container(
+                decoration: ShapeDecoration(
+                  color: widget._order.financial_status == 'paid'
+                      ? new Color(0xffD6E198)
+                      : new Color(0xf2c993),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
                   ),
-                  Container(
-                    color: Colors.white,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: widget._order.items.map<Widget>(
-                        (item) {
-                          return Padding(
-                            padding: const EdgeInsets.only(
-                                left: 8.0, right: 20, top: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  children: [
-                                    Text(
-                                      '${item['title']} x ${item['quantity']}',
-                                      style: TextStyle(
-                                        fontFamily: "SF",
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                    Text(
-                                      'per item: \$${item['price']}',
-                                      style: TextStyle(
-                                        fontFamily: "SF",
-                                        fontSize: 18,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Text(
-                                  '=>',
-                                  style: TextStyle(
-                                    fontFamily: "SF",
-                                    fontSize: 30,
-                                  ),
-                                ),
-                                Text(
-                                  '\$${double.parse(item['price']) * item['quantity']}',
-                                  style: TextStyle(
-                                    fontFamily: "SF",
-                                    fontSize: 20,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ).toList(),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(15, 2, 15, 2),
+                  child: Text(
+                    widget._order.financial_status == 'paid'
+                        ? "PAID"
+                        : "PENDING",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 21,
+                      fontFamily: "SFM",
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.only(top: 40, left: 8, right: 8),
-                    color: Colors.white,
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Order SubTotal:",
-                              style: TextStyle(
-                                fontFamily: "SF",
-                                fontSize: 17,
-                                color: Colors.grey,
-                              ),
-                            ),
-                            Text(
-                              widget._order.subtotal,
-                              style: TextStyle(
-                                fontFamily: "SF",
-                                fontSize: 17,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Tax:",
-                              style: TextStyle(
-                                fontFamily: "SF",
-                                fontSize: 17,
-                                color: Colors.grey,
-                              ),
-                            ),
-                            Text(
-                              widget._order.tax,
-                              style: TextStyle(
-                                fontFamily: "SF",
-                                fontSize: 17,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Divider(
-                          color: Colors.black,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Order Total:",
-                              style: TextStyle(
-                                fontFamily: "SF",
-                                fontSize: 20,
-                              ),
-                            ),
-                            Text(
-                              '${widget._order.total} ${widget._order.currency}',
-                              style: TextStyle(
-                                fontFamily: "SF",
-                                fontSize: 20,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  Image(
-                    image: AssetImage('assets/images/receipt_bottom.png'),
-                  ),
-                ],
+                ),
               ),
             ),
+          ],
+        ), //Text("${widget._order.name}"),
+      ),
+      backgroundColor: new Color(0xfff9efe7),
+      body: SafeArea(
+        child: Column(
+          children: [
             Expanded(
-              flex: 1,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Column(
+                child: ListView(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "SHIPPING SOURCE: ",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontFamily: "SF",
+                    ReceiptWidget(widget._order),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    widget._order.shipping_info == null
+                        ? Text("")
+                        : AddressWidget(widget._order.shipping_info),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 4,
+                            offset: Offset(0, 1), // changes position of shadow
                           ),
-                        ),
-                        FutureBuilder(
-                          future: _locationFuture,
-                          builder: (context, locationData) {
-                            switch (locationData.connectionState) {
-                              case ConnectionState.none:
-                              case ConnectionState.waiting:
-                                return DotLoading();
-                              default:
-                                //_locations.addAll(locationData.data['locations']);
-                                return DropdownButton<String>(
-                                  value: _locationValue,
+                        ],
+                      ),
+                      padding: const EdgeInsets.all(8),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "Shipping From",
+                                style: TextStyle(
+                                  fontFamily: "SFM",
+                                  fontSize: 25,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Divider(
+                            color: Colors.grey,
+                            height: 6,
+                            thickness: 1,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  "SOURCE: ",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontFamily: "SF",
+                                  ),
+                                ),
+                                flex: 1,
+                              ),
+                              Expanded(
+                                child: FutureBuilder(
+                                  future: _locationFuture,
+                                  builder: (context, locationData) {
+                                    switch (locationData.connectionState) {
+                                      case ConnectionState.none:
+                                      case ConnectionState.waiting:
+                                        return DotLoading();
+                                      default:
+                                        //_locations.addAll(locationData.data['locations']);
+                                        return DropdownButton<String>(
+                                          isExpanded: true,
+                                          value: _locationValue,
+                                          icon: Icon(Icons.arrow_downward),
+                                          iconSize: 24,
+                                          elevation: 16,
+                                          style: TextStyle(
+                                              color: Colors.deepPurple),
+                                          underline: Container(
+                                            height: 2,
+                                            color: Colors.deepPurpleAccent,
+                                          ),
+                                          onChanged: (String newLocation) {
+                                            setState(() {
+                                              _locationValue = newLocation;
+                                            });
+                                          },
+                                          items: locationData.data['locations']
+                                              .map<DropdownMenuItem<String>>(
+                                                  (var location) {
+                                            return DropdownMenuItem<String>(
+                                              value: location['id'].toString(),
+                                              child: Text(location['name']),
+                                            );
+                                          }).toList(),
+                                        );
+                                    }
+                                  },
+                                ),
+                                flex: 1,
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: Text(
+                                  "SHIPPING INFO: ",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontFamily: "SF",
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: DropdownButton<String>(
+                                  isExpanded: true,
+                                  value: _postalServiceValue,
                                   icon: Icon(Icons.arrow_downward),
                                   iconSize: 24,
                                   elevation: 16,
@@ -268,127 +235,101 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                                     height: 2,
                                     color: Colors.deepPurpleAccent,
                                   ),
-                                  onChanged: (String newLocation) {
+                                  onChanged: (String newService) {
                                     setState(() {
-                                      _locationValue = newLocation;
+                                      _enableTracking = true;
+                                      _postalServiceValue = newService;
                                     });
                                   },
-                                  items: locationData.data['locations']
-                                      .map<DropdownMenuItem<String>>(
-                                          (var location) {
+                                  items: <String>[
+                                    "Canada Post",
+                                    "FedEx",
+                                    "Purolator",
+                                    "USPS",
+                                    "UPS",
+                                    "DHL Express"
+                                  ].map<DropdownMenuItem<String>>(
+                                      (String postalService) {
                                     return DropdownMenuItem<String>(
-                                      value: location['id'].toString(),
-                                      child: Text(location['name']),
+                                      value: postalService,
+                                      child: Text(postalService),
                                     );
                                   }).toList(),
-                                );
-                            }
-                          },
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "SHIPPING INFO: ",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontFamily: "SF",
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                        DropdownButton<String>(
-                          value: _postalServiceValue,
-                          icon: Icon(Icons.arrow_downward),
-                          iconSize: 24,
-                          elevation: 16,
-                          style: TextStyle(color: Colors.deepPurple),
-                          underline: Container(
-                            height: 2,
-                            color: Colors.deepPurpleAccent,
+                          TextField(
+                            controller: _trackingNumberController,
+                            enabled: _enableTracking,
+                            decoration: InputDecoration(
+                                labelText:
+                                    'Tracking Number, Leave Blank if None'),
                           ),
-                          onChanged: (String newService) {
-                            setState(() {
-                              _enableTracking = true;
-                              _postalServiceValue = newService;
-                            });
-                          },
-                          items: <String>[
-                            "Canada Post",
-                            "FedEx",
-                            "Purolator",
-                            "USPS",
-                            "UPS",
-                            "DHL Express"
-                          ].map<DropdownMenuItem<String>>(
-                              (String postalService) {
-                            return DropdownMenuItem<String>(
-                              value: postalService,
-                              child: Text(postalService),
-                            );
-                          }).toList(),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                    TextField(
-                      controller: _trackingNumberController,
-                      enabled: _enableTracking,
-                      decoration: InputDecoration(
-                          labelText: 'Tracking Number, Leave Blank if None'),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Center(
+                      child: AnimatedSwitcher(
+                        duration: const Duration(seconds: 1),
+                        child: _fulfilled
+                            ? Icon(
+                                Icons.check_circle,
+                                color: Colors.green,
+                                size: 60.0,
+                              )
+                            : SizedBox(
+                                width: double.infinity,
+                                height: 100,
+                                child: FlatButton(
+                                  color: new Color(0xffD6E198),
+                                  onPressed: _locationValue == null
+                                      ? null
+                                      : () async {
+                                          Map fulfillment = {
+                                            'location_id': _locationValue,
+                                            'tracking_number':
+                                                _trackingNumberController.text,
+                                            'tracking_company':
+                                                _postalServiceValue,
+                                            'notify_customer': "true"
+                                          };
+                                          if (_trackingNumberController.text ==
+                                              "") {
+                                            fulfillment
+                                                .remove('tracking_company');
+                                            fulfillment
+                                                .remove('tracking_number');
+                                          }
+                                          var fulfillStatus = await postAuthData(
+                                              '$SERVER_IP/shopify/order/fulfill/${widget._order.order_id}',
+                                              fulfillment,
+                                              widget._token);
+                                          if (fulfillStatus['status_code'] ==
+                                              200) {
+                                            setState(() {
+                                              _fulfilled = true;
+                                            });
+                                          }
+                                        },
+                                  disabledColor: Colors.grey,
+                                  child: Text(
+                                    "Fulfill",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 35,
+                                      fontFamily: "SF",
+                                    ),
+                                  ),
+                                ),
+                              ),
+                      ),
                     ),
                   ],
                 ),
-              ),
-            ),
-            Center(
-              child: AnimatedSwitcher(
-                duration: const Duration(seconds: 1),
-                child: _fulfilled
-                    ? Icon(
-                        Icons.check_circle,
-                        color: Colors.green,
-                        size: 60.0,
-                      )
-                    : SizedBox(
-                        width: double.infinity,
-                        height: 100,
-                        child: FlatButton(
-                          color: Colors.green,
-                          onPressed: _locationValue == null
-                              ? null
-                              : () async {
-                                  Map fulfillment = {
-                                    'location_id': _locationValue,
-                                    'tracking_number':
-                                        _trackingNumberController.text,
-                                    'tracking_company': _postalServiceValue,
-                                    'notify_customer': "true"
-                                  };
-                                  if (_trackingNumberController.text == "") {
-                                    fulfillment.remove('tracking_company');
-                                    fulfillment.remove('tracking_number');
-                                  }
-                                  var fulfillStatus = await postAuthData(
-                                      '$SERVER_IP/shopify/order/fulfill/${widget._order.order_id}',
-                                      fulfillment,
-                                      widget._token);
-                                  if (fulfillStatus['status_code'] == 200) {
-                                    setState(() {
-                                      _fulfilled = true;
-                                    });
-                                  }
-                                },
-                          disabledColor: Colors.grey,
-                          child: Text(
-                            "Fulfill",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 35,
-                              fontFamily: "SF",
-                            ),
-                          ),
-                        ),
-                      ),
               ),
             ),
           ],

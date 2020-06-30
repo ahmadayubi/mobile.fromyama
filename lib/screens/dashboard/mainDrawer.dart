@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fromyama/data/user.dart';
 import 'package:fromyama/screens/loading/dotLoading.dart';
+import 'package:fromyama/screens/login/loginForm.dart';
 import 'package:fromyama/screens/platform/addShopify.dart';
 
+final storage = FlutterSecureStorage();
+
 class MainDrawer extends StatelessWidget {
-  User user;
-  String _token;
+  final User user;
+  final String _token;
 
   MainDrawer(this.user, this._token);
 
@@ -61,7 +65,7 @@ class MainDrawer extends StatelessWidget {
                     : ListTile(
                         leading: Icon(
                           Icons.add_circle,
-                          color: Colors.green,
+                          color: Colors.yellow,
                         ),
                         title: Text("Add Shopify Store"),
                         onTap: () => {
@@ -82,7 +86,7 @@ class MainDrawer extends StatelessWidget {
                     : ListTile(
                         leading: Icon(
                           Icons.add_circle,
-                          color: Colors.green,
+                          color: Colors.yellow,
                         ),
                         title: Text("Add Amazon Store"),
                       ),
@@ -97,14 +101,25 @@ class MainDrawer extends StatelessWidget {
                     : ListTile(
                         leading: Icon(
                           Icons.add_circle,
-                          color: Colors.green,
+                          color: Colors.yellow,
                         ),
                         title: Text("Add Etsy Store"),
                       ),
                 ListTile(
                   leading: Icon(Icons.settings),
                   title: Text('Settings'),
-                )
+                ),
+                ListTile(
+                  leading: Icon(Icons.exit_to_app),
+                  title: Text("Logout"),
+                  onTap: () async {
+                    await storage.deleteAll();
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (_) {
+                      return LoginForm();
+                    }));
+                  },
+                ),
               ],
             ),
     );

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fromyama/data/user.dart';
 import 'package:fromyama/screens/dashboard/mainDrawer.dart';
 import 'package:fromyama/screens/loading/dotLoading.dart';
@@ -10,8 +9,6 @@ import 'package:fromyama/widgets/etsyOrderWidget.dart';
 import 'package:fromyama/screens/loading/fyLoading.dart';
 import 'package:fromyama/widgets/shopifyOrderWidget.dart';
 import 'package:fromyama/widgets/amazonOrderWidget.dart';
-
-final storage = FlutterSecureStorage();
 
 class MainDash extends StatefulWidget {
   final _token;
@@ -67,17 +64,17 @@ class _MainDashState extends State<MainDash> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: Text(
-            "Unfilfulled Orders",
-            style: TextStyle(
-              fontFamily: 'NewYork',
-              fontSize: 30,
-            ),
-          ),
-          backgroundColor: Colors.orangeAccent,
+          titleSpacing: 0.0,
+          backgroundColor: Colors.white,
+          iconTheme: IconThemeData(color: Colors.black),
+          title: Text("Orders",
+              style: TextStyle(
+                color: Colors.black,
+                fontFamily: "SFM",
+              )),
         ),
         drawer: MainDrawer(user, widget._token),
-        backgroundColor: new Color(0xfffaebd7),
+        backgroundColor: new Color(0xfff9efe7),
         body: Center(
           child: SafeArea(
             child: Column(
@@ -108,16 +105,6 @@ class _MainDashState extends State<MainDash> {
                               onRefresh: _getData,
                             )
                           : Center(child: DotLoading()),
-                ),
-                FlatButton(
-                  onPressed: () async {
-                    await storage.deleteAll();
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (_) {
-                      return LoginForm();
-                    }));
-                  },
-                  child: Text("Logout"),
                 ),
               ],
             ),
