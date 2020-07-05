@@ -4,11 +4,11 @@ import 'package:fromyama/screens/platform/authBrowser.dart';
 import 'package:fromyama/utils/cColor.dart';
 import 'package:fromyama/utils/requests.dart';
 
-class AddShopify extends StatelessWidget {
+class AddEtsy extends StatelessWidget {
   final TextEditingController _shopNameController = TextEditingController();
   final String _token;
 
-  AddShopify(this._token);
+  AddEtsy(this._token);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class AddShopify extends StatelessWidget {
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: Colors.black),
         title: Text(
-          "Connect Shopify",
+          "Connect Etsy",
           style: TextStyle(
             color: Colors.black,
             fontFamily: "SFM",
@@ -34,7 +34,7 @@ class AddShopify extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image(
-                  image: AssetImage('assets/images/shopify_small.png'),
+                  image: AssetImage('assets/images/etsy_small.png'),
                   width: 100,
                 ),
                 DotLoading(),
@@ -63,7 +63,7 @@ class AddShopify extends StatelessWidget {
                   TextField(
                     controller: _shopNameController,
                     decoration: InputDecoration(
-                      labelText: 'Shopify Shop Name',
+                      labelText: 'Etsy Shop Name',
                       labelStyle: TextStyle(
                           color: Colors.grey[800], fontFamily: "SFCR"),
                       focusColor: Colors.grey[500],
@@ -81,7 +81,7 @@ class AddShopify extends StatelessWidget {
                         onPressed: () async {
                           var shopName = _shopNameController.text;
                           var authLink = await postAuthData(
-                              '$SERVER_IP/shopify/get_auth_url',
+                              '$SERVER_IP/etsy/token/request',
                               {'shop': shopName},
                               _token);
                           if (authLink != null) {
@@ -89,7 +89,7 @@ class AddShopify extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => AuthBrowser(
-                                        authLink['authLink'], _token)));
+                                        authLink['login_url'], _token)));
                           } else {}
                         },
                         child: Text(
@@ -122,8 +122,8 @@ class AddShopify extends StatelessWidget {
                           text:
                               "We do not store any passwords, authorization is done through "),
                       TextSpan(
-                          text: "Shopify.",
-                          style: TextStyle(color: Colors.green)),
+                          text: "Etsy.",
+                          style: TextStyle(color: Colors.orange)),
                       TextSpan(
                           text:
                               "They will notify you of what parts of your shop FromYama will have access to.")

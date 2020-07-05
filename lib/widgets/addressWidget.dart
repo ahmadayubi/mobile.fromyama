@@ -29,7 +29,7 @@ class AddressWidget extends StatelessWidget {
                 "Shipping To",
                 style: TextStyle(
                   fontFamily: "SFCM",
-                  fontSize: 20,
+                  fontSize: 18,
                   color: Colors.grey[800],
                 ),
               ),
@@ -47,7 +47,7 @@ class AddressWidget extends StatelessWidget {
             text: TextSpan(
               style: TextStyle(
                 fontFamily: "SFCR",
-                fontSize: 17,
+                fontSize: 16,
                 color: Colors.grey[800],
               ),
               children: <TextSpan>[

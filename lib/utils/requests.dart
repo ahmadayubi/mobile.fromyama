@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-const String SERVER_IP = "https://ea7311cfa0a8.ngrok.io";
+const String SERVER_IP = "https://a81dadfa99fa.ngrok.io";
 
 Future<Map<String, dynamic>> getData(String url) async {
   var res = await http.get(url);

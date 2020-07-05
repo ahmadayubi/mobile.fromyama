@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fromyama/screens/login/loginForm.dart';
+import 'package:fromyama/utils/cColor.dart';
 import 'package:fromyama/utils/requests.dart';
 
 class SignUpUser extends StatefulWidget {
@@ -40,94 +41,127 @@ class _SignUpUserState extends State<SignUpUser> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: new Color(0xfff9efe7),
-      body: SafeArea(
+    return Container(
+      color: new Color(0xfff9efe7),
+      child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: ListView(
             children: [
               Container(
-                child: Text("PLACEHOLDER FOR ART"),
-                height: 400,
+                height: 300,
+                child: Stack(
+                  children: [
+                    Positioned(
+                      left: 50,
+                      child: Image(
+                        image: AssetImage('assets/images/amazon_box.png'),
+                        height: 200,
+                      ),
+                    ),
+                    Positioned(
+                      left: 175,
+                      top: 80,
+                      child: Image(
+                        image: AssetImage('assets/images/shopify_box.png'),
+                        height: 150,
+                      ),
+                    ),
+                    Positioned(
+                      left: 195,
+                      top: 60,
+                      child: Image(
+                        image: AssetImage('assets/images/etsy_box.png'),
+                        height: 100,
+                      ),
+                    ),
+                    Positioned(
+                      child: Image(
+                        image: AssetImage('assets/images/fromyama.png'),
+                        height: 300,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              TextField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                    errorText: _validName ? null : "Please Enter A Valid Name",
-                    labelStyle:
-                        TextStyle(color: Colors.grey[800], fontFamily: "SFCR"),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30)),
+              Container(
+                margin: const EdgeInsets.all(15),
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 0.1,
+                      blurRadius: 2,
+                      offset: Offset(1, 1), // changes position of shadow
                     ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      "Start Fulfilling All Your Orders In One Place",
+                      style: TextStyle(
+                        fontFamily: "SFCM",
+                        fontSize: 20,
+                      ),
                     ),
-                    border: OutlineInputBorder(),
-                    focusColor: Colors.grey[500],
-                    hoverColor: Colors.grey[500],
-                    labelText: 'Full Name'),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              TextField(
-                controller: _emailController,
-                decoration: InputDecoration(
-                    errorText: _validEmail ? null : _emailError,
-                    labelStyle:
-                        TextStyle(color: Colors.grey[800], fontFamily: "SFCR"),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30)),
+                    Divider(),
+                    TextField(
+                      controller: _nameController,
+                      decoration: InputDecoration(
+                          errorText:
+                              _validName ? null : "Please Enter A Valid Name",
+                          labelStyle: TextStyle(
+                              color: Colors.grey[800], fontFamily: "SFCR"),
+                          focusColor: Colors.grey[500],
+                          hoverColor: Colors.grey[500],
+                          labelText: 'Full Name'),
                     ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                    SizedBox(
+                      height: 8,
                     ),
-                    border: OutlineInputBorder(),
-                    focusColor: Colors.grey[500],
-                    hoverColor: Colors.grey[500],
-                    labelText: 'Email'),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              TextField(
-                controller: _passwordController,
-                decoration: InputDecoration(
-                    errorText:
-                        _validPassword ? null : "Please Enter A Valid Password",
-                    labelStyle:
-                        TextStyle(color: Colors.grey[800], fontFamily: "SFCR"),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30)),
+                    TextField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                          errorText: _validEmail ? null : _emailError,
+                          labelStyle: TextStyle(
+                              color: Colors.grey[800], fontFamily: "SFCR"),
+                          focusColor: Colors.grey[500],
+                          hoverColor: Colors.grey[500],
+                          labelText: 'Email'),
                     ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                    SizedBox(
+                      height: 8,
                     ),
-                    border: OutlineInputBorder(),
-                    focusColor: Colors.grey[500],
-                    hoverColor: Colors.grey[500],
-                    labelText: 'Password'),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              TextField(
-                controller: _companyController,
-                decoration: InputDecoration(
-                    errorText: _validCompany ? null : _companyError,
-                    labelStyle:
-                        TextStyle(color: Colors.grey[800], fontFamily: "SFCR"),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30)),
+                    TextField(
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                          errorText: _validPassword
+                              ? null
+                              : "Please Enter A Valid Password",
+                          labelStyle: TextStyle(
+                              color: Colors.grey[800], fontFamily: "SFCR"),
+                          focusColor: Colors.grey[500],
+                          hoverColor: Colors.grey[500],
+                          labelText: 'Password'),
                     ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                    SizedBox(
+                      height: 8,
                     ),
-                    border: OutlineInputBorder(),
-                    focusColor: Colors.grey[500],
-                    hoverColor: Colors.grey[500],
-                    labelText: 'Company ID'),
+                    TextField(
+                      controller: _companyController,
+                      decoration: InputDecoration(
+                          errorText: _validCompany ? null : _companyError,
+                          labelStyle: TextStyle(
+                              color: Colors.grey[800], fontFamily: "SFCR"),
+                          focusColor: Colors.grey[500],
+                          hoverColor: Colors.grey[500],
+                          labelText: 'Company ID'),
+                    ),
+                  ],
+                ),
               ),
               SizedBox(
                 height: 8,
@@ -139,11 +173,8 @@ class _SignUpUserState extends State<SignUpUser> {
                     Container(
                       width: 200,
                       height: 50,
-                      child: FlatButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                        color: Colors.orangeAccent,
+                      child: RaisedButton(
+                        color: orange(),
                         onPressed: () async {
                           var email = _emailController.text;
                           var password = _passwordController.text;
@@ -242,7 +273,7 @@ class _SignUpUserState extends State<SignUpUser> {
                                 builder: (context) => LoginForm()));
                       },
                       child: Text(
-                        "Already Registered? Login",
+                        "Already Signed Up? Login",
                         style: TextStyle(fontFamily: "SFCM"),
                       ),
                     ),

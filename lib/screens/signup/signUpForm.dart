@@ -18,14 +18,10 @@ class SignUpForm extends StatelessWidget {
         bottomNavigationBar: BottomAppBar(
           color: new Color(0xfff9efe7),
           child: TabBar(
-            unselectedLabelColor: Colors.grey,
-            labelColor: Colors.white,
+            unselectedLabelColor: Colors.grey[500],
+            labelColor: Colors.grey[800],
             indicatorSize: TabBarIndicatorSize.tab,
-            indicator: new BubbleTabIndicator(
-              indicatorHeight: 25.0,
-              indicatorColor: Colors.orangeAccent,
-              tabBarIndicatorSize: TabBarIndicatorSize.tab,
-            ),
+            indicatorColor: Colors.orangeAccent,
             tabs: [
               Tab(
                 text: "Employee Signup",

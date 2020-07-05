@@ -4,7 +4,9 @@ import 'package:fromyama/data/user.dart';
 import 'package:fromyama/screens/dashboard/approveEmployee.dart';
 import 'package:fromyama/screens/loading/dotLoading.dart';
 import 'package:fromyama/screens/login/loginForm.dart';
+import 'package:fromyama/screens/platform/addEtsy.dart';
 import 'package:fromyama/screens/platform/addShopify.dart';
+import 'package:fromyama/screens/setting/settings.dart';
 import 'package:fromyama/screens/signup/signUpCompany.dart';
 import 'package:fromyama/screens/signup/signUpForm.dart';
 import 'package:fromyama/screens/signup/signUpUser.dart';
@@ -105,7 +107,7 @@ class MainDrawer extends StatelessWidget {
                                 color: new Color(0xffD6E198),
                               ),
                               title: Text(
-                                "Shopify Store Added",
+                                "Shopify Connected",
                                 style: TextStyle(
                                   fontFamily: 'SFCM',
                                   fontSize: 15,
@@ -118,14 +120,14 @@ class MainDrawer extends StatelessWidget {
                                 color: Colors.yellow,
                               ),
                               title: Text(
-                                "Add Shopify Store",
+                                "Connect Shopify",
                                 style: TextStyle(
                                   fontFamily: 'SFCM',
                                   fontSize: 15,
                                 ),
                               ),
                               onTap: () => {
-                                Navigator.pushReplacement(
+                                Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
@@ -166,7 +168,7 @@ class MainDrawer extends StatelessWidget {
                                 color: new Color(0xffD6E198),
                               ),
                               title: Text(
-                                "Etsy Store Added",
+                                "Etsy Connected",
                                 style: TextStyle(
                                   fontFamily: 'SFCM',
                                   fontSize: 15,
@@ -179,12 +181,18 @@ class MainDrawer extends StatelessWidget {
                                 color: Colors.yellow,
                               ),
                               title: Text(
-                                "Add Etsy Store",
+                                "Connect Etsy",
                                 style: TextStyle(
                                   fontFamily: 'SFCM',
                                   fontSize: 15,
                                 ),
                               ),
+                              onTap: () => {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => AddEtsy(_token)))
+                              },
                             ),
                       ListTile(
                         leading: Icon(Icons.settings),
@@ -195,6 +203,12 @@ class MainDrawer extends StatelessWidget {
                             fontSize: 15,
                           ),
                         ),
+                        onTap: () => {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Settings(_token, user)))
+                        },
                       ),
                       ListTile(
                         leading: Icon(Icons.exit_to_app),
@@ -250,7 +264,7 @@ class MainDrawer extends StatelessWidget {
                         height: 90,
                       ),
                       Text(
-                        "FromYama 2020",
+                        "   FromYama 2020",
                         style: TextStyle(
                           fontFamily: "SFCM",
                           fontSize: 15,

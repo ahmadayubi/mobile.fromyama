@@ -58,7 +58,9 @@ class _MainDashState extends State<MainDash> {
           }
         }).toList();
       });
-    } catch (error) {}
+    } catch (error) {
+      print(error);
+    }
   }
 
   @override

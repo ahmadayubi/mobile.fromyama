@@ -6,7 +6,7 @@ class ShopifyOrder {
   final String tax;
   final String currency;
   final String name;
-  final String financial_status;
+  final bool was_paid;
   final List items;
   final Map<String, dynamic> shipping_info;
 
@@ -15,7 +15,7 @@ class ShopifyOrder {
       this.total,
       this.created_at,
       this.currency,
-      this.financial_status,
+      this.was_paid,
       this.items,
       this.name,
       this.shipping_info,
@@ -30,7 +30,7 @@ class ShopifyOrder {
         tax = json['tax'],
         currency = json['currency'],
         name = json['name'],
-        financial_status = json['financial_status'],
+        was_paid = json['was_paid'],
         items = json['items'],
         shipping_info = json['shipping_info'];
 

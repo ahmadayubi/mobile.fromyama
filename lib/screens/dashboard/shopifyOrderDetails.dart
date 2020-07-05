@@ -71,7 +71,7 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                     "${widget._order.name}",
                     style: TextStyle(
                       fontSize: 25,
-                      fontFamily: "SFM",
+                      fontFamily: "SFCM",
                       color: Colors.grey[800],
                     ),
                   ),
@@ -82,9 +82,9 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
               padding: const EdgeInsets.only(right: 8.0),
               child: Container(
                 decoration: ShapeDecoration(
-                  color: widget._order.financial_status == 'paid'
+                  color: widget._order.was_paid
                       ? new Color(0xffD6E198)
-                      : new Color(0xf2c993),
+                      : new Color(0xffFFC58B),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18.0),
                   ),
@@ -92,12 +92,10 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(15, 2, 15, 2),
                   child: Text(
-                    widget._order.financial_status == 'paid'
-                        ? "PAID"
-                        : "PENDING",
+                    widget._order.was_paid ? "PAID" : "PENDING",
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 19,
+                      fontSize: 15,
                       fontFamily: "SFCM",
                     ),
                   ),
@@ -140,7 +138,7 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                           ),
                         ],
                       ),
-                      padding: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(15),
                       child: Column(
                         children: [
                           Row(
@@ -149,7 +147,7 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                                 "Shipping From",
                                 style: TextStyle(
                                   fontFamily: "SFCM",
-                                  fontSize: 20,
+                                  fontSize: 18,
                                   color: Colors.grey[800],
                                 ),
                               ),
@@ -170,7 +168,7 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                                 child: Text(
                                   "Source: ",
                                   style: TextStyle(
-                                    fontSize: 17,
+                                    fontSize: 16,
                                     fontFamily: "SFCR",
                                     color: Colors.grey[800],
                                   ),
@@ -229,7 +227,7 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                                 child: Text(
                                   "Carrier: ",
                                   style: TextStyle(
-                                    fontSize: 17,
+                                    fontSize: 16,
                                     fontFamily: "SFCR",
                                     color: Colors.grey[800],
                                   ),
@@ -299,7 +297,7 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                         child: _fulfilled
                             ? Icon(
                                 Icons.check_circle,
-                                color: Colors.green,
+                                color: new Color(0xffbbd984),
                                 size: 60.0,
                               )
                             : SizedBox(
