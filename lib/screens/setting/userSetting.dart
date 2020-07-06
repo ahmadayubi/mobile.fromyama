@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fromyama/data/user.dart';
+import 'package:fromyama/screens/boot.dart';
 import 'package:fromyama/utils/cColor.dart';
+import 'package:fromyama/utils/requests.dart';
 
 class UserSetting extends StatefulWidget {
   final String _token;
@@ -14,11 +16,14 @@ class UserSetting extends StatefulWidget {
 
 class _UserSettingState extends State<UserSetting> {
   TextEditingController _nameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  bool editText = false;
 
   @override
   void initState() {
     super.initState();
     _nameController = new TextEditingController(text: '${widget._user.name}');
+    _emailController = new TextEditingController(text: '${widget._user.email}');
   }
 
   @override
@@ -54,9 +59,21 @@ class _UserSettingState extends State<UserSetting> {
                     ),
                   ),
                   TextField(
+                    enabled: editText,
                     controller: _nameController,
                     decoration: InputDecoration(
                       labelText: 'Name',
+                      labelStyle: TextStyle(
+                          color: Colors.grey[800], fontFamily: "SFCR"),
+                      focusColor: Colors.grey[500],
+                      hoverColor: Colors.grey[500],
+                    ),
+                  ),
+                  TextField(
+                    enabled: editText,
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                      labelText: 'Email',
                       labelStyle: TextStyle(
                           color: Colors.grey[800], fontFamily: "SFCR"),
                       focusColor: Colors.grey[500],
@@ -67,9 +84,27 @@ class _UserSettingState extends State<UserSetting> {
                     alignment: Alignment.centerRight,
                     child: RaisedButton(
                       color: orange(),
-                      onPressed: () async {},
+                      onPressed: () async {
+                        if (!editText) {
+                          setState(() {
+                            editText = true;
+                          });
+                        } else {
+                          await postAuthData(
+                              '$SERVER_IP/user/update',
+                              {
+                                "email": _emailController.text,
+                                "name": _nameController.text
+                              },
+                              widget._token);
+                          Navigator.pushReplacement(context,
+                              MaterialPageRoute(builder: (_) {
+                            return Boot();
+                          }));
+                        }
+                      },
                       child: Text(
-                        "Update",
+                        editText ? "Update" : "Edit",
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 17,
@@ -107,6 +142,13 @@ class _UserSettingState extends State<UserSetting> {
                   ),
                   Text(
                     "ID: ${widget._user.user_id}",
+                    style: TextStyle(
+                      color: Colors.grey[800],
+                      fontFamily: "SFCR",
+                    ),
+                  ),
+                  Text(
+                    "Head of Company: ${widget._user.is_head}",
                     style: TextStyle(
                       color: Colors.grey[800],
                       fontFamily: "SFCR",

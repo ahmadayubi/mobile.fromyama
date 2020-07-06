@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fromyama/data/amazonOrder.dart';
 import 'package:fromyama/data/user.dart';
 import 'package:fromyama/screens/dashboard/mainDrawer.dart';
 import 'package:fromyama/screens/loading/dotLoading.dart';
@@ -46,17 +47,22 @@ class _MainDashState extends State<MainDash> {
   }
 
   void getOrders() async {
-    var result =
-        await getAuthData('$SERVER_IP/order/unfulfilled/all', widget._token);
+    var shopifyOrders = await getAuthData(
+        '$SERVER_IP/shopify/order/unfulfilled', widget._token);
+    var shopifyList = shopifyOrders['orders'].map((order) {
+      return ShopifyOrder.fromJson(order);
+    }).toList();
+    var amazonOrders =
+        await getAuthData('$SERVER_IP/amazon/order/unfulfilled', widget._token);
+    var amazonList = amazonOrders['orders'].map((order) {
+      return AmazonOrder.fromJson(order);
+    }).toList();
+    var etsyOrders =
+        await getAuthData('$SERVER_IP/etsy/order/unfulfilled', widget._token);
+    List<dynamic> sortedList = shopifyList + amazonList;
     try {
       setState(() {
-        _orders = result['orders'].map((order) {
-          switch (order['type']) {
-            case "Shopify":
-              return ShopifyOrder.fromJson(order);
-              break;
-          }
-        }).toList();
+        _orders = sortedList;
       });
     } catch (error) {
       print(error);
@@ -94,6 +100,9 @@ class _MainDashState extends State<MainDash> {
                               itemBuilder: (BuildContext context, int index) {
                                 if (_orders[index] is ShopifyOrder) {
                                   return shopifyOrderWidget(
+                                      _orders[index], context, widget._token);
+                                } else if (_orders[index] is AmazonOrder) {
+                                  return amazonOrderWidget(
                                       _orders[index], context, widget._token);
                                 } else {
                                   return Text("Error");

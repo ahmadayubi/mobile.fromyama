@@ -60,7 +60,7 @@ class ApproveEmployee extends StatelessWidget {
                         default:
                           return ListTile(
                             title: Text(
-                              newSnapshot.data['email'],
+                              '${newSnapshot.data['name']} | ${newSnapshot.data['email']}',
                               style: TextStyle(fontFamily: "SFCM"),
                             ),
                             subtitle: Text(
