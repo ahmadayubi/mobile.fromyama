@@ -26,6 +26,7 @@ class _AmazonOrderDetailsState extends State<AmazonOrderDetails> {
   void initState() {
     super.initState();
     // initial load
+    print(widget._order.items);
     _locationFuture = getLocations();
   }
 
@@ -117,6 +118,10 @@ class _AmazonOrderDetailsState extends State<AmazonOrderDetails> {
                 color: new Color(0xffD6E198),
                 child: ListView(
                   children: [
+                    ReceiptWidget(widget._order, fuilfillable),
+                    SizedBox(
+                      height: 15,
+                    ),
                     widget._order.shipping_info == null
                         ? SizedBox()
                         : AddressWidget(widget._order.shipping_info),
@@ -141,7 +146,7 @@ class _AmazonOrderDetailsState extends State<AmazonOrderDetails> {
                           Row(
                             children: [
                               Text(
-                                "Shipping From",
+                                "Fulfilling Amazon Order",
                                 style: TextStyle(
                                   fontFamily: "SFCM",
                                   fontSize: 18,
@@ -158,192 +163,33 @@ class _AmazonOrderDetailsState extends State<AmazonOrderDetails> {
                           SizedBox(
                             height: 10,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  "Source: ",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontFamily: "SFCR",
-                                    color: Colors.grey[800],
-                                  ),
-                                ),
-                                flex: 1,
-                              ),
-                              Expanded(
-                                child: FutureBuilder(
-                                  future: _locationFuture,
-                                  builder: (context, locationData) {
-                                    switch (locationData.connectionState) {
-                                      case ConnectionState.none:
-                                      case ConnectionState.waiting:
-                                        return DotLoading();
-                                      default:
-                                        //_locations.addAll(locationData.data['locations']);
-                                        return DropdownButton<String>(
-                                          isExpanded: true,
-                                          value: _locationValue,
-                                          icon: Icon(Icons.arrow_downward),
-                                          iconSize: 24,
-                                          elevation: 16,
-                                          style: TextStyle(
-                                              color: Colors.grey[800],
-                                              fontFamily: "SFCR"),
-                                          underline: Container(
-                                            height: 2,
-                                            color: Colors.grey[500],
-                                          ),
-                                          onChanged: (String newLocation) {
-                                            setState(() {
-                                              _locationValue = newLocation;
-                                            });
-                                          },
-                                          items: locationData.data['locations']
-                                              .map<DropdownMenuItem<String>>(
-                                                  (var location) {
-                                            return DropdownMenuItem<String>(
-                                              value: location['id'].toString(),
-                                              child: Text(location['name']),
-                                            );
-                                          }).toList(),
-                                        );
-                                    }
-                                  },
-                                ),
-                                flex: 1,
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  "Carrier: ",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontFamily: "SFCR",
-                                    color: Colors.grey[800],
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: DropdownButton<String>(
-                                  isExpanded: true,
-                                  value: _postalServiceValue,
-                                  icon: Icon(Icons.arrow_downward),
-                                  iconSize: 24,
-                                  elevation: 16,
-                                  style: TextStyle(
-                                      color: Colors.grey[800],
-                                      fontFamily: "SFCR"),
-                                  underline: Container(
-                                    height: 2,
-                                    color: Colors.grey[500],
-                                  ),
-                                  onChanged: (String newService) {
-                                    setState(() {
-                                      _enableTracking = true;
-                                      _postalServiceValue = newService;
-                                    });
-                                  },
-                                  items: <String>[
-                                    "Canada Post",
-                                    "FedEx",
-                                    "Purolator",
-                                    "USPS",
-                                    "UPS",
-                                    "DHL Express"
-                                  ].map<DropdownMenuItem<String>>(
-                                      (String postalService) {
-                                    return DropdownMenuItem<String>(
-                                      value: postalService,
-                                      child: Text(postalService),
-                                    );
-                                  }).toList(),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          TextField(
-                            controller: _trackingNumberController,
-                            enabled: _enableTracking,
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                focusColor: Colors.grey[500],
-                                hoverColor: Colors.grey[500],
-                                labelText:
-                                    'Tracking Number, Leave Blank if None'),
+                          RichText(
+                            text: TextSpan(
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  fontFamily: "SFCR",
+                                  color: Colors.grey[800]),
+                              children: <TextSpan>[
+                                TextSpan(
+                                    text:
+                                        "Amazon doesn't allow third-party applications access to order shipping addresses"),
+                                TextSpan(
+                                    text:
+                                        ', this prevents FromYama in providing a useful fulfillment option. We do allow you to'),
+                                TextSpan(
+                                    text:
+                                        ' view as much of the order details as possible.'),
+                                TextSpan(
+                                    text:
+                                        "\n\nTo fulfill the order please visit your Amazon Seller dashboard."),
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     ),
                     SizedBox(
                       height: 15,
-                    ),
-                    Center(
-                      child: AnimatedSwitcher(
-                        duration: const Duration(seconds: 1),
-                        child: _fulfilled
-                            ? Icon(
-                                Icons.check_circle,
-                                color: new Color(0xffbbd984),
-                                size: 60.0,
-                              )
-                            : SizedBox(
-                                width: double.infinity,
-                                height: 75,
-                                child: FlatButton(
-                                  color: new Color(0xffbbd984),
-                                  onPressed: _locationValue == null ||
-                                          !_fulfillable
-                                      ? null
-                                      : () async {
-                                          Map fulfillment = {
-                                            'location_id': _locationValue,
-                                            'tracking_number':
-                                                _trackingNumberController.text,
-                                            'tracking_company':
-                                                _postalServiceValue,
-                                            'notify_customer': "true"
-                                          };
-                                          if (_trackingNumberController.text ==
-                                              "") {
-                                            fulfillment
-                                                .remove('tracking_company');
-                                            fulfillment
-                                                .remove('tracking_number');
-                                          }
-                                          var fulfillStatus = await postAuthData(
-                                              '$SERVER_IP/shopify/order/fulfill/${widget._order.order_id}',
-                                              fulfillment,
-                                              widget._token);
-                                          if (fulfillStatus['status_code'] ==
-                                              200) {
-                                            setState(() {
-                                              _fulfilled = true;
-                                            });
-                                          }
-                                        },
-                                  disabledColor: Colors.grey,
-                                  child: Text(
-                                    "Fulfill",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 30,
-                                      fontFamily: "SFCR",
-                                    ),
-                                  ),
-                                ),
-                              ),
-                      ),
                     ),
                   ],
                 ),

@@ -23,7 +23,6 @@ class MainDash extends StatefulWidget {
 class _MainDashState extends State<MainDash> {
   void initState() {
     super.initState();
-    getOrders();
     getUser();
   }
 
@@ -44,25 +43,38 @@ class _MainDashState extends State<MainDash> {
         user = User.fromJson(result);
       });
     } catch (error) {}
+    getOrders();
   }
 
   void getOrders() async {
-    var shopifyOrders = await getAuthData(
-        '$SERVER_IP/shopify/order/unfulfilled', widget._token);
-    var shopifyList = shopifyOrders['orders'].map((order) {
-      return ShopifyOrder.fromJson(order);
-    }).toList();
-    var amazonOrders =
-        await getAuthData('$SERVER_IP/amazon/order/unfulfilled', widget._token);
-    var amazonList = amazonOrders['orders'].map((order) {
-      return AmazonOrder.fromJson(order);
-    }).toList();
-    var etsyOrders =
-        await getAuthData('$SERVER_IP/etsy/order/unfulfilled', widget._token);
-    List<dynamic> sortedList = shopifyList + amazonList;
+    var amazonList = [], shopifyList = [], etsyList = [];
+    if (user.platforms.contains("Shopify")) {
+      var shopifyOrders = await getAuthData(
+          '$SERVER_IP/shopify/order/unfulfilled', widget._token);
+      if (shopifyOrders['status_code'] == 200) {
+        shopifyList = shopifyOrders['orders'].map((order) {
+          return ShopifyOrder.fromJson(order);
+        }).toList();
+      }
+    }
+    if (user.platforms.contains("Amazon")) {
+      var amazonOrders = await getAuthData(
+          '$SERVER_IP/amazon/order/unfulfilled', widget._token);
+      if (amazonOrders['status_code'] == 200) {
+        amazonList = amazonOrders['orders'].map((order) {
+          return AmazonOrder.fromJson(order);
+        }).toList();
+      }
+    }
+    if (user.platforms.contains("Etsy")) {
+      var etsyOrders =
+          await getAuthData('$SERVER_IP/etsy/order/unfulfilled', widget._token);
+    }
+    List<dynamic> sortedList = shopifyList + amazonList + etsyList;
     try {
       setState(() {
         _orders = sortedList;
+        _checked = true;
       });
     } catch (error) {
       print(error);
@@ -76,7 +88,7 @@ class _MainDashState extends State<MainDash> {
           backgroundColor: Colors.white,
           iconTheme: IconThemeData(color: Colors.black),
           title: Text(
-            "Orders",
+            "Unfulfilled Orders",
             style: TextStyle(
               color: Colors.black,
               fontFamily: "SFM",
@@ -112,8 +124,21 @@ class _MainDashState extends State<MainDash> {
                         )
                       : _checked
                           ? RefreshIndicator(
-                              child: ListView(
-                                children: [Center(child: Text("No Orders"))],
+                              child: Stack(
+                                children: [
+                                  ListView(
+                                    children: [Center(child: Text(""))],
+                                  ),
+                                  Center(
+                                    child: Text(
+                                      "No Unfulfilled Orders",
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontFamily: "SFCR",
+                                          color: Colors.grey[800]),
+                                    ),
+                                  )
+                                ],
                               ),
                               onRefresh: _getData,
                             )

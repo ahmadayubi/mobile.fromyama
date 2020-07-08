@@ -1,14 +1,16 @@
-class ShopifyOrder {
-  final String order_id;
-  final String created_at;
-  final String total;
-  final String subtotal;
-  final String tax;
-  final String currency;
-  final String name;
-  final bool was_paid;
-  final List items;
-  final Map<String, dynamic> shipping_info;
+import 'package:fromyama/data/order.dart';
+
+class ShopifyOrder implements Order {
+  String order_id;
+  String created_at;
+  String total;
+  String subtotal;
+  String tax;
+  String currency;
+  String name;
+  bool was_paid;
+  List items;
+  Map<String, dynamic> shipping_info;
 
   ShopifyOrder(
       this.order_id,

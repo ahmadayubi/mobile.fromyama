@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:fromyama/data/order.dart';
 import 'package:fromyama/data/shopifyOrder.dart';
 
 class ReceiptWidget extends StatefulWidget {
-  final ShopifyOrder _order;
+  final Order _order;
   final Function _allChecked;
 
   ReceiptWidget(this._order, this._allChecked);
@@ -99,11 +100,13 @@ class _ReceiptWidgetState extends State<ReceiptWidget> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${item['title']}',
+                                  '${item['title'].length > 24 ? item['title'].replaceRange(24, item['title'].length, '...') : item['title']}',
                                   style: TextStyle(
                                     fontFamily: "SFCR",
                                     fontSize: 18,
                                   ),
+                                  softWrap: false,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                                 Text(
                                   'SKU:${item['sku']}',

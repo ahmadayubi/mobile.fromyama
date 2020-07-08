@@ -51,8 +51,12 @@ class AddressWidget extends StatelessWidget {
                 color: Colors.grey[800],
               ),
               children: <TextSpan>[
-                TextSpan(text: '${address['name']}'),
-                TextSpan(text: '\n${address['address1']}'),
+                TextSpan(
+                    text:
+                        '${address['name'] == null ? 'Seller Name Hidden' : address['name']}'),
+                TextSpan(
+                    text:
+                        '\n${address['address1'] == null ? 'Seller Street Address Hidden' : address['address1']}'),
                 TextSpan(
                     text:
                         '\n${address['city']}, ${address['province_code']} ${address['zip']}'),

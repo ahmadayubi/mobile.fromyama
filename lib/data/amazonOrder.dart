@@ -1,14 +1,18 @@
-class AmazonOrder {
-  final String order_id;
-  final String created_at;
-  final String total;
-  final String subtotal;
-  final String tax;
-  final String currency;
-  final String name;
-  final bool was_paid;
-  final List items;
-  final Map<String, dynamic> shipping_info;
+import 'package:fromyama/data/order.dart';
+
+class AmazonOrder implements Order {
+  String order_id;
+  String created_at;
+  String total;
+  String subtotal;
+  String tax;
+  String currency;
+  String name;
+  bool was_paid;
+  List items;
+  Map<String, dynamic> shipping_info;
+  bool is_prime;
+  String item_count;
 
   AmazonOrder(
       this.order_id,
@@ -20,7 +24,9 @@ class AmazonOrder {
       this.name,
       this.shipping_info,
       this.subtotal,
-      this.tax);
+      this.tax,
+      this.is_prime,
+      this.item_count);
 
   AmazonOrder.fromJson(Map<String, dynamic> json)
       : order_id = json['order_id'].toString(),
@@ -32,7 +38,9 @@ class AmazonOrder {
         name = json['name'],
         was_paid = json['was_paid'],
         items = json['items'],
-        shipping_info = json['shipping_info'];
+        shipping_info = json['shipping_info'],
+        is_prime = json['is_prime'],
+        item_count = json['item_count'];
 
   Map<String, dynamic> toJson() => {
         'order_id': order_id,

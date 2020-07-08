@@ -141,7 +141,7 @@ class MainDrawer extends StatelessWidget {
                                 color: new Color(0xffD6E198),
                               ),
                               title: Text(
-                                "Amazon Store Added",
+                                "Amazon Connected",
                                 style: TextStyle(
                                   fontFamily: 'SFCM',
                                   fontSize: 15,
@@ -154,7 +154,7 @@ class MainDrawer extends StatelessWidget {
                                 color: Colors.yellow,
                               ),
                               title: Text(
-                                "Add Amazon Store",
+                                "Connect Amazon",
                                 style: TextStyle(
                                   fontFamily: 'SFCM',
                                   fontSize: 15,
