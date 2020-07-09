@@ -4,11 +4,25 @@ import 'package:fromyama/screens/platform/authBrowser.dart';
 import 'package:fromyama/utils/cColor.dart';
 import 'package:fromyama/utils/requests.dart';
 
-class AddEtsy extends StatelessWidget {
-  final TextEditingController _shopNameController = TextEditingController();
+class AddEtsy extends StatefulWidget {
   final String _token;
 
   AddEtsy(this._token);
+
+  @override
+  _AddEtsyState createState() => _AddEtsyState();
+}
+
+class _AddEtsyState extends State<AddEtsy> {
+  final TextEditingController _shopNameController = TextEditingController();
+
+  bool enableButton = false;
+
+  @override
+  void dispose() {
+    _shopNameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +76,17 @@ class AddEtsy extends StatelessWidget {
                 children: [
                   TextField(
                     controller: _shopNameController,
+                    onChanged: (value) {
+                      if (value.length > 2) {
+                        setState(() {
+                          enableButton = true;
+                        });
+                      } else {
+                        setState(() {
+                          enableButton = false;
+                        });
+                      }
+                    },
                     decoration: InputDecoration(
                       labelText: 'Etsy Shop Name',
                       labelStyle: TextStyle(
@@ -78,20 +103,23 @@ class AddEtsy extends StatelessWidget {
                       height: 50,
                       child: RaisedButton(
                         color: orange(),
-                        onPressed: () async {
-                          var shopName = _shopNameController.text;
-                          var authLink = await postAuthData(
-                              '$SERVER_IP/etsy/token/request',
-                              {'shop': shopName},
-                              _token);
-                          if (authLink != null) {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => AuthBrowser(
-                                        authLink['login_url'], _token)));
-                          } else {}
-                        },
+                        onPressed: enableButton
+                            ? () async {
+                                var shopName = _shopNameController.text;
+                                var authLink = await postAuthData(
+                                    '$SERVER_IP/etsy/token/request',
+                                    {'shop': shopName},
+                                    widget._token);
+                                if (authLink != null) {
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => AuthBrowser(
+                                              authLink['login_url'],
+                                              widget._token)));
+                                } else {}
+                              }
+                            : null,
                         child: Text(
                           "Authorize",
                           style: TextStyle(

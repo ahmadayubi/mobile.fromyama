@@ -4,6 +4,7 @@ import 'package:fromyama/data/user.dart';
 import 'package:fromyama/screens/dashboard/approveEmployee.dart';
 import 'package:fromyama/screens/loading/dotLoading.dart';
 import 'package:fromyama/screens/login/loginForm.dart';
+import 'package:fromyama/screens/platform/addAmazon.dart';
 import 'package:fromyama/screens/platform/addEtsy.dart';
 import 'package:fromyama/screens/platform/addShopify.dart';
 import 'package:fromyama/screens/setting/settings.dart';
@@ -134,7 +135,8 @@ class MainDrawer extends StatelessWidget {
                                             AddShopify(_token)))
                               },
                             ),
-                      user.platforms.contains('Amazon')
+                      //user.platforms.contains('Amazon')
+                      false
                           ? ListTile(
                               leading: Icon(
                                 Icons.check_circle,
@@ -160,6 +162,13 @@ class MainDrawer extends StatelessWidget {
                                   fontSize: 15,
                                 ),
                               ),
+                              onTap: () => {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            AddAmazon(_token)))
+                              },
                             ),
                       user.platforms.contains('Etsy')
                           ? ListTile(
