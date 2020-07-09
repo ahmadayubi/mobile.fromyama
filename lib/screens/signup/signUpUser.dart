@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:fromyama/screens/login/loginForm.dart';
 import 'package:fromyama/utils/cColor.dart';
@@ -13,8 +15,8 @@ class _SignUpUserState extends State<SignUpUser> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _companyController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
-
-  bool _validName, _validPassword, _validCompany, _validEmail;
+  Timer _timer;
+  bool _validName, _validPassword, _validCompany, _validEmail, _slideIn = false;
   String _companyError = "", _emailError = "";
 
   void initState() {
@@ -22,7 +24,13 @@ class _SignUpUserState extends State<SignUpUser> {
     _validPassword = true;
     _validCompany = true;
     _validName = true;
+
     super.initState();
+    _timer = new Timer(const Duration(milliseconds: 1000), () {
+      setState(() {
+        _slideIn = true;
+      });
+    });
   }
 
   void displayDialog(context, title, text) => showDialog(
@@ -49,36 +57,36 @@ class _SignUpUserState extends State<SignUpUser> {
           child: ListView(
             children: [
               Container(
-                height: 300,
+                height: 200,
                 child: Stack(
                   children: [
-                    Positioned(
-                      left: 50,
+                    AnimatedPositioned(
+                      duration: Duration(milliseconds: 1000),
+                      curve: Curves.fastOutSlowIn,
+                      left: _slideIn ? 50 : -500,
                       child: Image(
                         image: AssetImage('assets/images/amazon_box.png'),
                         height: 200,
                       ),
                     ),
-                    Positioned(
+                    AnimatedPositioned(
+                      duration: Duration(milliseconds: 1500),
+                      curve: Curves.fastOutSlowIn,
                       left: 175,
-                      top: 80,
+                      top: _slideIn ? 80 : -500,
                       child: Image(
                         image: AssetImage('assets/images/shopify_box.png'),
                         height: 150,
                       ),
                     ),
-                    Positioned(
+                    AnimatedPositioned(
+                      duration: Duration(milliseconds: 2000),
+                      curve: Curves.fastOutSlowIn,
                       left: 195,
-                      top: 60,
+                      top: _slideIn ? 60 : -500,
                       child: Image(
                         image: AssetImage('assets/images/etsy_box.png'),
                         height: 100,
-                      ),
-                    ),
-                    Positioned(
-                      child: Image(
-                        image: AssetImage('assets/images/fromyama.png'),
-                        height: 300,
                       ),
                     ),
                   ],
@@ -100,6 +108,10 @@ class _SignUpUserState extends State<SignUpUser> {
                 ),
                 child: Column(
                   children: [
+                    Image(
+                      image: AssetImage('assets/images/fulfill_fy.png'),
+                      height: 100,
+                    ),
                     Text(
                       "Start Fulfilling All Your Orders In One Place",
                       style: TextStyle(

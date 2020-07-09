@@ -51,9 +51,14 @@ class _AddShopifyState extends State<AddShopify> {
                   image: AssetImage('assets/images/shopify_small.png'),
                   width: 100,
                 ),
-                DotLoading(),
+                DotLoading(
+                    dotOneColor: Color(0xff64943e),
+                    dotTwoColor: Color(0xff95bf47),
+                    dotThreeColor: Color(0xffb3d96c),
+                    duration: const Duration(milliseconds: 1000),
+                    dotType: DotType.circle),
                 Image(
-                  image: AssetImage('assets/images/fromyama.png'),
+                  image: AssetImage('assets/images/fulfill_fy.png'),
                   width: 200,
                 ),
               ],

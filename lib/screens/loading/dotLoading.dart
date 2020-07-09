@@ -12,11 +12,11 @@ class DotLoading extends StatefulWidget {
   final Icon dotIcon;
 
   DotLoading(
-      {this.dotOneColor = Colors.redAccent,
-      this.dotTwoColor = Colors.orange,
-      this.dotThreeColor = Colors.orangeAccent,
-      this.duration = const Duration(milliseconds: 1000),
-      this.dotType = DotType.circle,
+      {this.dotOneColor = const Color(0xffeb6d20),
+      this.dotTwoColor = const Color(0xff96bf48),
+      this.dotThreeColor = const Color(0xfffebd69),
+      this.duration = const Duration(milliseconds: 1500),
+      this.dotType = DotType.square,
       this.dotIcon = const Icon(Icons.blur_on)});
 
   @override

@@ -39,14 +39,14 @@ class MainDrawer extends StatelessWidget {
                             Text(
                               "Welcome Back, ",
                               style: TextStyle(
-                                fontFamily: 'SFM',
+                                fontFamily: 'SFCR',
                                 fontSize: 20,
                               ),
                             ),
                             Text(
                               user.name,
                               style: TextStyle(
-                                fontFamily: 'SFM',
+                                fontFamily: 'SFCM',
                                 fontSize: 35,
                               ),
                             ),
@@ -72,16 +72,6 @@ class MainDrawer extends StatelessWidget {
                         ),
                       ),
                       ListTile(
-                        leading: Icon(Icons.email),
-                        title: Text(
-                          user.email,
-                          style: TextStyle(
-                            fontFamily: 'SFCM',
-                            fontSize: 15,
-                          ),
-                        ),
-                      ),
-                      ListTile(
                         onTap: () {
                           Navigator.push(
                               context,
@@ -101,108 +91,72 @@ class MainDrawer extends StatelessWidget {
                           ),
                         ),
                       ),
-                      user.platforms.contains('Shopify')
-                          ? ListTile(
-                              leading: Icon(
-                                Icons.check_circle,
-                                color: new Color(0xffD6E198),
-                              ),
-                              title: Text(
-                                "Shopify Connected",
-                                style: TextStyle(
-                                  fontFamily: 'SFCM',
-                                  fontSize: 15,
-                                ),
-                              ),
-                            )
-                          : ListTile(
-                              leading: Icon(
-                                Icons.add_circle,
-                                color: Colors.yellow,
-                              ),
-                              title: Text(
-                                "Connect Shopify",
-                                style: TextStyle(
-                                  fontFamily: 'SFCM',
-                                  fontSize: 15,
-                                ),
-                              ),
-                              onTap: () => {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            AddShopify(_token)))
-                              },
+                      Visibility(
+                        visible: !user.platforms.contains('Shopify'),
+                        child: ListTile(
+                          leading: Icon(
+                            Icons.add_circle,
+                            color: Colors.yellow,
+                          ),
+                          title: Text(
+                            "Connect Shopify",
+                            style: TextStyle(
+                              fontFamily: 'SFCM',
+                              fontSize: 15,
                             ),
-                      //user.platforms.contains('Amazon')
-                      false
-                          ? ListTile(
-                              leading: Icon(
-                                Icons.check_circle,
-                                color: new Color(0xffD6E198),
-                              ),
-                              title: Text(
-                                "Amazon Connected",
-                                style: TextStyle(
-                                  fontFamily: 'SFCM',
-                                  fontSize: 15,
-                                ),
-                              ),
-                            )
-                          : ListTile(
-                              leading: Icon(
-                                Icons.add_circle,
-                                color: Colors.yellow,
-                              ),
-                              title: Text(
-                                "Connect Amazon",
-                                style: TextStyle(
-                                  fontFamily: 'SFCM',
-                                  fontSize: 15,
-                                ),
-                              ),
-                              onTap: () => {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            AddAmazon(_token)))
-                              },
+                          ),
+                          onTap: () => {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AddShopify(_token)))
+                          },
+                        ),
+                      ),
+                      Visibility(
+                        visible: !user.platforms.contains('Amazon'),
+                        child: ListTile(
+                          leading: Icon(
+                            Icons.add_circle,
+                            color: Colors.yellow,
+                          ),
+                          title: Text(
+                            "Connect Amazon",
+                            style: TextStyle(
+                              fontFamily: 'SFCM',
+                              fontSize: 15,
                             ),
-                      user.platforms.contains('Etsy')
-                          ? ListTile(
-                              leading: Icon(
-                                Icons.check_circle,
-                                color: new Color(0xffD6E198),
-                              ),
-                              title: Text(
-                                "Etsy Connected",
-                                style: TextStyle(
-                                  fontFamily: 'SFCM',
-                                  fontSize: 15,
-                                ),
-                              ),
-                            )
-                          : ListTile(
-                              leading: Icon(
-                                Icons.add_circle,
-                                color: Colors.yellow,
-                              ),
-                              title: Text(
-                                "Connect Etsy",
-                                style: TextStyle(
-                                  fontFamily: 'SFCM',
-                                  fontSize: 15,
-                                ),
-                              ),
-                              onTap: () => {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => AddEtsy(_token)))
-                              },
+                          ),
+                          onTap: () => {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AddAmazon(_token)))
+                          },
+                        ),
+                      ),
+                      Visibility(
+                        visible: !user.platforms.contains('Etsy'),
+                        child: ListTile(
+                          leading: Icon(
+                            Icons.add_circle,
+                            color: Colors.yellow,
+                          ),
+                          title: Text(
+                            "Connect Etsy",
+                            style: TextStyle(
+                              fontFamily: 'SFCM',
+                              fontSize: 15,
                             ),
+                          ),
+                          onTap: () => {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AddEtsy(_token)))
+                          },
+                        ),
+                      ),
                       ListTile(
                         leading: Icon(Icons.settings),
                         title: Text(
@@ -258,6 +212,39 @@ class MainDrawer extends StatelessWidget {
                     ],
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
+                        "Connected Platform(s): ",
+                        style: TextStyle(fontFamily: "SFCM", fontSize: 15),
+                      ),
+                      Visibility(
+                        visible: user.platforms.contains('Amazon'),
+                        child: Image(
+                          image: AssetImage("assets/images/amazon_small.png"),
+                          height: 20,
+                        ),
+                      ),
+                      Visibility(
+                        visible: user.platforms.contains('Etsy'),
+                        child: Image(
+                          image: AssetImage("assets/images/etsy_small.png"),
+                          height: 20,
+                        ),
+                      ),
+                      Visibility(
+                        visible: user.platforms.contains('Shopify'),
+                        child: Image(
+                          image: AssetImage("assets/images/shopify_small.png"),
+                          height: 20,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
                 Divider(
                   endIndent: 15,
                   indent: 15,
@@ -265,21 +252,10 @@ class MainDrawer extends StatelessWidget {
                   color: Colors.grey[700],
                 ),
                 Container(
-                  child: Row(
-                    children: [
-                      Image(
-                        image: AssetImage('assets/images/fromyama.png'),
-                        width: 90,
-                        height: 90,
-                      ),
-                      Text(
-                        "   FromYama 2020",
-                        style: TextStyle(
-                          fontFamily: "SFCM",
-                          fontSize: 15,
-                        ),
-                      )
-                    ],
+                  padding: const EdgeInsets.all(5),
+                  child: Image(
+                    image: AssetImage('assets/images/fulfill_fy.png'),
+                    height: 50,
                   ),
                 ),
               ],

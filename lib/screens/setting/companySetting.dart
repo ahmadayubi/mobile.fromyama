@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fromyama/screens/loading/fyLoading.dart';
 
 class CompanySetting extends StatelessWidget {
   final String _token;
@@ -7,7 +8,8 @@ class CompanySetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return FYLoading();
+    /* Container(
       color: new Color(0xfff9efe7),
       child: SafeArea(
         child: Padding(
@@ -17,6 +19,6 @@ class CompanySetting extends StatelessWidget {
           ),
         ),
       ),
-    );
+    ); */
   }
 }

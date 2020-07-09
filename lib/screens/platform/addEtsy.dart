@@ -51,9 +51,14 @@ class _AddEtsyState extends State<AddEtsy> {
                   image: AssetImage('assets/images/etsy_small.png'),
                   width: 100,
                 ),
-                DotLoading(),
+                DotLoading(
+                    dotOneColor: Colors.redAccent,
+                    dotTwoColor: Colors.orange,
+                    dotThreeColor: Colors.orangeAccent,
+                    duration: const Duration(milliseconds: 1000),
+                    dotType: DotType.circle),
                 Image(
-                  image: AssetImage('assets/images/fromyama.png'),
+                  image: AssetImage('assets/images/fulfill_fy.png'),
                   width: 200,
                 ),
               ],

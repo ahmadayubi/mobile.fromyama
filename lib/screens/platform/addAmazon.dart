@@ -55,11 +55,16 @@ class _AddAmazonState extends State<AddAmazon> {
               children: [
                 Image(
                   image: AssetImage('assets/images/amazon_small.png'),
-                  width: 100,
+                  width: 90,
                 ),
-                DotLoading(),
+                DotLoading(
+                    dotOneColor: Colors.redAccent,
+                    dotTwoColor: Colors.orange,
+                    dotThreeColor: Colors.orangeAccent,
+                    duration: const Duration(milliseconds: 1000),
+                    dotType: DotType.circle),
                 Image(
-                  image: AssetImage('assets/images/fromyama.png'),
+                  image: AssetImage('assets/images/fulfill_fy.png'),
                   width: 200,
                 ),
               ],
