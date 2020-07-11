@@ -19,6 +19,7 @@ class _SignUpUserState extends State<SignUpUser> {
   bool _validName, _validPassword, _validCompany, _validEmail, _slideIn = false;
   String _companyError = "", _emailError = "";
 
+  @override
   void initState() {
     _validEmail = true;
     _validPassword = true;
@@ -26,7 +27,7 @@ class _SignUpUserState extends State<SignUpUser> {
     _validName = true;
 
     super.initState();
-    _timer = new Timer(const Duration(milliseconds: 1000), () {
+    _timer = new Timer(const Duration(milliseconds: 200), () {
       setState(() {
         _slideIn = true;
       });
@@ -39,6 +40,7 @@ class _SignUpUserState extends State<SignUpUser> {
             AlertDialog(title: Text(title), content: Text(text)),
       );
 
+  @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();

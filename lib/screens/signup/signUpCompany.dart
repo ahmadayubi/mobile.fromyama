@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:fromyama/screens/login/loginForm.dart';
 import 'package:fromyama/utils/cColor.dart';
@@ -17,8 +19,9 @@ class _SignUpCompanyState extends State<SignUpCompany> {
 
   final TextEditingController _nameController = TextEditingController();
 
-  bool _validName, _validPassword, _validCompany, _validEmail;
+  bool _validName, _validPassword, _validCompany, _validEmail, _slideIn = false;
   String _companyError = "", _emailError = "";
+  Timer _timer;
 
   void initState() {
     _validEmail = true;
@@ -26,6 +29,11 @@ class _SignUpCompanyState extends State<SignUpCompany> {
     _validCompany = true;
     _validName = true;
     super.initState();
+    _timer = new Timer(const Duration(milliseconds: 200), () {
+      setState(() {
+        _slideIn = true;
+      });
+    });
   }
 
   void dispose() {
@@ -39,25 +47,54 @@ class _SignUpCompanyState extends State<SignUpCompany> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: beige(),
+      color: Colors.white,
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: ListView(
             children: [
               Container(
+                height: 250,
+                child: Stack(
+                  children: [
+                    AnimatedPositioned(
+                      duration: Duration(milliseconds: 1700),
+                      curve: Curves.fastOutSlowIn,
+                      left: _slideIn ? 25 : -500,
+                      bottom: 30,
+                      child: Image(
+                        image: AssetImage('assets/images/amazon_box.png'),
+                        height: 200,
+                      ),
+                    ),
+                    AnimatedPositioned(
+                      duration: Duration(milliseconds: 1500),
+                      curve: Curves.fastOutSlowIn,
+                      left: _slideIn ? 150 : -500,
+                      top: 100,
+                      child: Image(
+                        image: AssetImage('assets/images/shopify_box.png'),
+                        height: 150,
+                      ),
+                    ),
+                    AnimatedPositioned(
+                      duration: Duration(milliseconds: 1500),
+                      curve: Curves.fastOutSlowIn,
+                      left: _slideIn ? 175 : -500,
+                      top: 75,
+                      child: Image(
+                        image: AssetImage('assets/images/etsy_box.png'),
+                        height: 100,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
                 margin: const EdgeInsets.all(15),
                 padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 0.1,
-                      blurRadius: 2,
-                      offset: Offset(1, 1), // changes position of shadow
-                    ),
-                  ],
                 ),
                 child: Column(
                   children: [
@@ -119,118 +156,137 @@ class _SignUpCompanyState extends State<SignUpCompany> {
               SizedBox(
                 height: 8,
               ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Column(
+              Padding(
+                padding: const EdgeInsets.only(left: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      width: 200,
-                      height: 50,
-                      child: RaisedButton(
-                        color: blue(),
-                        onPressed: () async {
-                          var email = _emailController.text;
-                          var password = _passwordController.text;
-                          var companyID = _companyController.text;
-                          var name = _nameController.text;
-
-                          if (companyID == "") {
-                            setState(() {
-                              _validCompany = false;
-                              _companyError = "Company Name Cannot Be Empty";
-                            });
-                            return;
-                          } else {
-                            setState(() {
-                              _validCompany = true;
-                            });
-                          }
-                          if (name == "") {
-                            setState(() {
-                              _validName = false;
-                            });
-                            return;
-                          } else {
-                            setState(() {
-                              _validName = true;
-                            });
-                          }
-                          if (email == "") {
-                            setState(() {
-                              _validEmail = false;
-                              _emailError = "Invalid Email";
-                            });
-                            return;
-                          } else {
-                            setState(() {
-                              _validEmail = true;
-                            });
-                          }
-                          if (password == "") {
-                            setState(() {
-                              _validPassword = false;
-                            });
-                            return;
-                          } else {
-                            setState(() {
-                              _validPassword = true;
-                            });
-                          }
-
-                          var response = await postData(
-                              '$SERVER_IP/user/signup', {
-                            'name': name,
-                            'email': email,
-                            'password': password,
-                            'company_id': companyID
-                          });
-                          switch (response['status_code']) {
-                            case 201:
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => LoginForm()));
-                              break;
-                            case 422:
-                              setState(() {
-                                _validEmail = false;
-                                _emailError = "Email Already In Use";
-                              });
-                              break;
-                            case 403:
-                              setState(() {
-                                _validCompany = false;
-                                _companyError =
-                                    "Email Already Associated With Head Of Company";
-                              });
-                              break;
-                            default:
-                              break;
-                          }
-                        },
-                        child: Text(
-                          "Register",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontFamily: "SFCM"),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Image(
+                          image: AssetImage('assets/images/fulfill_fy.png'),
+                          height: 45,
                         ),
-                      ),
+                        Text(
+                            "Register Your Company To Start \nFulfilling Orders In One Place",
+                            style: TextStyle(fontFamily: "SFCM"))
+                      ],
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginForm()));
-                      },
-                      child: Text(
-                        "Already Registered? Login",
-                        style: TextStyle(fontFamily: "SFCM"),
-                      ),
+                    Column(
+                      children: [
+                        Container(
+                          width: 200,
+                          height: 50,
+                          child: RaisedButton(
+                            color: blue(),
+                            onPressed: () async {
+                              var email = _emailController.text;
+                              var password = _passwordController.text;
+                              var companyID = _companyController.text;
+                              var name = _nameController.text;
+
+                              if (companyID == "") {
+                                setState(() {
+                                  _validCompany = false;
+                                  _companyError =
+                                      "Company Name Cannot Be Empty";
+                                });
+                                return;
+                              } else {
+                                setState(() {
+                                  _validCompany = true;
+                                });
+                              }
+                              if (name == "") {
+                                setState(() {
+                                  _validName = false;
+                                });
+                                return;
+                              } else {
+                                setState(() {
+                                  _validName = true;
+                                });
+                              }
+                              if (email == "") {
+                                setState(() {
+                                  _validEmail = false;
+                                  _emailError = "Invalid Email";
+                                });
+                                return;
+                              } else {
+                                setState(() {
+                                  _validEmail = true;
+                                });
+                              }
+                              if (password == "") {
+                                setState(() {
+                                  _validPassword = false;
+                                });
+                                return;
+                              } else {
+                                setState(() {
+                                  _validPassword = true;
+                                });
+                              }
+
+                              var response = await postData(
+                                  '$SERVER_IP/user/signup', {
+                                'name': name,
+                                'email': email,
+                                'password': password,
+                                'company_id': companyID
+                              });
+                              switch (response['status_code']) {
+                                case 201:
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => LoginForm()));
+                                  break;
+                                case 422:
+                                  setState(() {
+                                    _validEmail = false;
+                                    _emailError = "Email Already In Use";
+                                  });
+                                  break;
+                                case 403:
+                                  setState(() {
+                                    _validCompany = false;
+                                    _companyError =
+                                        "Email Already Associated With Head Of Company";
+                                  });
+                                  break;
+                                default:
+                                  break;
+                              }
+                            },
+                            child: Text(
+                              "Register",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontFamily: "SFCM"),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginForm()));
+                          },
+                          child: Text(
+                            "Already Registered? Login",
+                            style: TextStyle(fontFamily: "SFCM"),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

@@ -30,20 +30,26 @@ class _MainDashState extends State<MainDash> {
   List<dynamic> _orders = [];
   bool _checked = false;
   User user;
+  bool _loading = false;
 
   Future<void> _getData() async {
-    setState(() {
-      getOrders();
-    });
+    if (this.mounted) {
+      setState(() {
+        _loading = true;
+        getOrders();
+      });
+    }
   }
 
   void getUser() async {
     var result = await getAuthData('$SERVER_IP/user/details', widget._token);
-    try {
-      setState(() {
-        user = User.fromJson(result);
-      });
-    } catch (error) {}
+    if (this.mounted) {
+      try {
+        setState(() {
+          user = User.fromJson(result);
+        });
+      } catch (error) {}
+    }
     getOrders();
   }
 
@@ -72,13 +78,16 @@ class _MainDashState extends State<MainDash> {
           await getAuthData('$SERVER_IP/etsy/order/unfulfilled', widget._token);
     }
     List<dynamic> sortedList = shopifyList + amazonList + etsyList;
-    try {
-      setState(() {
-        _orders = sortedList;
-        _checked = true;
-      });
-    } catch (error) {
-      print(error);
+    if (this.mounted) {
+      try {
+        setState(() {
+          _orders = sortedList;
+          _checked = true;
+          _loading = false;
+        });
+      } catch (error) {
+        print(error);
+      }
     }
   }
 
@@ -107,43 +116,65 @@ class _MainDashState extends State<MainDash> {
                 Expanded(
                   child: _orders.length != 0
                       ? RefreshIndicator(
-                          child: ListView.builder(
-                              padding: EdgeInsets.all(8),
-                              itemCount: _orders.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                if (_orders[index] is ShopifyOrder) {
-                                  return shopifyOrderWidget(
-                                      _orders[index], context, widget._token);
-                                } else if (_orders[index] is AmazonOrder) {
-                                  return amazonOrderWidget(
-                                      _orders[index], context, widget._token);
-                                } else {
-                                  return Text("Error");
-                                }
-                              }),
+                          child: Stack(
+                            children: [
+                              Center(
+                                child: Visibility(
+                                  visible: _loading,
+                                  child: DotLoading(),
+                                ),
+                              ),
+                              ListView.builder(
+                                  padding: EdgeInsets.all(8),
+                                  itemCount: _orders.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    if (_orders[index] is ShopifyOrder) {
+                                      return shopifyOrderWidget(_orders[index],
+                                          context, widget._token);
+                                    } else if (_orders[index] is AmazonOrder) {
+                                      return amazonOrderWidget(_orders[index],
+                                          context, widget._token);
+                                    } else {
+                                      return Text("Error");
+                                    }
+                                  }),
+                            ],
+                          ),
                           onRefresh: _getData,
                         )
                       : _checked
                           ? RefreshIndicator(
                               child: Stack(
                                 children: [
+                                  Center(
+                                    child: Visibility(
+                                      visible: _loading,
+                                      child: DotLoading(),
+                                    ),
+                                  ),
                                   ListView(
                                     children: [Center(child: Text(""))],
                                   ),
                                   Center(
-                                    child: Text(
-                                      "No Unfulfilled Orders",
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontFamily: "SFCR",
-                                          color: Colors.grey[800]),
+                                    child: Visibility(
+                                      visible: !_loading,
+                                      child: Text(
+                                        "No Unfulfilled Orders",
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontFamily: "SFCR",
+                                            color: Colors.grey[800]),
+                                      ),
                                     ),
                                   )
                                 ],
                               ),
                               onRefresh: _getData,
                             )
-                          : Center(child: DotLoading()),
+                          : Center(
+                              child: DotLoading(),
+                            ),
                 ),
               ],
             ),
