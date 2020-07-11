@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:fromyama/data/shopifyOrder.dart';
 import 'package:fromyama/screens/dashboard/mainDash.dart';
 import 'package:fromyama/screens/loading/dotLoading.dart';
+import 'package:fromyama/utils/cColor.dart';
 import 'package:fromyama/utils/requests.dart';
 import 'package:fromyama/screens/loading/fyLoading.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -105,7 +106,7 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
           ],
         ), //Text("${widget._order.name}"),
       ),
-      backgroundColor: new Color(0xfff9efe7),
+      backgroundColor: beige(),
       body: Container(
         margin: const EdgeInsets.all(10),
         child: Column(
@@ -113,7 +114,7 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
             Expanded(
               child: GlowingOverscrollIndicator(
                 axisDirection: AxisDirection.down,
-                color: new Color(0xffD6E198),
+                color: new Color(0x55bbd984), //new Color(0x5579de79),
                 child: ListView(
                   children: [
                     ReceiptWidget(widget._order, fuilfillable),

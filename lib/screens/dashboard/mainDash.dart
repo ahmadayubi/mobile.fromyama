@@ -4,6 +4,7 @@ import 'package:fromyama/data/user.dart';
 import 'package:fromyama/screens/dashboard/mainDrawer.dart';
 import 'package:fromyama/screens/loading/dotLoading.dart';
 import 'package:fromyama/screens/login/loginForm.dart';
+import 'package:fromyama/utils/cColor.dart';
 import 'package:fromyama/utils/requests.dart';
 import 'package:fromyama/data/shopifyOrder.dart';
 import 'package:fromyama/widgets/etsyOrderWidget.dart';
@@ -96,7 +97,7 @@ class _MainDashState extends State<MainDash> {
           ),
         ),
         drawer: MainDrawer(user, widget._token),
-        backgroundColor: new Color(0xfff9efe7),
+        backgroundColor: beige(),
         body: Center(
           child: SafeArea(
             child: Column(

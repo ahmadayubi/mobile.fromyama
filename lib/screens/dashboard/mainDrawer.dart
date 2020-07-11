@@ -11,6 +11,7 @@ import 'package:fromyama/screens/setting/settings.dart';
 import 'package:fromyama/screens/signup/signUpCompany.dart';
 import 'package:fromyama/screens/signup/signUpForm.dart';
 import 'package:fromyama/screens/signup/signUpUser.dart';
+import 'package:fromyama/utils/cColor.dart';
 
 final storage = FlutterSecureStorage();
 
@@ -33,36 +34,41 @@ class MainDrawer extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.only(
                             top: 30, left: 10, bottom: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Welcome Back, ",
-                              style: TextStyle(
-                                fontFamily: 'SFCR',
-                                fontSize: 20,
+                        child: Row(children: [
+                          Icon(
+                            Icons.supervised_user_circle,
+                            size: 50,
+                            color: Colors.grey[800],
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                user.name,
+                                style: TextStyle(
+                                  fontFamily: 'SFCM',
+                                  fontSize: 20,
+                                ),
                               ),
-                            ),
-                            Text(
-                              user.name,
-                              style: TextStyle(
-                                fontFamily: 'SFCM',
-                                fontSize: 35,
+                              Text(
+                                user.email,
+                                style: TextStyle(
+                                  fontFamily: 'SFCR',
+                                  fontSize: 15,
+                                ),
                               ),
-                            ),
-                            SizedBox(
-                              height: 2,
-                            ),
-                            Divider(
-                              color: Colors.grey[700],
-                              height: 2,
-                              endIndent: 10,
-                            ),
-                          ],
-                        ),
+                              SizedBox(
+                                height: 2,
+                              ),
+                            ],
+                          ),
+                        ]),
                       ),
                       ListTile(
-                        leading: Icon(Icons.home),
+                        leading: Icon(Icons.store),
                         title: Text(
                           '${user.company}\nID ${user.company_id}',
                           style: TextStyle(
@@ -81,7 +87,7 @@ class MainDrawer extends StatelessWidget {
                         },
                         leading: Icon(
                           Icons.add_circle,
-                          color: new Color(0xffD6E198),
+                          color: green(),
                         ),
                         title: Text(
                           'Accept Employees',
@@ -252,10 +258,14 @@ class MainDrawer extends StatelessWidget {
                   color: Colors.grey[700],
                 ),
                 Container(
-                  padding: const EdgeInsets.all(5),
-                  child: Image(
-                    image: AssetImage('assets/images/fulfill_fy.png'),
-                    height: 50,
+                  padding: const EdgeInsets.all(10),
+                  width: double.infinity,
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Image(
+                      image: AssetImage('assets/images/fulfill_fy.png'),
+                      height: 30,
+                    ),
                   ),
                 ),
               ],

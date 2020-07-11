@@ -50,20 +50,21 @@ class _SignUpUserState extends State<SignUpUser> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: new Color(0xfff9efe7),
+      color: Colors.white,
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: ListView(
             children: [
               Container(
-                height: 200,
+                height: 250,
                 child: Stack(
                   children: [
                     AnimatedPositioned(
                       duration: Duration(milliseconds: 1000),
                       curve: Curves.fastOutSlowIn,
-                      left: _slideIn ? 50 : -500,
+                      left: _slideIn ? 25 : -500,
+                      bottom: 30,
                       child: Image(
                         image: AssetImage('assets/images/amazon_box.png'),
                         height: 200,
@@ -72,8 +73,8 @@ class _SignUpUserState extends State<SignUpUser> {
                     AnimatedPositioned(
                       duration: Duration(milliseconds: 1500),
                       curve: Curves.fastOutSlowIn,
-                      left: 175,
-                      top: _slideIn ? 80 : -500,
+                      left: 150,
+                      top: _slideIn ? 100 : -500,
                       child: Image(
                         image: AssetImage('assets/images/shopify_box.png'),
                         height: 150,
@@ -82,8 +83,8 @@ class _SignUpUserState extends State<SignUpUser> {
                     AnimatedPositioned(
                       duration: Duration(milliseconds: 2000),
                       curve: Curves.fastOutSlowIn,
-                      left: 195,
-                      top: _slideIn ? 60 : -500,
+                      left: 175,
+                      top: _slideIn ? 75 : -500,
                       child: Image(
                         image: AssetImage('assets/images/etsy_box.png'),
                         height: 100,
@@ -97,26 +98,27 @@ class _SignUpUserState extends State<SignUpUser> {
                 padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  boxShadow: [
+/*                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.withOpacity(0.5),
                       spreadRadius: 0.1,
                       blurRadius: 2,
                       offset: Offset(1, 1), // changes position of shadow
                     ),
-                  ],
+                  ], */
                 ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Image(
                       image: AssetImage('assets/images/fulfill_fy.png'),
-                      height: 100,
+                      height: 70,
                     ),
                     Text(
                       "Start Fulfilling All Your Orders In One Place",
                       style: TextStyle(
-                        fontFamily: "SFCM",
-                        fontSize: 20,
+                        fontFamily: "SFCR",
+                        fontSize: 16,
                       ),
                     ),
                     Divider(),
@@ -186,7 +188,7 @@ class _SignUpUserState extends State<SignUpUser> {
                       width: 200,
                       height: 50,
                       child: RaisedButton(
-                        color: orange(),
+                        color: blue(),
                         onPressed: () async {
                           var email = _emailController.text;
                           var password = _passwordController.text;

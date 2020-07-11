@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:fromyama/screens/signup/signUpCompany.dart';
 import 'package:fromyama/screens/signup/signUpUser.dart';
+import 'package:fromyama/utils/cColor.dart';
 
 class SignUpForm extends StatelessWidget {
   @override
@@ -16,12 +17,12 @@ class SignUpForm extends StatelessWidget {
           ],
         ),
         bottomNavigationBar: BottomAppBar(
-          color: new Color(0xfff9efe7),
+          color: Colors.white,
           child: TabBar(
             unselectedLabelColor: Colors.grey[500],
             labelColor: Colors.grey[800],
             indicatorSize: TabBarIndicatorSize.tab,
-            indicatorColor: Colors.orangeAccent,
+            indicatorColor: blue(),
             tabs: [
               Tab(
                 text: "Employee Signup",

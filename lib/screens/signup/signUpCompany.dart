@@ -39,7 +39,7 @@ class _SignUpCompanyState extends State<SignUpCompany> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: new Color(0xfff9efe7),
+      color: beige(),
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(10.0),
@@ -127,7 +127,7 @@ class _SignUpCompanyState extends State<SignUpCompany> {
                       width: 200,
                       height: 50,
                       child: RaisedButton(
-                        color: orange(),
+                        color: blue(),
                         onPressed: () async {
                           var email = _emailController.text;
                           var password = _passwordController.text;
