@@ -115,7 +115,8 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                 Expanded(
                   child: GlowingOverscrollIndicator(
                     axisDirection: AxisDirection.down,
-                    color: new Color(0x55bbd984), //new Color(0x5579de79),
+                    color: new Color(
+                        0xFFFFAF), //new Color(0x55AF00),//new Color(0xFFFFAF) //new Color(0x5579de79),
                     child: ListView(
                       children: [
                         ReceiptWidget(widget._order, fuilfillable),

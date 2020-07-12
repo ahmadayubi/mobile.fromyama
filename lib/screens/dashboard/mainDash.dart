@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fromyama/data/amazonOrder.dart';
+import 'package:fromyama/data/etsyOrder.dart';
 import 'package:fromyama/data/user.dart';
 import 'package:fromyama/screens/dashboard/mainDrawer.dart';
 import 'package:fromyama/screens/loading/dotLoading.dart';
@@ -65,8 +66,10 @@ class _MainDashState extends State<MainDash> {
       }
     }
     if (user.platforms.contains("Amazon")) {
+      /* var amazonOrders = await getAuthData(
+          '$SERVER_IP/amazon/order/unfulfilled', widget._token); */
       var amazonOrders = await getAuthData(
-          '$SERVER_IP/amazon/order/unfulfilled', widget._token);
+          '$SERVER_IP/amazon/fake/order/unfulfilled', widget._token);
       if (amazonOrders['status_code'] == 200) {
         amazonList = amazonOrders['orders'].map((order) {
           return AmazonOrder.fromJson(order);
@@ -74,8 +77,13 @@ class _MainDashState extends State<MainDash> {
       }
     }
     if (user.platforms.contains("Etsy")) {
-      var etsyOrders =
-          await getAuthData('$SERVER_IP/etsy/order/unfulfilled', widget._token);
+      var etsyOrders = await getAuthData(
+          '$SERVER_IP/etsy/fake/order/unfulfilled', widget._token);
+      if (etsyOrders['status_code'] == 200) {
+        etsyList = etsyOrders['orders'].map((order) {
+          return EtsyOrder.fromJson(order);
+        }).toList();
+      }
     }
     List<dynamic> sortedList = shopifyList + amazonList + etsyList;
     if (this.mounted) {
@@ -134,6 +142,9 @@ class _MainDashState extends State<MainDash> {
                                           context, widget._token);
                                     } else if (_orders[index] is AmazonOrder) {
                                       return amazonOrderWidget(_orders[index],
+                                          context, widget._token);
+                                    } else if (_orders[index] is EtsyOrder) {
+                                      return etsyOrderWidget(_orders[index],
                                           context, widget._token);
                                     } else {
                                       return Text("Error");
