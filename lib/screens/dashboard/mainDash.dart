@@ -139,7 +139,7 @@ class _MainDashState extends State<MainDash> {
                                       (BuildContext context, int index) {
                                     if (_orders[index] is ShopifyOrder) {
                                       return shopifyOrderWidget(_orders[index],
-                                          context, widget._token);
+                                          context, widget._token, getOrders);
                                     } else if (_orders[index] is AmazonOrder) {
                                       return amazonOrderWidget(_orders[index],
                                           context, widget._token);

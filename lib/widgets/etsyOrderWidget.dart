@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fromyama/data/etsyOrder.dart';
 import 'package:fromyama/data/shopifyOrder.dart';
@@ -15,9 +16,10 @@ Widget etsyOrderWidget(EtsyOrder order, BuildContext context, String token) {
         onTap: () => {
           Navigator.push(
             context,
-            SlideLeft(
-              exitPage: MainDash(token),
-              enterPage: EtsyOrderDetails(order, token),
+            CupertinoPageRoute(
+              builder: (_) {
+                return EtsyOrderDetails(order, token);
+              },
             ),
           )
         },

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fromyama/data/shopifyOrder.dart';
@@ -12,8 +13,9 @@ import 'package:fromyama/widgets/receiptWidget.dart';
 class ShopifyOrderDetails extends StatefulWidget {
   final ShopifyOrder _order;
   final String _token;
+  final Function callback;
 
-  ShopifyOrderDetails(this._order, this._token);
+  ShopifyOrderDetails(this._order, this._token, this.callback);
 
   @override
   _ShopifyOrderDetailsState createState() => _ShopifyOrderDetailsState();
@@ -342,6 +344,7 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                                         setState(() {
                                           _fulfilled = true;
                                           _fulfillResponse = 200;
+                                          widget.callback();
                                         });
                                       } else {
                                         setState(() {
@@ -453,8 +456,7 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                           onPressed:
                               _fulfillResponse == 200 || _fulfillResponse == 500
                                   ? () {
-                                      Navigator.of(context)
-                                          .pop(); // To close the dialog
+                                      Navigator.of(context).pop();
                                     }
                                   : null,
                           child: Text("Go Back To Main Dash"),

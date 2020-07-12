@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fromyama/data/shopifyOrder.dart';
 import 'package:fromyama/screens/dashboard/mainDash.dart';
@@ -5,7 +6,7 @@ import 'package:fromyama/screens/dashboard/shopifyOrderDetails.dart';
 import 'package:fromyama/widgets/slideLeft.dart';
 
 Widget shopifyOrderWidget(
-    ShopifyOrder order, BuildContext context, String token) {
+    ShopifyOrder order, BuildContext context, String token, Function cb) {
   return Padding(
     padding: const EdgeInsets.fromLTRB(1, 6, 1, 5),
     child: Tooltip(
@@ -15,9 +16,10 @@ Widget shopifyOrderWidget(
         onTap: () => {
           Navigator.push(
             context,
-            SlideLeft(
-              exitPage: MainDash(token),
-              enterPage: ShopifyOrderDetails(order, token),
+            CupertinoPageRoute(
+              builder: (_) {
+                return ShopifyOrderDetails(order, token, cb);
+              },
             ),
           )
         },

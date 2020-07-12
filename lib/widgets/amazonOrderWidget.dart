@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fromyama/data/amazonOrder.dart';
 import 'package:fromyama/screens/dashboard/amazonOrderDetails.dart';
@@ -16,9 +17,10 @@ Widget amazonOrderWidget(
         onTap: () => {
           Navigator.push(
             context,
-            SlideLeft(
-              exitPage: MainDash(token),
-              enterPage: AmazonOrderDetails(order, token),
+            CupertinoPageRoute(
+              builder: (_) {
+                return AmazonOrderDetails(order, token);
+              },
             ),
           )
         },
@@ -102,7 +104,7 @@ Widget amazonOrderWidget(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "${order.shipping_info == null ? "No Name" : order.shipping_info['name']}",
+                              "${order.shipping_info['name'] == null ? "No Name" : order.shipping_info['name']}",
                               style: TextStyle(
                                   fontSize: 20,
                                   fontFamily: "SFCR",
