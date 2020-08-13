@@ -52,6 +52,7 @@ class _AddPaymentState extends State<AddPayment> {
         child: Stack(
           children: [
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CreditCardWidget(
                   cardNumber: cardNumber,
@@ -67,40 +68,52 @@ class _AddPaymentState extends State<AddPayment> {
                     ),
                   ),
                 ),
-                RaisedButton(
-                  color: blue(),
-                  child: Text(
-                    "Add Card",
-                    style: TextStyle(
-                        color: Colors.white, fontSize: 20, fontFamily: "SFCM"),
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      cardAdded = true;
-                    });
-                    var date = expiryDate.split("/");
-                    CreditCard card = CreditCard(
-                      number: cardNumber,
-                      expMonth: int.parse(date[0]),
-                      expYear: int.parse(date[1]),
-                      cvc: cvvCode,
-                    );
-                    StripePayment.createTokenWithCard(card).then((token) {
-                      postAuthData('$SERVER_IP/company/payment/add',
-                              {'payment_token': token.tokenId}, widget._token)
-                          .then((response) {
-                        if (response['status_code'] == 200) {
-                          setState(() {
-                            cardResponse = 200;
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Container(
+                    margin: const EdgeInsets.all(15),
+                    width: 200,
+                    height: 50,
+                    child: RaisedButton(
+                      color: blue(),
+                      child: Text(
+                        "Add Card",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontFamily: "SFCM"),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          cardAdded = true;
+                        });
+                        var date = expiryDate.split("/");
+                        CreditCard card = CreditCard(
+                          number: cardNumber,
+                          expMonth: int.parse(date[0]),
+                          expYear: int.parse(date[1]),
+                          cvc: cvvCode,
+                        );
+                        StripePayment.createTokenWithCard(card).then((token) {
+                          postAuthData(
+                                  '$SERVER_IP/company/payment/add',
+                                  {'payment_token': token.tokenId},
+                                  widget._token)
+                              .then((response) {
+                            if (response['status_code'] == 200) {
+                              setState(() {
+                                cardResponse = 200;
+                              });
+                            }
+                          }).catchError((error) {
+                            print(error);
                           });
-                        }
-                      }).catchError((error) {
-                        print(error);
-                      });
-                    }).catchError((error) {
-                      print(error);
-                    });
-                  },
+                        }).catchError((error) {
+                          print(error);
+                        });
+                      },
+                    ),
+                  ),
                 )
               ],
             ),
