@@ -100,6 +100,11 @@ class _SignUpCompanyState extends State<SignUpCompany> {
                   children: [
                     TextField(
                       controller: _companyController,
+                      onChanged: (value) {
+                        setState(() {
+                          _validCompany = true;
+                        });
+                      },
                       decoration: InputDecoration(
                           errorText: _validCompany ? null : _companyError,
                           labelStyle: TextStyle(
@@ -113,6 +118,11 @@ class _SignUpCompanyState extends State<SignUpCompany> {
                     ),
                     TextField(
                       controller: _nameController,
+                      onChanged: (value) {
+                        setState(() {
+                          _validName = true;
+                        });
+                      },
                       decoration: InputDecoration(
                           errorText:
                               _validName ? null : "Please Enter A Valid Name",
@@ -127,6 +137,11 @@ class _SignUpCompanyState extends State<SignUpCompany> {
                     ),
                     TextField(
                       controller: _emailController,
+                      onChanged: (value) {
+                        setState(() {
+                          _validEmail = true;
+                        });
+                      },
                       decoration: InputDecoration(
                           errorText: _validEmail ? null : _emailError,
                           labelStyle: TextStyle(
@@ -140,6 +155,11 @@ class _SignUpCompanyState extends State<SignUpCompany> {
                     ),
                     TextField(
                       controller: _passwordController,
+                      onChanged: (value) {
+                        setState(() {
+                          _validPassword = true;
+                        });
+                      },
                       decoration: InputDecoration(
                           errorText: _validPassword
                               ? null

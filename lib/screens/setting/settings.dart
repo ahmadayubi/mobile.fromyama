@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fromyama/data/user.dart';
 import 'package:fromyama/screens/setting/companySetting.dart';
 import 'package:fromyama/screens/setting/userSetting.dart';
+import 'package:fromyama/utils/cColor.dart';
 
 class Settings extends StatelessWidget {
   final String _token;
@@ -29,16 +30,16 @@ class Settings extends StatelessWidget {
         body: TabBarView(
           children: [
             UserSetting(_token, _user),
-            CompanySetting(_token),
+            CompanySetting(_token, _user.is_head),
           ],
         ),
         bottomNavigationBar: BottomAppBar(
-          color: new Color(0xfff9efe7),
+          color: beige(),
           child: TabBar(
             unselectedLabelColor: Colors.grey[500],
             labelColor: Colors.grey[800],
             indicatorSize: TabBarIndicatorSize.tab,
-            indicatorColor: Colors.orangeAccent,
+            indicatorColor: blue(),
             tabs: [
               Tab(
                 text: "User Settings",

@@ -29,7 +29,7 @@ class _UserSettingState extends State<UserSetting> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: new Color(0xfff9efe7),
+      color: beige(),
       child: SafeArea(
         child: ListView(
           children: [
@@ -83,7 +83,7 @@ class _UserSettingState extends State<UserSetting> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: RaisedButton(
-                      color: orange(),
+                      color: blue(),
                       onPressed: () async {
                         if (!editText) {
                           setState(() {

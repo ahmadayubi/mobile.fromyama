@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:fromyama/screens/signup/signUpCompany.dart';
 import 'package:fromyama/screens/signup/signUpUser.dart';
 import 'package:fromyama/utils/cColor.dart';

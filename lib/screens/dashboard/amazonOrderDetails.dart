@@ -6,7 +6,6 @@ import 'package:fromyama/screens/dashboard/mainDash.dart';
 import 'package:fromyama/screens/loading/dotLoading.dart';
 import 'package:fromyama/utils/requests.dart';
 import 'package:fromyama/screens/loading/fyLoading.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:convert';
 
 import 'package:fromyama/widgets/addressWidget.dart';
