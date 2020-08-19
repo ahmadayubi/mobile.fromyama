@@ -9,6 +9,7 @@ import 'package:fromyama/screens/platform/addEtsy.dart';
 import 'package:fromyama/screens/platform/addShopify.dart';
 import 'package:fromyama/screens/postage/addParcel.dart';
 import 'package:fromyama/screens/postage/addPayment.dart';
+import 'package:fromyama/screens/postage/checkRate.dart';
 import 'package:fromyama/screens/setting/settings.dart';
 import 'package:fromyama/screens/signup/signUpCompany.dart';
 import 'package:fromyama/screens/signup/signUpForm.dart';
@@ -179,7 +180,8 @@ class MainDrawer extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                   //builder: (context) => Settings(_token, user)))
-                                  builder: (context) => AddParcel(_token)))
+                                  builder: (context) =>
+                                      CheckRate(_token, {"test": "test"})))
                         },
                       ),
                       ListTile(
