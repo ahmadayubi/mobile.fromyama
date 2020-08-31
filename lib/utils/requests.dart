@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-const String SERVER_IP = "https://f30795f00f62.ngrok.io";
+const String SERVER_IP = "http://54f48588d89e.ngrok.io";
 
 Map<String, dynamic> formatRes(res) {
   if (res.statusCode != 500) {
@@ -21,19 +21,25 @@ Future<Map<String, dynamic>> getData(String url) async {
 }
 
 Future<Map<String, dynamic>> postData(String url, Map data) async {
-  var res = await http.post(url, body: data);
+  var res = await http.post(url,
+      headers: {"Content-Type": "application/json"}, body: jsonEncode(data));
   return formatRes(res);
 }
 
 Future<Map<String, dynamic>> getAuthData(String url, String token) async {
-  var res = await http.get(url, headers: {"Authorization": 'Bearer $token'});
+  var res = await http.get(url, headers: {
+    "Authorization": 'Bearer $token',
+    "Content-Type": "application/json"
+  });
   return formatRes(res);
 }
 
 Future<Map<String, dynamic>> postAuthData(
     String url, Map data, String token) async {
-  var res = await http
-      .post(url, body: data, headers: {"Authorization": 'Bearer $token'});
+  var res = await http.post(url, body: jsonEncode(data), headers: {
+    "Authorization": 'Bearer $token',
+    "Content-Type": "application/json"
+  });
 
   return formatRes(res);
 }
