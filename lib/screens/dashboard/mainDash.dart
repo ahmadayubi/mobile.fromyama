@@ -32,6 +32,7 @@ class _MainDashState extends State<MainDash> {
   bool _checked = false;
   User user;
   bool _loading = false;
+  int _numOrders = 0;
 
   Future<void> _getData() async {
     if (this.mounted) {
@@ -92,6 +93,7 @@ class _MainDashState extends State<MainDash> {
           _orders = sortedList;
           _checked = true;
           _loading = false;
+          _numOrders = _orders.length;
         });
       } catch (error) {
         print(error);
@@ -106,7 +108,7 @@ class _MainDashState extends State<MainDash> {
           backgroundColor: Colors.white,
           iconTheme: IconThemeData(color: Colors.black),
           title: Text(
-            "Unfulfilled Orders",
+            'Unfulfilled Orders ($_numOrders)',
             style: TextStyle(
               color: Colors.black,
               fontFamily: "SFM",

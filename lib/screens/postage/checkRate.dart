@@ -22,6 +22,9 @@ class _CheckRateState extends State<CheckRate> {
   Map<String, dynamic> _shipper;
   var _parcelId;
   bool _validWeight = true;
+  bool _showDialog = false;
+  int _purchaseResponse = 0;
+  int _indexOfSelected = -1;
   var rates = [];
 
   Map<String, dynamic> testDest = {'zip': 'V5H3Z7'};
@@ -48,116 +51,268 @@ class _CheckRateState extends State<CheckRate> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Purchase Shipping Label"),
+        iconTheme: IconThemeData(color: Colors.black),
+        backgroundColor: Colors.white,
+        titleSpacing: 0.0,
+        title: Text(
+          "Purchase Shipping Label",
+          style: TextStyle(color: Colors.grey[800], fontFamily: "SFCR"),
+        ),
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            children: [
-              AddressWidget(testDest),
-              DropdownButton<String>(
-                isExpanded: true,
-                value: _parcelId,
-                icon: Icon(Icons.arrow_downward),
-                iconSize: 24,
-                elevation: 16,
-                style: TextStyle(color: Colors.grey[800], fontFamily: "SFCR"),
-                underline: Container(
-                  height: 2,
-                  color: Colors.grey[500],
-                ),
-                onChanged: (String newParcel) {
-                  setState(() {
-                    _parcelId = newParcel;
-                  });
-                },
-                items: _parcels.map<DropdownMenuItem<String>>((var parcel) {
-                  return DropdownMenuItem<String>(
-                    value: parcel['_id'],
-                    child: Text(parcel['name']),
-                  );
-                }).toList(),
-              ),
-              TextField(
-                controller: _weightController,
-                onChanged: (value) {
-                  setState(() {
-                    _validWeight = true;
-                  });
-                },
-                decoration: InputDecoration(
-                    errorText: _validWeight ? null : "Invalid Weight",
-                    labelStyle:
-                        TextStyle(color: Colors.grey[800], fontFamily: "SFCR"),
-                    focusColor: Colors.grey[500],
-                    hoverColor: Colors.grey[500],
-                    labelText: 'Weight'),
-                keyboardType: TextInputType.number,
-                inputFormatters: <TextInputFormatter>[
-                  WhitelistingTextInputFormatter.digitsOnly
-                ],
-              ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: Container(
-                  margin: const EdgeInsets.all(10),
-                  width: 200,
-                  height: 50,
-                  child: RaisedButton(
-                    color: blue(),
-                    child: Text(
-                      "Check Rates",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontFamily: "SFCM"),
-                    ),
-                    onPressed: () async {
-                      var parcel, weight;
-                      for (int i = 0; i < _parcels.length; i++) {
-                        if (_parcels[i]['_id'] == _parcelId) {
-                          parcel = _parcels[i];
-                          break;
-                        }
-                      }
+      backgroundColor: beige(),
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: [
+                AddressWidget(widget._dest),
+                SizedBox(height: 10),
+                Container(
+                  padding: EdgeInsets.only(
+                    top: 10,
+                    bottom: 10,
+                    left: 10,
+                    right: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 0.1,
+                        blurRadius: 2,
+                        offset: Offset(1, 1), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      DropdownButton<String>(
+                        hint: Text("Select Parcel Type"),
+                        isExpanded: true,
+                        value: _parcelId,
+                        icon: Icon(Icons.arrow_downward),
+                        iconSize: 24,
+                        elevation: 16,
+                        style: TextStyle(
+                            color: Colors.grey[800], fontFamily: "SFCR"),
+                        underline: Container(
+                          height: 2,
+                          color: Colors.grey[500],
+                        ),
+                        onChanged: (String newParcel) {
+                          setState(() {
+                            _parcelId = newParcel;
+                          });
+                        },
+                        items: _parcels
+                            .map<DropdownMenuItem<String>>((var parcel) {
+                          return DropdownMenuItem<String>(
+                            value: parcel['_id'],
+                            child: Text(parcel['name']),
+                          );
+                        }).toList(),
+                      ),
+                      TextField(
+                        controller: _weightController,
+                        onChanged: (value) {
+                          setState(() {
+                            _validWeight = true;
+                          });
+                        },
+                        decoration: InputDecoration(
+                            suffixText: "grams",
+                            errorText: _validWeight ? null : "Invalid Weight",
+                            labelStyle: TextStyle(
+                                color: Colors.grey[800], fontFamily: "SFCR"),
+                            focusColor: Colors.grey[500],
+                            hoverColor: Colors.grey[500],
+                            labelText: 'Item Weight'),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          WhitelistingTextInputFormatter.digitsOnly
+                        ],
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Container(
+                          margin: const EdgeInsets.all(10),
+                          width: 200,
+                          height: 50,
+                          child: RaisedButton(
+                            color: blue(),
+                            child: Text(
+                              "Check Rates",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontFamily: "SFCM"),
+                            ),
+                            onPressed: () async {
+                              var parcel, weight;
+                              for (int i = 0; i < _parcels.length; i++) {
+                                if (_parcels[i]['_id'] == _parcelId) {
+                                  parcel = _parcels[i];
+                                  break;
+                                }
+                              }
 
-                      weight = double.parse(parcel['weight']) +
-                          (double.parse(_weightController.text) / 1000);
+                              weight = double.parse(parcel['weight']) +
+                                  (double.parse(_weightController.text) / 1000);
 
-                      var result = await postAuthData(
-                          '$SERVER_IP/postage/canadapost/rates',
-                          {
-                            'parcel': {
-                              'weight': weight.toStringAsFixed(2),
-                              'length': parcel['length'],
-                              'width': parcel['width'],
-                              'height': parcel['height']
+                              var result = await postAuthData(
+                                  '$SERVER_IP/postage/canadapost/rates',
+                                  {
+                                    'parcel': {
+                                      'weight': weight.toStringAsFixed(2),
+                                      'length': parcel['length'],
+                                      'width': parcel['width'],
+                                      'height': parcel['height']
+                                    },
+                                    'dest': {
+                                      'zip': testDest[
+                                          'zip'], //widget._dest['zip'],
+                                    },
+                                  },
+                                  widget._token);
+                              setState(() {
+                                this.rates = result['quotes'];
+                              });
                             },
-                            'dest': {
-                              'zip': testDest['zip'], //widget._dest['zip'],
-                            },
-                          },
-                          widget._token);
-                      setState(() {
-                        this.rates = result['quotes'];
-                      });
-                    },
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemBuilder: (BuildContext context, int index) {
-                    return postageRateWidget(
-                        rates[index], context, widget._token);
-                  },
-                  itemCount: rates.length,
+                Expanded(
+                  child: ListView.builder(
+                    itemBuilder: (BuildContext context, int index) {
+                      return InkWell(
+                          splashColor: blue(),
+                          onTap: () => {
+                                setState(() {
+                                  _showDialog = true;
+                                })
+                              },
+                          child: postageRateWidget(
+                              rates[index], context, widget._token));
+                    },
+                    itemCount: rates.length,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+          Visibility(
+            visible: _showDialog,
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              color: new Color(0x77000000),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(
+                      top: 10,
+                      bottom: 10,
+                      left: 10,
+                      right: 10,
+                    ),
+                    decoration: new BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(2),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 10.0,
+                          offset: const Offset(0.0, 10.0),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize:
+                          MainAxisSize.max, // To make the card compact
+                      children: [
+                        Text(
+                          "Purchase Shipping Label",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: "SFCM",
+                          ),
+                        ),
+                        Visibility(
+                          visible: _purchaseResponse == 0,
+                          child: SizedBox(height: 80, child: DotLoading()),
+                        ),
+                        Visibility(
+                          visible: _purchaseResponse == 200,
+                          child: SizedBox(
+                            height: 80,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.check_circle,
+                                  color: new Color(0xffbbd984),
+                                  size: 60.0,
+                                ),
+                                Text(
+                                  "Label Purchased",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 30,
+                                    fontFamily: "SFCM",
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        Visibility(
+                          visible: _purchaseResponse == 500,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.error,
+                                color: Colors.red,
+                                size: 20.0,
+                              ),
+                              Text(
+                                "Error Purchasing Label",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 15,
+                                  fontFamily: "SFCM",
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 24.0),
+                        FlatButton(
+                          onPressed: _purchaseResponse == 200 ||
+                                  _purchaseResponse == 500
+                              ? () {
+                                  setState(() {
+                                    _showDialog = false;
+                                  });
+                                }
+                              : null,
+                          child: Text("Cancel"),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -48,11 +48,20 @@ class _AddPaymentState extends State<AddPayment> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.black),
+        backgroundColor: Colors.white,
+        titleSpacing: 0.0,
+        title: Text(
+          "Add Payment Method",
+          style: TextStyle(color: Colors.grey[800], fontFamily: "SFCR"),
+        ),
+      ),
+      backgroundColor: beige(),
       body: SafeArea(
         child: Stack(
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            ListView(
               children: [
                 CreditCardWidget(
                   cardNumber: cardNumber,
@@ -61,60 +70,92 @@ class _AddPaymentState extends State<AddPayment> {
                   cvvCode: cvvCode,
                   showBackView: isCvvFocused,
                 ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: CreditCardForm(
-                      onCreditCardModelChange: onCreditCardModelChange,
-                    ),
+                Container(
+                  margin: EdgeInsets.all(15),
+                  padding: EdgeInsets.only(
+                    top: 10,
+                    bottom: 10,
+                    left: 10,
+                    right: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 0.1,
+                        blurRadius: 2,
+                        offset: Offset(1, 1), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      CreditCardForm(
+                        onCreditCardModelChange: onCreditCardModelChange,
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Container(
+                          margin: const EdgeInsets.all(15),
+                          width: 300,
+                          height: 50,
+                          child: RaisedButton(
+                            color: blue(),
+                            child: Text(
+                              "Add Payment Method",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontFamily: "SFCM"),
+                            ),
+                            onPressed: () {
+                              CreditCard card;
+                              try {
+                                var date = expiryDate.split("/");
+                                card = CreditCard(
+                                  number: cardNumber,
+                                  expMonth: int.parse(date[0]),
+                                  expYear: int.parse(date[1]),
+                                  cvc: cvvCode,
+                                );
+                              } catch (err) {
+                                print(err);
+                              }
+                              StripePayment.createTokenWithCard(card)
+                                  .then((token) {
+                                setState(() {
+                                  cardAdded = true;
+                                });
+                                postAuthData(
+                                        '$SERVER_IP/company/payment/add',
+                                        {'payment_token': token.tokenId},
+                                        widget._token)
+                                    .then((response) {
+                                  if (response['status_code'] == 200) {
+                                    setState(() {
+                                      cardResponse = 200;
+                                    });
+                                  }
+                                }).catchError((error) {
+                                  setState(() {
+                                    cardAdded = false;
+                                  });
+                                  print(error);
+                                });
+                              }).catchError((error) {
+                                setState(() {
+                                  cardAdded = false;
+                                });
+                                print(error);
+                              });
+                            },
+                          ),
+                        ),
+                      )
+                    ],
                   ),
                 ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Container(
-                    margin: const EdgeInsets.all(15),
-                    width: 200,
-                    height: 50,
-                    child: RaisedButton(
-                      color: blue(),
-                      child: Text(
-                        "Add Card",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontFamily: "SFCM"),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          cardAdded = true;
-                        });
-                        var date = expiryDate.split("/");
-                        CreditCard card = CreditCard(
-                          number: cardNumber,
-                          expMonth: int.parse(date[0]),
-                          expYear: int.parse(date[1]),
-                          cvc: cvvCode,
-                        );
-                        StripePayment.createTokenWithCard(card).then((token) {
-                          postAuthData(
-                                  '$SERVER_IP/company/payment/add',
-                                  {'payment_token': token.tokenId},
-                                  widget._token)
-                              .then((response) {
-                            if (response['status_code'] == 200) {
-                              setState(() {
-                                cardResponse = 200;
-                              });
-                            }
-                          }).catchError((error) {
-                            print(error);
-                          });
-                        }).catchError((error) {
-                          print(error);
-                        });
-                      },
-                    ),
-                  ),
-                )
               ],
             ),
             Visibility(

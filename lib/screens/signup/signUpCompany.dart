@@ -252,11 +252,11 @@ class _SignUpCompanyState extends State<SignUpCompany> {
                               }
 
                               var response = await postData(
-                                  '$SERVER_IP/user/signup', {
+                                  '$SERVER_IP/company/register', {
                                 'name': name,
                                 'email': email,
                                 'password': password,
-                                'company_id': companyID
+                                'company_name': companyID
                               });
                               switch (response['status_code']) {
                                 case 201:

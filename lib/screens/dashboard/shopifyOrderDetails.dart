@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:fromyama/data/shopifyOrder.dart';
 import 'package:fromyama/screens/dashboard/mainDash.dart';
 import 'package:fromyama/screens/loading/dotLoading.dart';
+import 'package:fromyama/screens/postage/checkRate.dart';
 import 'package:fromyama/utils/cColor.dart';
 import 'package:fromyama/utils/requests.dart';
 
@@ -200,6 +201,7 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                                           default:
                                             //_locations.addAll(locationData.data['locations']);
                                             return DropdownButton<String>(
+                                              hint: Text("Select A Location"),
                                               isExpanded: true,
                                               value: _locationValue,
                                               icon: Icon(Icons.arrow_downward),
@@ -255,6 +257,7 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                                   Expanded(
                                     flex: 1,
                                     child: DropdownButton<String>(
+                                      hint: Text("Select A Carrier"),
                                       isExpanded: true,
                                       value: _postalServiceValue,
                                       icon: Icon(Icons.arrow_downward),
@@ -294,15 +297,45 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                               SizedBox(
                                 height: 5,
                               ),
-                              TextField(
-                                controller: _trackingNumberController,
-                                enabled: _enableTracking,
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    focusColor: Colors.grey[500],
-                                    hoverColor: Colors.grey[500],
-                                    labelText:
-                                        'Tracking Number, Leave Blank if None'),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      controller: _trackingNumberController,
+                                      enabled: _enableTracking,
+                                      decoration: InputDecoration(
+                                          labelStyle: TextStyle(
+                                            color: Colors.grey[800],
+                                            fontFamily: "SFCR",
+                                            fontSize: 15,
+                                          ),
+                                          focusColor: Colors.grey[500],
+                                          hoverColor: Colors.grey[500],
+                                          labelText:
+                                              'Tracking Number, Leave Blank if None'),
+                                    ),
+                                  ),
+                                  FlatButton(
+                                    color: white(),
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => CheckRate(
+                                                  widget._token,
+                                                  widget
+                                                      ._order.shipping_info)));
+                                    },
+                                    child: Text(
+                                      "Or Purchase Label",
+                                      style: TextStyle(
+                                        color: Colors.grey[800],
+                                        fontSize: 15,
+                                        fontFamily: "SFCR",
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),

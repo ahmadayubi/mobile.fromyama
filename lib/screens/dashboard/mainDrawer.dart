@@ -220,6 +220,44 @@ class MainDrawer extends StatelessWidget {
                           ),
                         ),
                       ),
+                      ListTile(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AddParcel(_token)));
+                        },
+                        leading: Icon(
+                          Icons.add_circle,
+                          color: new Color(0xffD6E198),
+                        ),
+                        title: Text(
+                          'Add Parcel TEMP',
+                          style: TextStyle(
+                            fontFamily: 'SFCM',
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
+                      ListTile(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AddPayment(_token)));
+                        },
+                        leading: Icon(
+                          Icons.add_circle,
+                          color: new Color(0xffD6E198),
+                        ),
+                        title: Text(
+                          'Add Payment TEMP',
+                          style: TextStyle(
+                            fontFamily: 'SFCM',
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
