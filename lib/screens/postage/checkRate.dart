@@ -24,7 +24,7 @@ class _CheckRateState extends State<CheckRate> {
   bool _validWeight = true;
   bool _showDialog = false;
   int _purchaseResponse = 0;
-  int _indexOfSelected = -1;
+  int _indexOfSelected = 0;
   var rates = [];
 
   Map<String, dynamic> testDest = {'zip': 'V5H3Z7'};
@@ -193,6 +193,7 @@ class _CheckRateState extends State<CheckRate> {
                           splashColor: blue(),
                           onTap: () => {
                                 setState(() {
+                                  _indexOfSelected = index;
                                   _showDialog = true;
                                 })
                               },
@@ -206,7 +207,7 @@ class _CheckRateState extends State<CheckRate> {
             ),
           ),
           Visibility(
-            visible: _showDialog,
+            visible: _showDialog && rates.length > 0,
             child: Container(
               padding: const EdgeInsets.all(20),
               color: new Color(0x77000000),
@@ -215,10 +216,10 @@ class _CheckRateState extends State<CheckRate> {
                 children: [
                   Container(
                     padding: EdgeInsets.only(
-                      top: 10,
-                      bottom: 10,
-                      left: 10,
-                      right: 10,
+                      top: 15,
+                      bottom: 15,
+                      left: 15,
+                      right: 15,
                     ),
                     decoration: new BoxDecoration(
                       color: Colors.white,
@@ -232,81 +233,267 @@ class _CheckRateState extends State<CheckRate> {
                         ),
                       ],
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      mainAxisSize:
-                          MainAxisSize.max, // To make the card compact
-                      children: [
-                        Text(
-                          "Purchase Shipping Label",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontFamily: "SFCM",
-                          ),
-                        ),
-                        Visibility(
-                          visible: _purchaseResponse == 0,
-                          child: SizedBox(height: 80, child: DotLoading()),
-                        ),
-                        Visibility(
-                          visible: _purchaseResponse == 200,
-                          child: SizedBox(
-                            height: 80,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.check_circle,
-                                  color: new Color(0xffbbd984),
-                                  size: 60.0,
-                                ),
-                                Text(
-                                  "Label Purchased",
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 30,
-                                    fontFamily: "SFCM",
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        Visibility(
-                          visible: _purchaseResponse == 500,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                    child: rates.length > 0
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisSize:
+                                MainAxisSize.max, // To make the card compact
                             children: [
-                              Icon(
-                                Icons.error,
-                                color: Colors.red,
-                                size: 20.0,
-                              ),
                               Text(
-                                "Error Purchasing Label",
+                                "${rates[_indexOfSelected]['service-name']}",
                                 style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 15,
+                                  fontSize: 20,
                                   fontFamily: "SFCM",
                                 ),
-                              )
+                              ),
+                              Divider(
+                                color: Colors.grey,
+                                height: 6,
+                                thickness: 1,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Base ",
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontFamily: "SFCM",
+                                    ),
+                                  ),
+                                  Text(
+                                    "${rates[_indexOfSelected]['price-details']['base']}",
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontFamily: "SFCM",
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "GST ",
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontFamily: "SFCM",
+                                    ),
+                                  ),
+                                  Text(
+                                    "${rates[_indexOfSelected]['price-details']['taxes']['gst']['_']}",
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontFamily: "SFCM",
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "PST ",
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontFamily: "SFCM",
+                                    ),
+                                  ),
+                                  Text(
+                                    "${rates[_indexOfSelected]['price-details']['taxes']['pst']}",
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontFamily: "SFCM",
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "HST ",
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontFamily: "SFCM",
+                                    ),
+                                  ),
+                                  Text(
+                                    "${rates[_indexOfSelected]['price-details']['taxes']['hst']}",
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontFamily: "SFCM",
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: rates[_indexOfSelected]
+                                            ['price-details']['adjustments']
+                                        ['adjustment']
+                                    .map<Widget>(
+                                  (adj) {
+                                    return Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "${adj['adjustment-name']} ",
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontFamily: "SFCM",
+                                          ),
+                                        ),
+                                        Text(
+                                          "${adj['adjustment-cost']}",
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontFamily: "SFCM",
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ).toList(),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Total ",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontFamily: "SFCM",
+                                    ),
+                                  ),
+                                  Text(
+                                    "${rates[_indexOfSelected]['price-details']['due']} CAD",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontFamily: "SFCM",
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 24.0),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  FlatButton(
+                                    onPressed: () async {
+                                      var parcel, weight;
+                                      for (int i = 0;
+                                          i < _parcels.length;
+                                          i++) {
+                                        if (_parcels[i]['_id'] == _parcelId) {
+                                          parcel = _parcels[i];
+                                          break;
+                                        }
+                                      }
+                                      weight = double.parse(parcel['weight']) +
+                                          (double.parse(
+                                                  _weightController.text) /
+                                              1000);
+                                      var result = await postAuthData(
+                                          '$SERVER_IP/postage/canadapost/buy',
+                                          {
+                                            "amount":
+                                                "${double.parse(rates[_indexOfSelected]['price-details']['due']) * 100}",
+                                            "currency": "cad",
+                                            "dest": widget._dest,
+                                            "service_code":
+                                                rates[_indexOfSelected]
+                                                    ['service-code'],
+                                            "parcel": {
+                                              'weight':
+                                                  weight.toStringAsFixed(2),
+                                              'length': parcel['length'],
+                                              'width': parcel['width'],
+                                              'height': parcel['height']
+                                            },
+                                          },
+                                          widget._token);
+
+                                      print(result);
+                                    },
+                                    child: Text("Purchase"),
+                                  ),
+                                  FlatButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        _showDialog = false;
+                                        _indexOfSelected = 0;
+                                      });
+                                    },
+                                    child: Text("Cancel"),
+                                  ),
+                                  Visibility(
+                                    visible: _purchaseResponse == 200,
+                                    child: SizedBox(
+                                        height: 80, child: DotLoading()),
+                                  ),
+                                  Visibility(
+                                    visible: _purchaseResponse == 200,
+                                    child: SizedBox(
+                                      height: 80,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.check_circle,
+                                            color: new Color(0xffbbd984),
+                                            size: 60.0,
+                                          ),
+                                          Text(
+                                            "Label Purchased",
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 30,
+                                              fontFamily: "SFCM",
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Visibility(
+                                    visible: _purchaseResponse == 500,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.error,
+                                          color: Colors.red,
+                                          size: 20.0,
+                                        ),
+                                        Text(
+                                          "Error Purchasing Label",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 15,
+                                            fontFamily: "SFCM",
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ],
-                          ),
-                        ),
-                        SizedBox(height: 24.0),
-                        FlatButton(
-                          onPressed: _purchaseResponse == 200 ||
-                                  _purchaseResponse == 500
-                              ? () {
-                                  setState(() {
-                                    _showDialog = false;
-                                  });
-                                }
-                              : null,
-                          child: Text("Cancel"),
-                        ),
-                      ],
-                    ),
+                          )
+                        : Text("Error"),
                   ),
                 ],
               ),
