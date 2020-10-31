@@ -404,7 +404,7 @@ class _CheckRateState extends State<CheckRate> {
                                           (double.parse(
                                                   _weightController.text) /
                                               1000);
-                                      var result = await postAuthData(
+                                      await postAuthData(
                                           '$SERVER_IP/postage/canadapost/buy',
                                           {
                                             "amount":
@@ -423,8 +423,6 @@ class _CheckRateState extends State<CheckRate> {
                                             },
                                           },
                                           widget._token);
-
-                                      print(result);
                                     },
                                     child: Text("Purchase"),
                                   ),

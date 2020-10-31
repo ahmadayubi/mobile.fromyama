@@ -179,9 +179,7 @@ class MainDrawer extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  //builder: (context) => Settings(_token, user)))
-                                  builder: (context) =>
-                                      CheckRate(_token, {"test": "test"})))
+                                  builder: (context) => Settings(_token, user)))
                         },
                       ),
                       ListTile(
