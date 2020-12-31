@@ -141,7 +141,7 @@ class _UserSettingState extends State<UserSetting> {
                     ),
                   ),
                   Text(
-                    "ID: ${widget._user.user_id}",
+                    "ID: ${widget._user.id}",
                     style: TextStyle(
                       color: Colors.grey[800],
                       fontFamily: "SFCR",

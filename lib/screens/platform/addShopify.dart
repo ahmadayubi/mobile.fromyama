@@ -112,7 +112,7 @@ class _AddShopifyState extends State<AddShopify> {
                             ? () async {
                                 var shopName = _shopNameController.text;
                                 var authLink = await postAuthData(
-                                    '$SERVER_IP/shopify/get_auth_url',
+                                    '$SERVER_IP/shopify/generate-link',
                                     {'shop': shopName},
                                     widget._token);
                                 if (authLink != null) {
@@ -120,8 +120,7 @@ class _AddShopifyState extends State<AddShopify> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => AuthBrowser(
-                                              authLink['authLink'],
-                                              widget._token)));
+                                              authLink['url'], widget._token)));
                                 } else {}
                               }
                             : null,

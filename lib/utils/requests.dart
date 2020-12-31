@@ -1,13 +1,18 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-const String SERVER_IP = "https://567b298eafdf.ngrok.io";
+const String SERVER_IP = "https://ea5852492717.ngrok.io";
 
 Map<String, dynamic> formatRes(res) {
   if (res.statusCode != 500) {
     Map<String, dynamic> dataMap;
     if (res.body.isNotEmpty) {
-      dataMap = json.decode(res.body);
+      dynamic decode = json.decode(res.body);
+      if (decode is List) {
+        dataMap = {"data": decode};
+      } else {
+        dataMap = decode;
+      }
       dataMap['status_code'] = res.statusCode;
       return dataMap;
     }
@@ -37,6 +42,16 @@ Future<Map<String, dynamic>> getAuthData(String url, String token) async {
 Future<Map<String, dynamic>> postAuthData(
     String url, Map data, String token) async {
   var res = await http.post(url, body: jsonEncode(data), headers: {
+    "Authorization": 'Bearer $token',
+    "Content-Type": "application/json"
+  });
+
+  return formatRes(res);
+}
+
+Future<Map<String, dynamic>> putAuthData(
+    String url, Map data, String token) async {
+  var res = await http.put(url, body: jsonEncode(data), headers: {
     "Authorization": 'Bearer $token',
     "Content-Type": "application/json"
   });

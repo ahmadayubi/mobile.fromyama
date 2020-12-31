@@ -241,7 +241,7 @@ class _AddParcelState extends State<AddParcel> {
                                 _loading = true;
                               });
                               var response = await postAuthData(
-                                  '$SERVER_IP/company/parcel/add',
+                                  '$SERVER_IP/company/add/parcel',
                                   {
                                     'name': name,
                                     'length': length,

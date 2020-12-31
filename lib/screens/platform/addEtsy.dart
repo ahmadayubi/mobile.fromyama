@@ -112,7 +112,7 @@ class _AddEtsyState extends State<AddEtsy> {
                             ? () async {
                                 var shopName = _shopNameController.text;
                                 var authLink = await postAuthData(
-                                    '$SERVER_IP/etsy/token/request',
+                                    '$SERVER_IP/etsy/generate-link',
                                     {'shop': shopName},
                                     widget._token);
                                 if (authLink != null) {
@@ -120,8 +120,7 @@ class _AddEtsyState extends State<AddEtsy> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => AuthBrowser(
-                                              authLink['login_url'],
-                                              widget._token)));
+                                              authLink['url'], widget._token)));
                                 } else {}
                               }
                             : null,

@@ -128,7 +128,7 @@ class _AddPaymentState extends State<AddPayment> {
                                   cardAdded = true;
                                 });
                                 postAuthData(
-                                        '$SERVER_IP/company/payment/add',
+                                        '$SERVER_IP/company/add/payment/method',
                                         {'payment_token': token.tokenId},
                                         widget._token)
                                     .then((response) {

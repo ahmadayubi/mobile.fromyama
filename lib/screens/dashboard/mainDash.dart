@@ -33,6 +33,8 @@ class _MainDashState extends State<MainDash> {
   User user;
   bool _loading = false;
   int _numOrders = 0;
+  Map<String, dynamic> platforms;
+  bool _approved = true;
 
   Future<void> _getData() async {
     if (this.mounted) {
@@ -44,43 +46,55 @@ class _MainDashState extends State<MainDash> {
   }
 
   void getUser() async {
-    var result = await getAuthData('$SERVER_IP/user/details', widget._token);
-    if (this.mounted) {
-      try {
-        setState(() {
-          user = User.fromJson(result);
-        });
-      } catch (error) {}
+    var result = User.fromJson(
+        await getAuthData('$SERVER_IP/user/details', widget._token));
+
+    if (result.is_approved) {
+      if (this.mounted) {
+        try {
+          setState(() {
+            user = result;
+          });
+        } catch (error) {}
+      }
+      getOrders();
+    } else {
+      setState(() {
+        _approved = false;
+      });
     }
-    getOrders();
   }
 
   void getOrders() async {
     var amazonList = [], shopifyList = [], etsyList = [];
-    if (user.platforms.contains("Shopify")) {
-      var shopifyOrders = await getAuthData(
-          '$SERVER_IP/shopify/order/unfulfilled', widget._token);
-      if (shopifyOrders['status_code'] == 200) {
+    platforms =
+        await getAuthData('$SERVER_IP/company/platforms', widget._token);
+    if (platforms["shopify_connected"]) {
+      var shopifyOrders =
+          await getAuthData('$SERVER_IP/shopify/orders/all', widget._token);
+      if (shopifyOrders['status_code'] == 200 &&
+          shopifyOrders["orders"] != null) {
         shopifyList = shopifyOrders['orders'].map((order) {
           return ShopifyOrder.fromJson(order);
         }).toList();
       }
     }
-    if (user.platforms.contains("Amazon")) {
+    if (platforms["amazon_connected"]) {
       /* var amazonOrders = await getAuthData(
           '$SERVER_IP/amazon/order/unfulfilled', widget._token); */
-      var amazonOrders = await getAuthData(
-          '$SERVER_IP/amazon/fake/order/unfulfilled', widget._token);
-      if (amazonOrders['status_code'] == 200) {
+      var amazonOrders =
+          await getAuthData('$SERVER_IP/amazon/orders/all', widget._token);
+      if (amazonOrders['status_code'] == 200 &&
+          amazonOrders["orders"] != null) {
         amazonList = amazonOrders['orders'].map((order) {
           return AmazonOrder.fromJson(order);
         }).toList();
       }
     }
-    if (user.platforms.contains("Etsy")) {
-      var etsyOrders = await getAuthData(
-          '$SERVER_IP/etsy/fake/order/unfulfilled', widget._token);
-      if (etsyOrders['status_code'] == 200) {
+    if (platforms["etsy_connected"]) {
+      var etsyOrders =
+          await getAuthData('$SERVER_IP/etsy/orders/all', widget._token);
+      if (etsyOrders['status_code'] == 200 && etsyOrders["orders"] != null) {
         etsyList = etsyOrders['orders'].map((order) {
           return EtsyOrder.fromJson(order);
         }).toList();
@@ -115,7 +129,7 @@ class _MainDashState extends State<MainDash> {
             ),
           ),
         ),
-        drawer: MainDrawer(user, widget._token),
+        drawer: MainDrawer(user, widget._token, platforms),
         backgroundColor: beige(),
         body: Center(
           child: SafeArea(

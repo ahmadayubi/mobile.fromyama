@@ -286,6 +286,10 @@ class _SignUpUserState extends State<SignUpUser> {
                               });
                               break;
                             default:
+                              setState(() {
+                                _validCompany = false;
+                                _validEmail = false;
+                              });
                               break;
                           }
                         },

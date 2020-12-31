@@ -21,8 +21,9 @@ final storage = FlutterSecureStorage();
 class MainDrawer extends StatelessWidget {
   final User user;
   final String _token;
+  final Map<String, dynamic> _platforms;
 
-  MainDrawer(this.user, this._token);
+  MainDrawer(this.user, this._token, this._platforms);
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +102,7 @@ class MainDrawer extends StatelessWidget {
                         ),
                       ),
                       Visibility(
-                        visible: !user.platforms.contains('Shopify'),
+                        visible: !_platforms["shopify_connected"],
                         child: ListTile(
                           leading: Icon(
                             Icons.add_circle,
@@ -123,7 +124,7 @@ class MainDrawer extends StatelessWidget {
                         ),
                       ),
                       Visibility(
-                        visible: !user.platforms.contains('Amazon'),
+                        visible: !_platforms["amazon_connected"],
                         child: ListTile(
                           leading: Icon(
                             Icons.add_circle,
@@ -145,7 +146,7 @@ class MainDrawer extends StatelessWidget {
                         ),
                       ),
                       Visibility(
-                        visible: !user.platforms.contains('Etsy'),
+                        visible: !_platforms["etsy_connected"],
                         child: ListTile(
                           leading: Icon(
                             Icons.add_circle,
@@ -269,21 +270,21 @@ class MainDrawer extends StatelessWidget {
                         style: TextStyle(fontFamily: "SFCM", fontSize: 15),
                       ),
                       Visibility(
-                        visible: user.platforms.contains('Amazon'),
+                        visible: _platforms["amazon_connected"],
                         child: Image(
                           image: AssetImage("assets/images/amazon_small.png"),
                           height: 20,
                         ),
                       ),
                       Visibility(
-                        visible: user.platforms.contains('Etsy'),
+                        visible: _platforms["etsy_connected"],
                         child: Image(
                           image: AssetImage("assets/images/etsy_small.png"),
                           height: 20,
                         ),
                       ),
                       Visibility(
-                        visible: user.platforms.contains('Shopify'),
+                        visible: _platforms["shopify_connected"],
                         child: Image(
                           image: AssetImage("assets/images/shopify_small.png"),
                           height: 20,

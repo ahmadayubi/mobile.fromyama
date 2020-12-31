@@ -362,7 +362,8 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                                         'tracking_number':
                                             _trackingNumberController.text,
                                         'tracking_company': _postalServiceValue,
-                                        'notify_customer': "true"
+                                        'notify_customer': "true",
+                                        'order_id': widget._order.order_id,
                                       };
                                       if (_trackingNumberController.text ==
                                           "") {
@@ -370,7 +371,7 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                                         fulfillment.remove('tracking_number');
                                       }
                                       var fulfillStatus = await postAuthData(
-                                          '$SERVER_IP/shopify/order/fulfill/${widget._order.order_id}',
+                                          '$SERVER_IP/shopify/fulfill',
                                           fulfillment,
                                           widget._token);
                                       if (fulfillStatus['status_code'] == 200) {
