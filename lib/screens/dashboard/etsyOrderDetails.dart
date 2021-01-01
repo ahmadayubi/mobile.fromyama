@@ -109,11 +109,11 @@ class _EtsyOrderDetailsState extends State<EtsyOrderDetails> {
                           height: 15,
                         ),
                         Visibility(
-                          visible: widget._order.shipping_info != null,
-                          child: AddressWidget(widget._order.shipping_info),
+                          visible: widget._order.shipping_address != null,
+                          child: AddressWidget(widget._order.shipping_address),
                         ),
                         Visibility(
-                          visible: widget._order.shipping_info != null,
+                          visible: widget._order.shipping_address != null,
                           child: SizedBox(
                             height: 15,
                           ),
@@ -233,8 +233,8 @@ class _EtsyOrderDetailsState extends State<EtsyOrderDetails> {
                                           MaterialPageRoute(
                                               builder: (context) => CheckRate(
                                                   widget._token,
-                                                  widget
-                                                      ._order.shipping_info)));
+                                                  widget._order
+                                                      .shipping_address)));
                                     },
                                     child: Text(
                                       "Or Purchase Label",

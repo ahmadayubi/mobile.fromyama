@@ -121,9 +121,9 @@ class _AmazonOrderDetailsState extends State<AmazonOrderDetails> {
                     SizedBox(
                       height: 15,
                     ),
-                    widget._order.shipping_info == null
+                    widget._order.shipping_address == null
                         ? SizedBox()
-                        : AddressWidget(widget._order.shipping_info),
+                        : AddressWidget(widget._order.shipping_address),
                     SizedBox(
                       height: 15,
                     ),

@@ -70,9 +70,7 @@ Widget postageRateWidget(Map rate, BuildContext context, String token) {
                               color: Colors.grey[800]),
                         ),
                         Visibility(
-                          visible: rate['price-details']['options']['option']
-                                  ['option-code'] ==
-                              "DC",
+                          visible: rate['guaranteed-delivery'],
                           child: Row(
                             children: [
                               Icon(
@@ -91,7 +89,7 @@ Widget postageRateWidget(Map rate, BuildContext context, String token) {
                           ),
                         ),
                         Text(
-                          'ESTIMATED DELIVERY ${rate['service-standard']['expected-delivery-date']}',
+                          'ESTIMATED DELIVERY ${rate['expected-delivery-date']}',
                           style: TextStyle(
                             fontSize: 13,
                             fontFamily: "SFCM",

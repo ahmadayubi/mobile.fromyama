@@ -59,7 +59,7 @@ class AddressWidget extends StatelessWidget {
                         '\n${address['address1'] == null ? 'Seller Street Address Hidden' : address['address1']}'),
                 TextSpan(
                     text:
-                        '\n${address['city']}, ${address['province_code']} ${address['zip']}'),
+                        '\n${address['city']}, ${address['province']} ${address['postal_code']}'),
                 TextSpan(text: '\n${address['country']}'),
               ],
             ),

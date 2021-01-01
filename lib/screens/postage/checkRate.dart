@@ -41,7 +41,7 @@ class _CheckRateState extends State<CheckRate> {
       try {
         setState(() {
           this._parcels = shippingInfo['parcels'];
-          this._shipper = shippingInfo['shipper'];
+          this._shipper = shippingInfo['address'];
         });
       } catch (error) {}
     }
@@ -66,7 +66,7 @@ class _CheckRateState extends State<CheckRate> {
             padding: const EdgeInsets.all(10.0),
             child: Column(
               children: [
-                AddressWidget(widget._dest),
+                //AddressWidget(widget._dest),
                 SizedBox(height: 10),
                 Container(
                   padding: EdgeInsets.only(
@@ -109,7 +109,7 @@ class _CheckRateState extends State<CheckRate> {
                         items: _parcels
                             .map<DropdownMenuItem<String>>((var parcel) {
                           return DropdownMenuItem<String>(
-                            value: parcel['_id'],
+                            value: parcel['id'],
                             child: Text(parcel['name']),
                           );
                         }).toList(),
@@ -152,33 +152,32 @@ class _CheckRateState extends State<CheckRate> {
                             onPressed: () async {
                               var parcel, weight;
                               for (int i = 0; i < _parcels.length; i++) {
-                                if (_parcels[i]['_id'] == _parcelId) {
+                                if (_parcels[i]['id'] == _parcelId) {
                                   parcel = _parcels[i];
                                   break;
                                 }
                               }
 
-                              weight = double.parse(parcel['weight']) +
+                              weight = parcel['weight'] / 1000 +
                                   (double.parse(_weightController.text) / 1000);
 
-                              var result = await postAuthData(
-                                  '$SERVER_IP/postage/canadapost/rates',
-                                  {
-                                    'parcel': {
+                              if (weight > 30) {
+                              } else {
+                                var result = await postAuthData(
+                                    '$SERVER_IP/postage/rates/canadapost',
+                                    {
+                                      'postal_code': testDest['zip'],
                                       'weight': weight.toStringAsFixed(2),
-                                      'length': parcel['length'],
-                                      'width': parcel['width'],
+                                      'length': parcel['length'].toString(),
+                                      'width': parcel['width'].toString(),
                                       'height': parcel['height']
+                                          .toString(), //widget._dest['zip'],
                                     },
-                                    'dest': {
-                                      'zip': testDest[
-                                          'zip'], //widget._dest['zip'],
-                                    },
-                                  },
-                                  widget._token);
-                              setState(() {
-                                this.rates = result['quotes'];
-                              });
+                                    widget._token);
+                                setState(() {
+                                  this.rates = result['data'];
+                                });
+                              }
                             },
                           ),
                         ),
@@ -287,7 +286,7 @@ class _CheckRateState extends State<CheckRate> {
                                     ),
                                   ),
                                   Text(
-                                    "${rates[_indexOfSelected]['price-details']['taxes']['gst']['_']}",
+                                    "${rates[_indexOfSelected]['price-details']['gst']}",
                                     style: TextStyle(
                                       fontSize: 15,
                                       fontFamily: "SFCM",
@@ -307,7 +306,7 @@ class _CheckRateState extends State<CheckRate> {
                                     ),
                                   ),
                                   Text(
-                                    "${rates[_indexOfSelected]['price-details']['taxes']['pst']}",
+                                    "${rates[_indexOfSelected]['price-details']['pst']}",
                                     style: TextStyle(
                                       fontSize: 15,
                                       fontFamily: "SFCM",
@@ -327,7 +326,7 @@ class _CheckRateState extends State<CheckRate> {
                                     ),
                                   ),
                                   Text(
-                                    "${rates[_indexOfSelected]['price-details']['taxes']['hst']}",
+                                    "${rates[_indexOfSelected]['price-details']['hst']}",
                                     style: TextStyle(
                                       fontSize: 15,
                                       fontFamily: "SFCM",
@@ -337,8 +336,7 @@ class _CheckRateState extends State<CheckRate> {
                               ),
                               Column(
                                 children: rates[_indexOfSelected]
-                                            ['price-details']['adjustments']
-                                        ['adjustment']
+                                        ['price-details']['adjustments']
                                     .map<Widget>(
                                   (adj) {
                                     return Row(
@@ -395,32 +393,34 @@ class _CheckRateState extends State<CheckRate> {
                                       for (int i = 0;
                                           i < _parcels.length;
                                           i++) {
-                                        if (_parcels[i]['_id'] == _parcelId) {
+                                        if (_parcels[i]['id'] == _parcelId) {
                                           parcel = _parcels[i];
                                           break;
                                         }
                                       }
-                                      weight = double.parse(parcel['weight']) +
+                                      weight = parcel['weight'] / 1000 +
                                           (double.parse(
                                                   _weightController.text) /
                                               1000);
                                       await postAuthData(
-                                          '$SERVER_IP/postage/canadapost/buy',
+                                          '$SERVER_IP/postage/buy/canadapost',
                                           {
-                                            "amount":
-                                                "${double.parse(rates[_indexOfSelected]['price-details']['due']) * 100}",
-                                            "currency": "cad",
-                                            "dest": widget._dest,
+                                            "name": "Fram",
+                                            "street": "113 springbeauty ave",
+                                            "city": "Ottawa",
+                                            "province_code": "ON",
+                                            "postal_code": "K2E7E8",
+                                            "country_code": "CA",
+                                            "phone": "6136003774",
                                             "service_code":
                                                 rates[_indexOfSelected]
                                                     ['service-code'],
-                                            "parcel": {
-                                              'weight':
-                                                  weight.toStringAsFixed(2),
-                                              'length': parcel['length'],
-                                              'width': parcel['width'],
-                                              'height': parcel['height']
-                                            },
+                                            'weight': weight.toStringAsFixed(2),
+                                            'length':
+                                                parcel['length'].toString(),
+                                            'width': parcel['width'].toString(),
+                                            'height':
+                                                parcel['height'].toString()
                                           },
                                           widget._token);
                                     },

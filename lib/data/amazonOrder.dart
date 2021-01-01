@@ -10,7 +10,7 @@ class AmazonOrder implements Order {
   String name;
   bool was_paid;
   List items;
-  Map<String, dynamic> shipping_info;
+  Map<String, dynamic> shipping_address;
   bool is_prime;
   String item_count;
 
@@ -22,7 +22,7 @@ class AmazonOrder implements Order {
       this.was_paid,
       this.items,
       this.name,
-      this.shipping_info,
+      this.shipping_address,
       this.subtotal,
       this.tax,
       this.is_prime,
@@ -38,7 +38,7 @@ class AmazonOrder implements Order {
         name = json['name'],
         was_paid = json['was_paid'],
         items = json['items'],
-        shipping_info = json['shipping_info'],
+        shipping_address = json['shipping_address'],
         is_prime = json['is_prime'],
         item_count = json['item_count'];
 

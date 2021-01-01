@@ -10,7 +10,7 @@ class EtsyOrder implements Order {
   String name;
   bool was_paid;
   List items;
-  Map<String, dynamic> shipping_info;
+  Map<String, dynamic> shipping_address;
 
   EtsyOrder(
       this.order_id,
@@ -20,7 +20,7 @@ class EtsyOrder implements Order {
       this.was_paid,
       this.items,
       this.name,
-      this.shipping_info,
+      this.shipping_address,
       this.subtotal,
       this.tax);
 
@@ -34,7 +34,7 @@ class EtsyOrder implements Order {
         name = json['name'],
         was_paid = json['was_paid'],
         items = json['items'],
-        shipping_info = json['shipping_info'];
+        shipping_address = json['shipping_address'];
 
   Map<String, dynamic> toJson() => {
         'order_id': order_id,

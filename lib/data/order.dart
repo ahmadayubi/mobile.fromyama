@@ -8,5 +8,5 @@ class Order {
   String name;
   bool was_paid;
   List items;
-  Map<String, dynamic> shipping_info;
+  Map<String, dynamic> shipping_address;
 }

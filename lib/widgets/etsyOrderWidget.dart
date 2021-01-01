@@ -103,7 +103,7 @@ Widget etsyOrderWidget(EtsyOrder order, BuildContext context, String token) {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "${order.shipping_info == null ? "No Name" : order.shipping_info['name']}",
+                              "${order.shipping_address == null ? "No Name" : order.shipping_address['name']}",
                               style: TextStyle(
                                   fontSize: 20,
                                   fontFamily: "SFCR",

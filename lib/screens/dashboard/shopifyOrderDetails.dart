@@ -127,11 +127,11 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                           height: 15,
                         ),
                         Visibility(
-                          visible: widget._order.shipping_info != null,
-                          child: AddressWidget(widget._order.shipping_info),
+                          visible: widget._order.shipping_address != null,
+                          child: AddressWidget(widget._order.shipping_address),
                         ),
                         Visibility(
-                          visible: widget._order.shipping_info != null,
+                          visible: widget._order.shipping_address != null,
                           child: SizedBox(
                             height: 15,
                           ),
@@ -323,8 +323,8 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                                           MaterialPageRoute(
                                               builder: (context) => CheckRate(
                                                   widget._token,
-                                                  widget
-                                                      ._order.shipping_info)));
+                                                  widget._order
+                                                      .shipping_address)));
                                     },
                                     child: Text(
                                       "Or Purchase Label",
@@ -363,7 +363,6 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                                             _trackingNumberController.text,
                                         'tracking_company': _postalServiceValue,
                                         'notify_customer': "true",
-                                        'order_id': widget._order.order_id,
                                       };
                                       if (_trackingNumberController.text ==
                                           "") {
@@ -371,7 +370,7 @@ class _ShopifyOrderDetailsState extends State<ShopifyOrderDetails> {
                                         fulfillment.remove('tracking_number');
                                       }
                                       var fulfillStatus = await postAuthData(
-                                          '$SERVER_IP/shopify/fulfill',
+                                          '$SERVER_IP/shopify/fulfill/${widget._order.order_id}',
                                           fulfillment,
                                           widget._token);
                                       if (fulfillStatus['status_code'] == 200) {

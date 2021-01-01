@@ -104,7 +104,7 @@ Widget amazonOrderWidget(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "${order.shipping_info['name'] == null ? "No Name" : order.shipping_info['name']}",
+                              "${order.shipping_address['name'] == null ? "No Name" : order.shipping_address['name']}",
                               style: TextStyle(
                                   fontSize: 20,
                                   fontFamily: "SFCR",
