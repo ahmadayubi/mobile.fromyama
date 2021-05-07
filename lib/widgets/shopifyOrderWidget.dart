@@ -40,14 +40,14 @@ Widget shopifyOrderWidget(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(8.0, 8, 8, 2),
+                padding: const EdgeInsets.fromLTRB(8.0, 2, 8, 2),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       '${order.name}',
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 16,
                         fontFamily: "SFM",
                         color: Colors.grey[800], //new Color(0xff1a1a1a),
                       ),
@@ -64,10 +64,10 @@ Widget shopifyOrderWidget(
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(15, 2, 15, 2),
                         child: Text(
-                          order.was_paid ? "PAID" : "PENDING",
+                          (order.was_paid ? "PAID" : "PENDING") + " +${order.total} ${order.currency}",
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 15,
+                            fontSize: 14,
                             fontFamily: "SFCM",
                           ),
                         ),
@@ -93,8 +93,8 @@ Widget shopifyOrderWidget(
                             const EdgeInsets.only(right: 10, top: 5, bottom: 5),
                         child: Image(
                           image: AssetImage('assets/images/shopify_small.png'),
-                          width: 45,
-                          height: 45,
+                          width: 42,
+                          height: 42,
                         ),
                       ),
                       Padding(
@@ -105,14 +105,14 @@ Widget shopifyOrderWidget(
                             Text(
                               "${order.shipping_address == null ? "No Name" : order.shipping_address['name']}",
                               style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 19,
                                   fontFamily: "SFCR",
                                   color: Colors.grey[800]),
                             ),
                             Text(
                               'PLACED ${order.created_at.split('T')[0]} @ ${order.created_at.split('T')[1].split('-')[0]}',
                               style: TextStyle(
-                                fontSize: 13,
+                                fontSize: 12,
                                 fontFamily: "SFCM",
                                 color: Colors.grey[700],
                               ),

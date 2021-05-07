@@ -98,15 +98,15 @@ class _AddPaymentState extends State<AddPayment> {
                         alignment: Alignment.centerRight,
                         child: Container(
                           margin: const EdgeInsets.all(15),
-                          width: 300,
-                          height: 50,
+                          width: 220,
+                          height: 40,
                           child: RaisedButton(
                             color: blue(),
                             child: Text(
                               "Add Payment Method",
                               style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 20,
+                                  fontSize: 18,
                                   fontFamily: "SFCM"),
                             ),
                             onPressed: () {
@@ -156,6 +156,14 @@ class _AddPaymentState extends State<AddPayment> {
                     ],
                   ),
                 ),
+/*                Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 50, right: 50, top: 5),
+                    padding: const EdgeInsets.only(left: 10, right: 10),
+                    child: Text("Payments are processed using Stripe, we don't store anything."),
+                  ),
+                ),*/
               ],
             ),
             Visibility(
@@ -239,7 +247,7 @@ class _AddPaymentState extends State<AddPayment> {
                             ),
                           ),
                           SizedBox(height: 24.0),
-                          FlatButton(
+                          TextButton(
                             onPressed:
                                 cardResponse == 200 || cardResponse == 500
                                     ? () {

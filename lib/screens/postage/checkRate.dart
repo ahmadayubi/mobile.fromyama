@@ -5,6 +5,8 @@ import 'package:fromyama/utils/cColor.dart';
 import 'package:fromyama/utils/requests.dart';
 import 'package:fromyama/widgets/addressWidget.dart';
 import 'package:fromyama/widgets/postageRateWidget.dart';
+import 'package:fromyama/utils/address.dart';
+import 'package:fromyama/controllers/postage/canadapost.dart';
 
 class CheckRate extends StatefulWidget {
   final String _token;
@@ -26,12 +28,13 @@ class _CheckRateState extends State<CheckRate> {
   int _purchaseResponse = 0;
   int _indexOfSelected = 0;
   var rates = [];
-
-  Map<String, dynamic> testDest = {'zip': 'V5H3Z7'};
+  bool _loading = false;
 
   void initState() {
     super.initState();
     getShippingInfo();
+    widget._dest['country_code'] =
+        countryToCountryCode(widget._dest['country']);
   }
 
   void getShippingInfo() async {
@@ -157,25 +160,23 @@ class _CheckRateState extends State<CheckRate> {
                                   break;
                                 }
                               }
-
                               weight = parcel['weight'] / 1000 +
                                   (double.parse(_weightController.text) / 1000);
-
                               if (weight > 30) {
                               } else {
-                                var result = await postAuthData(
-                                    '$SERVER_IP/postage/rates/canadapost',
-                                    {
-                                      'postal_code': testDest['zip'],
-                                      'weight': weight.toStringAsFixed(2),
-                                      'length': parcel['length'].toString(),
-                                      'width': parcel['width'].toString(),
-                                      'height': parcel['height']
-                                          .toString(), //widget._dest['zip'],
-                                    },
+                                setState(() {
+                                  _loading = true;
+                                });
+                                var result = await getCanadaPostRates(
+                                    widget._dest['postal_code'],
+                                    parcel['length'].toString(),
+                                    parcel['width'].toString(),
+                                    parcel['height'].toString(),
+                                    weight.toStringAsFixed(2),
                                     widget._token);
                                 setState(() {
                                   this.rates = result['data'];
+                                  _loading = false;
                                 });
                               }
                             },
@@ -185,23 +186,25 @@ class _CheckRateState extends State<CheckRate> {
                     ],
                   ),
                 ),
-                Expanded(
-                  child: ListView.builder(
-                    itemBuilder: (BuildContext context, int index) {
-                      return InkWell(
-                          splashColor: blue(),
-                          onTap: () => {
-                                setState(() {
-                                  _indexOfSelected = index;
-                                  _showDialog = true;
-                                })
-                              },
-                          child: postageRateWidget(
-                              rates[index], context, widget._token));
-                    },
-                    itemCount: rates.length,
-                  ),
-                ),
+                _loading
+                    ? Padding(padding: EdgeInsets.all(20), child: DotLoading())
+                    : Expanded(
+                        child: ListView.builder(
+                          itemBuilder: (BuildContext context, int index) {
+                            return InkWell(
+                                splashColor: blue(),
+                                onTap: () => {
+                                      setState(() {
+                                        _indexOfSelected = index;
+                                        _showDialog = true;
+                                      })
+                                    },
+                                child: postageRateWidget(
+                                    rates[index], context, widget._token));
+                          },
+                          itemCount: rates.length,
+                        ),
+                      ),
               ],
             ),
           ),

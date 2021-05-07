@@ -77,7 +77,7 @@ class MainDrawer extends StatelessWidget {
                           '${user.company}\nID ${user.company_id}',
                           style: TextStyle(
                             fontFamily: 'SFCM',
-                            fontSize: 13,
+                            fontSize: 10,
                           ),
                         ),
                       ),

@@ -273,7 +273,7 @@ class _SignUpUserState extends State<SignUpUser> {
                                   MaterialPageRoute(
                                       builder: (context) => LoginForm()));
                               break;
-                            case 422:
+                            case 409:
                               setState(() {
                                 _validEmail = false;
                                 _emailError = "Email Already In Use";

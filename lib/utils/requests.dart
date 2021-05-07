@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-const String SERVER_IP = "https://e901d1f5d6ce.ngrok.io";
+const String SERVER_IP = "http://api.fromyama.com";
 
 Map<String, dynamic> formatRes(res) {
   if (res.statusCode != 500) {
