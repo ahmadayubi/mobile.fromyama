@@ -11,6 +11,8 @@ class ShopifyOrder implements Order {
   bool was_paid;
   List items;
   Map<String, dynamic> shipping_address;
+  String imagePath = "assets/images/shopify_small.png";
+  int color = 0xffD6E198;
 
   ShopifyOrder(
       this.order_id,

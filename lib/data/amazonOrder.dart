@@ -13,6 +13,8 @@ class AmazonOrder implements Order {
   Map<String, dynamic> shipping_address;
   bool is_prime;
   String item_count;
+  String imagePath = "assets/images/amazon_small.png";
+  int color = 0xFFFFAB40;
 
   AmazonOrder(
       this.order_id,

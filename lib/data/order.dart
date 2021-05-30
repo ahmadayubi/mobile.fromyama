@@ -1,4 +1,6 @@
 class Order {
+  int color;
+  String imagePath;
   String order_id;
   String created_at;
   String total;

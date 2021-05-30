@@ -8,10 +8,8 @@ import 'package:fromyama/screens/login/loginForm.dart';
 import 'package:fromyama/utils/cColor.dart';
 import 'package:fromyama/utils/requests.dart';
 import 'package:fromyama/data/shopifyOrder.dart';
-import 'package:fromyama/widgets/etsyOrderWidget.dart';
 import 'package:fromyama/screens/loading/fyLoading.dart';
-import 'package:fromyama/widgets/shopifyOrderWidget.dart';
-import 'package:fromyama/widgets/amazonOrderWidget.dart';
+import 'package:fromyama/widgets/orderTile.dart';
 import 'package:fromyama/controllers/dashboard/mainDash.dart';
 
 class MainDash extends StatefulWidget {
@@ -116,29 +114,8 @@ class _MainDashState extends State<MainDash> {
                                     ListView.builder(
                                         padding: EdgeInsets.all(8),
                                         itemCount: _orders.length,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          if (_orders[index] is ShopifyOrder) {
-                                            return shopifyOrderWidget(
-                                                _orders[index],
-                                                context,
-                                                widget._token,
-                                                getOrders);
-                                          } else if (_orders[index]
-                                              is AmazonOrder) {
-                                            return amazonOrderWidget(
-                                                _orders[index],
-                                                context,
-                                                widget._token);
-                                          } else if (_orders[index]
-                                              is EtsyOrder) {
-                                            return etsyOrderWidget(
-                                                _orders[index],
-                                                context,
-                                                widget._token);
-                                          } else {
-                                            return Text("Error");
-                                          }
+                                        itemBuilder: (BuildContext context, int index) {
+                                          return OrderTile(_orders[index], widget._token, getOrders);
                                         }),
                                   ],
                                 ),
