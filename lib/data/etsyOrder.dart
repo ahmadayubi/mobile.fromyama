@@ -13,6 +13,7 @@ class EtsyOrder implements Order {
   Map<String, dynamic> shipping_address;
   String imagePath = "assets/images/etsy_small.png";
   int color = 0xFFFFAB40;
+  String type = "etsy";
 
   EtsyOrder(
       this.order_id,

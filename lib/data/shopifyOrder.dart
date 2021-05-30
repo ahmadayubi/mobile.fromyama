@@ -13,6 +13,7 @@ class ShopifyOrder implements Order {
   Map<String, dynamic> shipping_address;
   String imagePath = "assets/images/shopify_small.png";
   int color = 0xffD6E198;
+  String type = "shopify";
 
   ShopifyOrder(
       this.order_id,

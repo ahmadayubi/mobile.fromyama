@@ -8,6 +8,7 @@ class Order {
   String tax;
   String currency;
   String name;
+  String type;
   bool was_paid;
   List items;
   Map<String, dynamic> shipping_address;

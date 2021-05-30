@@ -15,6 +15,7 @@ class AmazonOrder implements Order {
   String item_count;
   String imagePath = "assets/images/amazon_small.png";
   int color = 0xFFFFAB40;
+  String type = "amazon";
 
   AmazonOrder(
       this.order_id,

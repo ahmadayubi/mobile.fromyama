@@ -5,6 +5,7 @@ import 'package:fromyama/data/order.dart';
 import 'package:fromyama/data/shopifyOrder.dart';
 import 'package:fromyama/screens/dashboard/mainDash.dart';
 import 'package:fromyama/screens/loading/dotLoading.dart';
+import 'package:fromyama/screens/loading/processLoading.dart';
 import 'package:fromyama/screens/postage/checkRate.dart';
 import 'package:fromyama/utils/cColor.dart';
 import 'package:fromyama/utils/requests.dart';
@@ -26,7 +27,7 @@ class OrderDetails extends StatefulWidget {
 class _OrderDetailsState extends State<OrderDetails> {
   void initState() {
     super.initState();
-    if(widget._order is ShopifyOrder) _locationFuture = getLocations();
+    if(widget._order.type == "shopify") _locationFuture = getLocations();
   }
 
   Future<Map<String, dynamic>> getLocations() async {
@@ -38,7 +39,8 @@ class _OrderDetailsState extends State<OrderDetails> {
   var _postalServiceValue;
   bool _enableTracking = false;
   bool _fulfillable = false;
-  int _fulfillResponse = 0;
+  int _fulfillResponse = -1;
+  String _fulfillMessage = "Temporary default.";
   bool _showDialog = false;
 
   void fuilfillable(bool val) {
@@ -350,7 +352,8 @@ class _OrderDetailsState extends State<OrderDetails> {
                                           ? null
                                           : () async {
                                         setState(() {
-                                          _showDialog = true;
+                                          _fulfillResponse = 0;
+                                          _fulfillMessage = "Fulfilling ${widget._order.type} order";
                                         });
                                         Map fulfillment = {
                                           'location_id': _locationValue,
@@ -365,18 +368,20 @@ class _OrderDetailsState extends State<OrderDetails> {
                                           fulfillment.remove('tracking_number');
                                         }
                                         var fulfillStatus = await postAuthData(
-                                            '$SERVER_IP/shopify/fulfill/${widget._order.order_id}',
+                                            '$SERVER_IP/${widget._order.type}/fulfill/${widget._order.order_id}',
                                             fulfillment,
                                             widget._token);
                                         if (fulfillStatus['status_code'] == 200) {
                                           setState(() {
                                             _fulfilled = true;
                                             _fulfillResponse = 200;
-                                            widget.callback();
+                                            _fulfillMessage = "Order fulfilled.";
                                           });
+                                          widget.callback();
                                         } else {
                                           setState(() {
                                             _fulfillResponse = 500;
+                                            _fulfillMessage = "Error fulfilling order.";
                                           });
                                         }
                                       },
@@ -461,103 +466,7 @@ class _OrderDetailsState extends State<OrderDetails> {
               ],
             ),
           ),
-          Visibility(
-            visible: _showDialog,
-            child: Container(
-              padding: const EdgeInsets.all(100),
-              color: new Color(0x77000000),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: EdgeInsets.only(
-                      top: 10,
-                      bottom: 10,
-                      left: 10,
-                      right: 10,
-                    ),
-                    decoration: new BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(2),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 10.0,
-                          offset: const Offset(0.0, 10.0),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisSize:
-                      MainAxisSize.min, // To make the card compact
-                      children: <Widget>[
-                        Visibility(
-                          visible: _fulfillResponse == 0,
-                          child: SizedBox(height: 80, child: DotLoading()),
-                        ),
-                        Visibility(
-                          visible: _fulfillResponse == 200,
-                          child: SizedBox(
-                            height: 80,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.check_circle,
-                                  color: new Color(0xffbbd984),
-                                  size: 60.0,
-                                ),
-                                Text(
-                                  "Fulfilled",
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 30,
-                                    fontFamily: "SFCM",
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        Visibility(
-                          visible: _fulfillResponse == 500,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.error,
-                                color: Colors.red,
-                                size: 60.0,
-                              ),
-                              Text(
-                                "Error Fulfilling Order",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 30,
-                                  fontFamily: "SFCM",
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        SizedBox(height: 24.0),
-                        TextButton(
-                          onPressed:
-                          _fulfillResponse == 200 || _fulfillResponse == 500
-                              ? () {
-                            Navigator.of(context).pop();
-                          }
-                              : null,
-                          child: Text("Go Back To Main Dash"),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          ProcessLoading(_fulfillResponse, _fulfillMessage),
         ],
       ),
     );
