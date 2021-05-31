@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fromyama/screens/login/loginForm.dart';
 import 'package:fromyama/utils/cColor.dart';
+import 'package:fromyama/utils/fyButton.dart';
 import 'package:fromyama/utils/requests.dart';
 
 class SignUpUser extends StatefulWidget {
@@ -206,102 +207,91 @@ class _SignUpUserState extends State<SignUpUser> {
                 alignment: Alignment.bottomRight,
                 child: Column(
                   children: [
-                    Container(
-                      width: 200,
-                      height: 50,
-                      child: RaisedButton(
-                        color: blue(),
-                        onPressed: () async {
-                          var email = _emailController.text;
-                          var password = _passwordController.text;
-                          var companyID = _companyController.text;
-                          var name = _nameController.text;
-                          if (name == "") {
-                            setState(() {
-                              _validName = false;
-                            });
-                            return;
-                          } else {
-                            setState(() {
-                              _validName = true;
-                            });
-                          }
-                          if (email == "") {
+                    FYButton(
+                      onPressed: () async {
+                        var email = _emailController.text;
+                        var password = _passwordController.text;
+                        var companyID = _companyController.text;
+                        var name = _nameController.text;
+                        if (name == "") {
+                          setState(() {
+                            _validName = false;
+                          });
+                          return;
+                        } else {
+                          setState(() {
+                            _validName = true;
+                          });
+                        }
+                        if (email == "") {
+                          setState(() {
+                            _validEmail = false;
+                            _emailError = "Invalid Email";
+                          });
+                          return;
+                        } else {
+                          setState(() {
+                            _validEmail = true;
+                          });
+                        }
+                        if (password == "") {
+                          setState(() {
+                            _validPassword = false;
+                          });
+                          return;
+                        } else {
+                          setState(() {
+                            _validPassword = true;
+                          });
+                        }
+                        if (companyID == "") {
+                          setState(() {
+                            _validCompany = false;
+                            _companyError = "Company ID Cannot Be Empty";
+                          });
+                          return;
+                        } else {
+                          setState(() {
+                            _validCompany = true;
+                          });
+                        }
+
+                        var response = await postData(
+                            '$SERVER_IP/user/signup', {
+                          'name': name,
+                          'email': email,
+                          'password': password,
+                          'company_id': companyID
+                        });
+                        switch (response['status_code']) {
+                          case 201:
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginForm()));
+                            break;
+                          case 409:
                             setState(() {
                               _validEmail = false;
-                              _emailError = "Invalid Email";
+                              _emailError = "Email Already In Use";
                             });
-                            return;
-                          } else {
-                            setState(() {
-                              _validEmail = true;
-                            });
-                          }
-                          if (password == "") {
-                            setState(() {
-                              _validPassword = false;
-                            });
-                            return;
-                          } else {
-                            setState(() {
-                              _validPassword = true;
-                            });
-                          }
-                          if (companyID == "") {
+                            break;
+                          case 401:
                             setState(() {
                               _validCompany = false;
-                              _companyError = "Company ID Cannot Be Empty";
+                              _companyError = "Invalid Company ID";
                             });
-                            return;
-                          } else {
+                            break;
+                          default:
                             setState(() {
-                              _validCompany = true;
+                              _validCompany = false;
+                              _validEmail = false;
                             });
-                          }
-
-                          var response = await postData(
-                              '$SERVER_IP/user/signup', {
-                            'name': name,
-                            'email': email,
-                            'password': password,
-                            'company_id': companyID
-                          });
-                          switch (response['status_code']) {
-                            case 201:
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => LoginForm()));
-                              break;
-                            case 409:
-                              setState(() {
-                                _validEmail = false;
-                                _emailError = "Email Already In Use";
-                              });
-                              break;
-                            case 401:
-                              setState(() {
-                                _validCompany = false;
-                                _companyError = "Invalid Company ID";
-                              });
-                              break;
-                            default:
-                              setState(() {
-                                _validCompany = false;
-                                _validEmail = false;
-                              });
-                              break;
-                          }
-                        },
-                        child: Text(
-                          "Sign Up",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontFamily: "SFCM"),
-                        ),
+                            break;
+                        }
+                      },
+                      text: "Sign Up",
                       ),
-                    ),
                     SizedBox(
                       height: 10,
                     ),

@@ -156,9 +156,7 @@ class _MainDashState extends State<MainDash> {
                       ),
                     ],
                   )
-                : user == null
-                    ? Text("Not Approved Yet.")
-                    : DotLoading(),
+                : user == null ? Text("Not Approved Yet.") : DotLoading(),
           ),
         ),
       );

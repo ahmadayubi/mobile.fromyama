@@ -362,8 +362,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                                           'tracking_company': _postalServiceValue,
                                           'notify_customer': "true",
                                         };
-                                        if (_trackingNumberController.text ==
-                                            "") {
+                                        if (_trackingNumberController.text == "") {
                                           fulfillment.remove('tracking_company');
                                           fulfillment.remove('tracking_number');
                                         }
@@ -466,7 +465,7 @@ class _OrderDetailsState extends State<OrderDetails> {
               ],
             ),
           ),
-          ProcessLoading(_fulfillResponse, _fulfillMessage),
+          ProcessLoading(responseStatus: _fulfillResponse, message: _fulfillMessage),
         ],
       ),
     );

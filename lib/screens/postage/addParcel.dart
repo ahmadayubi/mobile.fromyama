@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fromyama/screens/loading/dotLoading.dart';
+import 'package:fromyama/screens/loading/processLoading.dart';
 import 'package:fromyama/utils/cColor.dart';
+import 'package:fromyama/utils/fyButton.dart';
 import 'package:fromyama/utils/requests.dart';
 
 class AddParcel extends StatefulWidget {
@@ -24,9 +26,10 @@ class _AddParcelState extends State<AddParcel> {
       _validWidth = true,
       _validHeight = true,
       _validWeight = true,
-      _validName = true,
-      _loading = false;
+      _validName = true;
   String _demImage = "none";
+  int _responseStatus = -1;
+  String _responseMessage = "";
 
   @override
   Widget build(BuildContext context) {
@@ -42,174 +45,163 @@ class _AddParcelState extends State<AddParcel> {
       ),
       backgroundColor: beige(),
       body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.all(10),
-          margin: const EdgeInsets.all(10),
-          child: ListView(
-            children: [
-              Image(
-                image: AssetImage('assets/images/parcel_$_demImage.png'),
-                height: 300,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 0.1,
-                      blurRadius: 2,
-                      offset: Offset(1, 1), // changes position of shadow
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(15),
-                child: Column(
-                  children: [
-                    TextField(
-                      controller: _nameController,
-                      onTap: () {
-                        setState(() {
-                          _demImage = "none";
-                        });
-                      },
-                      onChanged: (value) {
-                        setState(() {
-                          _validName = true;
-                        });
-                      },
-                      decoration: InputDecoration(
-                          errorText: _validName ? null : "Invalid Name",
-                          labelStyle: TextStyle(
-                              color: Colors.grey[800], fontFamily: "SFCR"),
-                          focusColor: Colors.grey[500],
-                          hoverColor: Colors.grey[500],
-                          labelText: 'Parcel Name (Internal Use)'),
-                    ),
-                    TextField(
-                      controller: _lengthController,
-                      onTap: () {
-                        setState(() {
-                          _demImage = "length";
-                        });
-                      },
-                      onChanged: (value) {
-                        setState(() {
-                          _validLength = true;
-                        });
-                      },
-                      decoration: InputDecoration(
-                          suffixText: "cm",
-                          errorText: _validLength
-                              ? null
-                              : "Invalid Length (must be greater than 5, less than 200)",
-                          labelStyle: TextStyle(
-                              color: Colors.grey[800], fontFamily: "SFCR"),
-                          focusColor: Colors.grey[500],
-                          hoverColor: Colors.grey[500],
-                          labelText: 'Length'),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        WhitelistingTextInputFormatter.digitsOnly
+        child: Stack(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              margin: const EdgeInsets.all(10),
+              child: ListView(
+                children: [
+                  Image(
+                    image: AssetImage('assets/images/parcel_$_demImage.png'),
+                    height: 300,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 0.1,
+                          blurRadius: 2,
+                          offset: Offset(1, 1), // changes position of shadow
+                        ),
                       ],
                     ),
-                    TextField(
-                      controller: _widthController,
-                      onTap: () {
-                        setState(() {
-                          _demImage = "width";
-                        });
-                      },
-                      onChanged: (value) {
-                        setState(() {
-                          _validWidth = true;
-                        });
-                      },
-                      decoration: InputDecoration(
-                          suffixText: "cm",
-                          errorText: _validWidth
-                              ? null
-                              : "Invalid Width (must be greater than 5, less than 200)",
-                          labelStyle: TextStyle(
-                              color: Colors.grey[800], fontFamily: "SFCR"),
-                          focusColor: Colors.grey[500],
-                          hoverColor: Colors.grey[500],
-                          labelText: 'Width'),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        WhitelistingTextInputFormatter.digitsOnly
-                      ],
-                    ),
-                    TextField(
-                      controller: _heightController,
-                      onTap: () {
-                        setState(() {
-                          _demImage = "height";
-                        });
-                      },
-                      onChanged: (value) {
-                        setState(() {
-                          _validHeight = true;
-                        });
-                      },
-                      decoration: InputDecoration(
-                          suffixText: "cm",
-                          errorText: _validHeight
-                              ? null
-                              : "Invalid Height (must be greater than 5, less than 200)",
-                          labelStyle: TextStyle(
-                              color: Colors.grey[800], fontFamily: "SFCR"),
-                          focusColor: Colors.grey[500],
-                          hoverColor: Colors.grey[500],
-                          labelText: 'Height'),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        WhitelistingTextInputFormatter.digitsOnly
-                      ],
-                    ),
-                    TextField(
-                      controller: _weightController,
-                      onTap: () {
-                        setState(() {
-                          _demImage = "none";
-                        });
-                      },
-                      onChanged: (value) {
-                        setState(() {
-                          _validWeight = true;
-                        });
-                      },
-                      decoration: InputDecoration(
-                          suffixText: "grams",
-                          errorText: _validWeight
-                              ? null
-                              : "Invalid Weight (must be greater than 0, less than 30,000)",
-                          labelStyle: TextStyle(
-                              color: Colors.grey[800], fontFamily: "SFCR"),
-                          focusColor: Colors.grey[500],
-                          hoverColor: Colors.grey[500],
-                          labelText: 'Weight'),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        WhitelistingTextInputFormatter.digitsOnly
-                      ],
-                    ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Container(
-                        margin: const EdgeInsets.all(10),
-                        width: 200,
-                        height: 50,
-                        child: RaisedButton(
-                          color: blue(),
-                          child: Text(
-                            "Add Parcel",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontFamily: "SFCM"),
-                          ),
-                          onPressed: () async {
+                    padding: const EdgeInsets.all(15),
+                    child: Column(
+                      children: [
+                        TextField(
+                          controller: _nameController,
+                          onTap: () {
+                            setState(() {
+                              _demImage = "none";
+                            });
+                          },
+                          onChanged: (value) {
+                            setState(() {
+                              _validName = true;
+                            });
+                          },
+                          decoration: InputDecoration(
+                              errorText: _validName ? null : "Invalid Name",
+                              labelStyle: TextStyle(
+                                  color: Colors.grey[800], fontFamily: "SFCR"),
+                              focusColor: Colors.grey[500],
+                              hoverColor: Colors.grey[500],
+                              labelText: 'Parcel Name (Internal Use)'),
+                        ),
+                        TextField(
+                          controller: _lengthController,
+                          onTap: () {
+                            setState(() {
+                              _demImage = "length";
+                            });
+                          },
+                          onChanged: (value) {
+                            setState(() {
+                              _validLength = true;
+                            });
+                          },
+                          decoration: InputDecoration(
+                              suffixText: "cm",
+                              errorText: _validLength
+                                  ? null
+                                  : "Invalid Length (must be greater than 5, less than 200)",
+                              labelStyle: TextStyle(
+                                  color: Colors.grey[800], fontFamily: "SFCR"),
+                              focusColor: Colors.grey[500],
+                              hoverColor: Colors.grey[500],
+                              labelText: 'Length'),
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            WhitelistingTextInputFormatter.digitsOnly
+                          ],
+                        ),
+                        TextField(
+                          controller: _widthController,
+                          onTap: () {
+                            setState(() {
+                              _demImage = "width";
+                            });
+                          },
+                          onChanged: (value) {
+                            setState(() {
+                              _validWidth = true;
+                            });
+                          },
+                          decoration: InputDecoration(
+                              suffixText: "cm",
+                              errorText: _validWidth
+                                  ? null
+                                  : "Invalid Width (must be greater than 5, less than 200)",
+                              labelStyle: TextStyle(
+                                  color: Colors.grey[800], fontFamily: "SFCR"),
+                              focusColor: Colors.grey[500],
+                              hoverColor: Colors.grey[500],
+                              labelText: 'Width'),
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            WhitelistingTextInputFormatter.digitsOnly
+                          ],
+                        ),
+                        TextField(
+                          controller: _heightController,
+                          onTap: () {
+                            setState(() {
+                              _demImage = "height";
+                            });
+                          },
+                          onChanged: (value) {
+                            setState(() {
+                              _validHeight = true;
+                            });
+                          },
+                          decoration: InputDecoration(
+                              suffixText: "cm",
+                              errorText: _validHeight
+                                  ? null
+                                  : "Invalid Height (must be greater than 5, less than 200)",
+                              labelStyle: TextStyle(
+                                  color: Colors.grey[800], fontFamily: "SFCR"),
+                              focusColor: Colors.grey[500],
+                              hoverColor: Colors.grey[500],
+                              labelText: 'Height'),
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            WhitelistingTextInputFormatter.digitsOnly
+                          ],
+                        ),
+                        TextField(
+                          controller: _weightController,
+                          onTap: () {
+                            setState(() {
+                              _demImage = "none";
+                            });
+                          },
+                          onChanged: (value) {
+                            setState(() {
+                              _validWeight = true;
+                            });
+                          },
+                          decoration: InputDecoration(
+                              suffixText: "grams",
+                              errorText: _validWeight
+                                  ? null
+                                  : "Invalid Weight (must be greater than 0, less than 30,000)",
+                              labelStyle: TextStyle(
+                                  color: Colors.grey[800], fontFamily: "SFCR"),
+                              focusColor: Colors.grey[500],
+                              hoverColor: Colors.grey[500],
+                              labelText: 'Weight'),
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            WhitelistingTextInputFormatter.digitsOnly
+                          ],
+                        ),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: FYButton(onPressed: () async {
                             var name = _nameController.text;
                             var length = _lengthController.text;
                             var width = _widthController.text;
@@ -238,7 +230,8 @@ class _AddParcelState extends State<AddParcel> {
                                 _validWeight &&
                                 _validWidth) {
                               setState(() {
-                                _loading = true;
+                                _responseStatus = 0;
+                                _responseMessage = "Adding parcel.";
                               });
                               var response = await postAuthData(
                                   '$SERVER_IP/company/add/parcel',
@@ -253,28 +246,27 @@ class _AddParcelState extends State<AddParcel> {
 
                               switch (response['status_code']) {
                                 case 201:
-                                  Navigator.pop(context);
+                                  setState(() {
+                                    _responseStatus = 200;
+                                    _responseMessage = "Parcel added.";
+                                  });
                                   break;
                                 default:
+                                  _responseStatus = 500;
+                                  _responseMessage = "Error adding parcel.";
                                   break;
                               }
                             }
-                          },
+                          }, text: "Add Parcel"),
                         ),
-                      ),
+                      ],
                     ),
-                    SizedBox(
-                      height: 50,
-                    ),
-                    Visibility(
-                      visible: _loading,
-                      child: DotLoading(),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+            ProcessLoading(responseStatus: _responseStatus, message: _responseMessage),
+          ],
         ),
       ),
     );

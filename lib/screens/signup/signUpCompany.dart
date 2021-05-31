@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fromyama/screens/login/loginForm.dart';
 import 'package:fromyama/utils/cColor.dart';
+import 'package:fromyama/utils/fyButton.dart';
 import 'package:fromyama/utils/requests.dart';
 
 class SignUpCompany extends StatefulWidget {
@@ -196,100 +197,89 @@ class _SignUpCompanyState extends State<SignUpCompany> {
                     ),
                     Column(
                       children: [
-                        Container(
-                          width: 200,
-                          height: 50,
-                          child: RaisedButton(
-                            color: blue(),
-                            onPressed: () async {
-                              var email = _emailController.text;
-                              var password = _passwordController.text;
-                              var companyID = _companyController.text;
-                              var name = _nameController.text;
+                        FYButton(
+                          onPressed: () async {
+                            var email = _emailController.text;
+                            var password = _passwordController.text;
+                            var companyID = _companyController.text;
+                            var name = _nameController.text;
 
-                              if (companyID == "") {
+                            if (companyID == "") {
+                              setState(() {
+                                _validCompany = false;
+                                _companyError =
+                                    "Company Name Cannot Be Empty";
+                              });
+                              return;
+                            } else {
+                              setState(() {
+                                _validCompany = true;
+                              });
+                            }
+                            if (name == "") {
+                              setState(() {
+                                _validName = false;
+                              });
+                              return;
+                            } else {
+                              setState(() {
+                                _validName = true;
+                              });
+                            }
+                            if (email == "") {
+                              setState(() {
+                                _validEmail = false;
+                                _emailError = "Invalid Email";
+                              });
+                              return;
+                            } else {
+                              setState(() {
+                                _validEmail = true;
+                              });
+                            }
+                            if (password == "") {
+                              setState(() {
+                                _validPassword = false;
+                              });
+                              return;
+                            } else {
+                              setState(() {
+                                _validPassword = true;
+                              });
+                            }
+
+                            var response = await postData(
+                                '$SERVER_IP/company/register', {
+                              'name': name,
+                              'email': email,
+                              'password': password,
+                              'company_name': companyID
+                            });
+                            switch (response['status_code']) {
+                              case 201:
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LoginForm()));
+                                break;
+                              case 422:
+                                setState(() {
+                                  _validEmail = false;
+                                  _emailError = "Email Already In Use";
+                                });
+                                break;
+                              case 403:
                                 setState(() {
                                   _validCompany = false;
                                   _companyError =
-                                      "Company Name Cannot Be Empty";
+                                      "Email Already Associated With Head Of Company";
                                 });
-                                return;
-                              } else {
-                                setState(() {
-                                  _validCompany = true;
-                                });
-                              }
-                              if (name == "") {
-                                setState(() {
-                                  _validName = false;
-                                });
-                                return;
-                              } else {
-                                setState(() {
-                                  _validName = true;
-                                });
-                              }
-                              if (email == "") {
-                                setState(() {
-                                  _validEmail = false;
-                                  _emailError = "Invalid Email";
-                                });
-                                return;
-                              } else {
-                                setState(() {
-                                  _validEmail = true;
-                                });
-                              }
-                              if (password == "") {
-                                setState(() {
-                                  _validPassword = false;
-                                });
-                                return;
-                              } else {
-                                setState(() {
-                                  _validPassword = true;
-                                });
-                              }
-
-                              var response = await postData(
-                                  '$SERVER_IP/company/register', {
-                                'name': name,
-                                'email': email,
-                                'password': password,
-                                'company_name': companyID
-                              });
-                              switch (response['status_code']) {
-                                case 201:
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => LoginForm()));
-                                  break;
-                                case 422:
-                                  setState(() {
-                                    _validEmail = false;
-                                    _emailError = "Email Already In Use";
-                                  });
-                                  break;
-                                case 403:
-                                  setState(() {
-                                    _validCompany = false;
-                                    _companyError =
-                                        "Email Already Associated With Head Of Company";
-                                  });
-                                  break;
-                                default:
-                                  break;
-                              }
-                            },
-                            child: Text(
-                              "Register",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontFamily: "SFCM"),
-                            ),
-                          ),
+                                break;
+                              default:
+                                break;
+                            }
+                          },
+                          text: "Register",
                         ),
                         SizedBox(
                           height: 10,

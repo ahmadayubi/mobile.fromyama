@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fromyama/screens/loading/dotLoading.dart';
 import 'package:fromyama/screens/loading/fyLoading.dart';
+import 'package:fromyama/screens/loading/processLoading.dart';
 import 'package:fromyama/utils/cColor.dart';
+import 'package:fromyama/utils/fyButton.dart';
 import 'package:fromyama/utils/requests.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 import 'package:flutter_credit_card/credit_card_form.dart';
@@ -24,7 +26,8 @@ class _AddPaymentState extends State<AddPayment> {
   String cvvCode = '';
   bool isCvvFocused = false;
   bool cardAdded = false;
-  int cardResponse = 0;
+  int cardResponse = -1;
+  String _responseMessage = "";
 
   void onCreditCardModelChange(CreditCardModel creditCardModel) {
     setState(() {
@@ -96,61 +99,53 @@ class _AddPaymentState extends State<AddPayment> {
                       ),
                       Align(
                         alignment: Alignment.centerRight,
-                        child: Container(
-                          margin: const EdgeInsets.all(15),
-                          width: 220,
-                          height: 40,
-                          child: RaisedButton(
-                            color: blue(),
-                            child: Text(
-                              "Add Payment Method",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontFamily: "SFCM"),
-                            ),
-                            onPressed: () {
-                              CreditCard card;
-                              try {
-                                var date = expiryDate.split("/");
-                                card = CreditCard(
-                                  number: cardNumber,
-                                  expMonth: int.parse(date[0]),
-                                  expYear: int.parse(date[1]),
-                                  cvc: cvvCode,
-                                );
-                              } catch (err) {
-                                print(err);
-                              }
-                              StripePayment.createTokenWithCard(card)
-                                  .then((token) {
-                                setState(() {
-                                  cardAdded = true;
-                                });
-                                postAuthData(
-                                        '$SERVER_IP/company/add/payment/method',
-                                        {'payment_token': token.tokenId},
-                                        widget._token)
-                                    .then((response) {
-                                  if (response['status_code'] == 200) {
-                                    setState(() {
-                                      cardResponse = 200;
-                                    });
-                                  }
-                                }).catchError((error) {
+                        child: FYButton(
+                          text: "Add Payment Method",
+                          onPressed: () {
+                            CreditCard card;
+                            try {
+                              var date = expiryDate.split("/");
+                              card = CreditCard(
+                                number: cardNumber,
+                                expMonth: int.parse(date[0]),
+                                expYear: int.parse(date[1]),
+                                cvc: cvvCode,
+                              );
+                            } catch (err) {
+                              print(err);
+                            }
+                            StripePayment.createTokenWithCard(card).then((token) {
+                              setState(() {
+                                cardResponse = 0;
+                                _responseMessage = "Adding payment method.";
+                                cardAdded = true;
+                              });
+                              postAuthData(
+                                      '$SERVER_IP/company/add/payment/method',
+                                      {'payment_token': token.tokenId},
+                                      widget._token)
+                                  .then((response) {
+                                if (response['status_code'] == 200) {
                                   setState(() {
-                                    cardAdded = false;
+                                    cardResponse = 200;
+                                    _responseMessage = "Payment method added.";
                                   });
-                                  print(error);
-                                });
+                                }
                               }).catchError((error) {
                                 setState(() {
-                                  cardAdded = false;
+                                  cardResponse = 500;
+                                  _responseMessage = "Error adding payment method.";
                                 });
                                 print(error);
                               });
-                            },
-                          ),
+                            }).catchError((error) {
+                              setState(() {
+                                cardResponse = 500;
+                                _responseMessage = "Error adding payment method.";
+                              });
+                              print(error);
+                            });
+                          },
                         ),
                       )
                     ],
@@ -166,103 +161,7 @@ class _AddPaymentState extends State<AddPayment> {
                 ),*/
               ],
             ),
-            Visibility(
-              visible: cardAdded,
-              child: Container(
-                padding: const EdgeInsets.all(100),
-                color: new Color(0x77000000),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.only(
-                        top: 10,
-                        bottom: 10,
-                        left: 10,
-                        right: 10,
-                      ),
-                      decoration: new BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.circular(2),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black26,
-                            blurRadius: 10.0,
-                            offset: const Offset(0.0, 10.0),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        mainAxisSize:
-                            MainAxisSize.min, // To make the card compact
-                        children: <Widget>[
-                          Visibility(
-                            visible: cardResponse == 0,
-                            child: SizedBox(height: 80, child: DotLoading()),
-                          ),
-                          Visibility(
-                            visible: cardResponse == 200,
-                            child: SizedBox(
-                              height: 80,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.check_circle,
-                                    color: new Color(0xffbbd984),
-                                    size: 60.0,
-                                  ),
-                                  Text(
-                                    "Card Added",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 30,
-                                      fontFamily: "SFCM",
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                          Visibility(
-                            visible: cardResponse == 500,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.error,
-                                  color: Colors.red,
-                                  size: 60.0,
-                                ),
-                                Text(
-                                  "Error",
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 30,
-                                    fontFamily: "SFCM",
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 24.0),
-                          TextButton(
-                            onPressed:
-                                cardResponse == 200 || cardResponse == 500
-                                    ? () {
-                                        Navigator.of(context).pop();
-                                      }
-                                    : null,
-                            child: Text("Go Back To Main Dash"),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            ProcessLoading(responseStatus: cardResponse, message: _responseMessage),
           ],
         ),
       ),

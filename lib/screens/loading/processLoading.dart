@@ -1,11 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:fromyama/screens/loading/dotLoading.dart';
+import 'package:fromyama/utils/cColor.dart';
 
 class ProcessLoading extends StatelessWidget {
-  const ProcessLoading(this.responseStatus, this.message);
+  const ProcessLoading({this.responseStatus, this.message, this.showBackButton = true});
 
   final String message;
   final int responseStatus;
+  final bool showBackButton;
 
   @override
   Widget build(BuildContext context) {
@@ -40,12 +44,17 @@ class ProcessLoading extends StatelessWidget {
                 MainAxisSize.min, // To make the card compact
                 children: <Widget>[
                   SizedBox(
-                      height: 20,
-                      child: responseStatus == 200 ?
+                      height: 25,
+                      child: (responseStatus >= 200 && responseStatus < 300) ?
                       Icon(
                         Icons.check_circle,
                         color: new Color(0xffbbd984),
-                        size: 60.0,
+                        size: 30.0,
+                      ) :  responseStatus == 500 ?
+                      Icon(
+                        Icons.error,
+                        color: red(),
+                        size: 30.0,
                       ) : DotLoading()),
                   SizedBox(
                     height: 40,
@@ -67,13 +76,14 @@ class ProcessLoading extends StatelessWidget {
                       ],
                     ),
                   ),
-
-                  TextButton(
-                    onPressed:
-                    responseStatus == 200 || responseStatus == 500 ? () {
-                      Navigator.of(context).pop();
-                    } : null,
-                    child: Text("Go Back To Main Dash"),
+                  Visibility(
+                    visible: showBackButton,
+                    child: TextButton(
+                      onPressed: (responseStatus >= 200 && responseStatus < 300) || responseStatus == 500 ? () {
+                        Navigator.of(context).pop();
+                      } : null,
+                      child: Text("Go Back To Main Dash"),
+                    ),
                   ),
                 ],
               ),

@@ -39,3 +39,7 @@ Color paleRed() {
 Color green() {
   return new Color(0xffD6E198);
 }
+
+Color red() {
+  return new Color(0xffff6961);
+}
