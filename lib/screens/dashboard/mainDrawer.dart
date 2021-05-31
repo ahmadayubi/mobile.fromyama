@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fromyama/data/user.dart';
 import 'package:fromyama/screens/dashboard/approveEmployee.dart';
@@ -71,13 +72,19 @@ class MainDrawer extends StatelessWidget {
                           ),
                         ]),
                       ),
-                      ListTile(
-                        leading: Icon(Icons.store),
-                        title: Text(
-                          '${user.company}\nID ${user.company_id}',
-                          style: TextStyle(
-                            fontFamily: 'SFCM',
-                            fontSize: 10,
+                      Tooltip(
+                        message: "Company ID copied to clipboard.",
+                        child: ListTile(
+                          onTap: (){
+                            Clipboard.setData(ClipboardData(text: user.company_id));
+                          },
+                          leading: Icon(Icons.store),
+                          title: Text(
+                            '${user.company}',
+                            style: TextStyle(
+                              fontFamily: 'SFCM',
+                              fontSize: 15,
+                            ),
                           ),
                         ),
                       ),

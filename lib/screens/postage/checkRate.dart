@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fromyama/screens/loading/dotLoading.dart';
+import 'package:fromyama/screens/loading/processLoading.dart';
 import 'package:fromyama/utils/cColor.dart';
+import 'package:fromyama/utils/fyButton.dart';
 import 'package:fromyama/utils/requests.dart';
 import 'package:fromyama/widgets/addressWidget.dart';
 import 'package:fromyama/widgets/postageRateWidget.dart';
@@ -24,9 +26,9 @@ class _CheckRateState extends State<CheckRate> {
   Map<String, dynamic> _shipper;
   var _parcelId;
   bool _validWeight = true;
-  bool _showDialog = false;
-  int _purchaseResponse = 0;
-  int _indexOfSelected = 0;
+  int _purchaseResponse = -1;
+  String _purchaseMessage = "";
+  int _indexOfSelected = -1;
   var rates = [];
   bool _loading = false;
 
@@ -37,14 +39,57 @@ class _CheckRateState extends State<CheckRate> {
         countryToCountryCode(widget._dest['country']);
   }
 
+  void buyShippingLabel() async {
+    setState(() {
+      _purchaseResponse = 0;
+      _purchaseMessage = "Processing label purchase.";
+    });
+    var parcel, weight;
+    for (int i = 0; i < _parcels.length; i++) {
+      if (_parcels[i]['id'] == _parcelId) {
+        parcel = _parcels[i];
+        break;
+      }
+    }
+    weight =
+        parcel['weight'] / 1000 + (double.parse(_weightController.text) / 1000);
+
+    var resp = await postAuthData('$SERVER_IP/postage/buy/canadapost',
+        {
+          "name": "Fram",
+          "street": "113 springbeauty ave",
+          "city": "Ottawa",
+          "province_code": "ON",
+          "postal_code": "K2E7E8",
+          "country_code": "CA",
+          "phone": "6136003774",
+          "service_code": rates[_indexOfSelected]['service-code'],
+          'weight': weight.toStringAsFixed(2),
+          'length': parcel['length'].toString(),
+          'width': parcel['width'].toString(),
+          'height': parcel['height'].toString()
+        }, widget._token);
+
+    switch (resp['status_code']) {
+      case 200:
+        setState(() {
+          _purchaseResponse = 200;
+          _purchaseMessage = "Label purchased.";
+        });
+        break;
+      default:
+        break;
+    }
+  }
+
   void getShippingInfo() async {
     var shippingInfo =
         await getAuthData('$SERVER_IP/company/shipper', widget._token);
     if (this.mounted) {
       try {
         setState(() {
-          this._parcels = shippingInfo['parcels'];
-          this._shipper = shippingInfo['address'];
+          _parcels = shippingInfo['parcels'];
+          _shipper = shippingInfo['address'];
         });
       } catch (error) {}
     }
@@ -118,6 +163,7 @@ class _CheckRateState extends State<CheckRate> {
                         }).toList(),
                       ),
                       TextField(
+                        autofocus: false,
                         controller: _weightController,
                         onChanged: (value) {
                           setState(() {
@@ -139,48 +185,37 @@ class _CheckRateState extends State<CheckRate> {
                       ),
                       Align(
                         alignment: Alignment.centerRight,
-                        child: Container(
-                          margin: const EdgeInsets.all(10),
-                          width: 200,
-                          height: 50,
-                          child: RaisedButton(
-                            color: blue(),
-                            child: Text(
-                              "Check Rates",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontFamily: "SFCM"),
-                            ),
-                            onPressed: () async {
-                              var parcel, weight;
-                              for (int i = 0; i < _parcels.length; i++) {
-                                if (_parcels[i]['id'] == _parcelId) {
-                                  parcel = _parcels[i];
-                                  break;
-                                }
+                        child: FYButton(
+                          text: "Check Rates",
+                          onPressed: () async {
+                            var parcel, weight;
+                            for (int i = 0; i < _parcels.length; i++) {
+                              if (_parcels[i]['id'] == _parcelId) {
+                                parcel = _parcels[i];
+                                break;
                               }
-                              weight = parcel['weight'] / 1000 +
-                                  (double.parse(_weightController.text) / 1000);
-                              if (weight > 30) {
-                              } else {
-                                setState(() {
-                                  _loading = true;
-                                });
-                                var result = await getCanadaPostRates(
-                                    widget._dest['postal_code'],
-                                    parcel['length'].toString(),
-                                    parcel['width'].toString(),
-                                    parcel['height'].toString(),
-                                    weight.toStringAsFixed(2),
-                                    widget._token);
-                                setState(() {
-                                  this.rates = result['data'];
-                                  _loading = false;
-                                });
-                              }
-                            },
-                          ),
+                            }
+                            weight = parcel['weight'] / 1000 +
+                                (double.parse(_weightController.text) / 1000);
+                            if (weight > 30) {
+                            } else {
+                              setState(() {
+                                _loading = true;
+                              });
+                              var result = await getCanadaPostRates(
+                                  widget._dest['postal_code'],
+                                  parcel['length'].toString(),
+                                  parcel['width'].toString(),
+                                  parcel['height'].toString(),
+                                  weight.toStringAsFixed(2),
+                                  widget._token);
+                              print(result);
+                              setState(() {
+                                this.rates = result['data'];
+                                _loading = false;
+                              });
+                            }
+                          },
                         ),
                       ),
                     ],
@@ -194,13 +229,195 @@ class _CheckRateState extends State<CheckRate> {
                             return InkWell(
                                 splashColor: blue(),
                                 onTap: () => {
-                                      setState(() {
-                                        _indexOfSelected = index;
-                                        _showDialog = true;
-                                      })
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return Dialog(
+                                                child: Container(
+                                                  padding: const EdgeInsets.all(10),
+                                                  child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                  Text(
+                                                    "${rates[index]['service-name']}",
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      fontFamily: "SFCM",
+                                                    ),
+                                                  ),
+                                                  Divider(
+                                                    color: Colors.grey,
+                                                    height: 6,
+                                                    thickness: 1,
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                        "Base ",
+                                                        style: TextStyle(
+                                                          fontSize: 15,
+                                                          fontFamily: "SFCM",
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        "${rates[index]['price-details']['base']}",
+                                                        style: TextStyle(
+                                                          fontSize: 15,
+                                                          fontFamily: "SFCM",
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                        "GST ",
+                                                        style: TextStyle(
+                                                          fontSize: 15,
+                                                          fontFamily: "SFCM",
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        "${rates[index]['price-details']['gst']}",
+                                                        style: TextStyle(
+                                                          fontSize: 15,
+                                                          fontFamily: "SFCM",
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                        "PST ",
+                                                        style: TextStyle(
+                                                          fontSize: 15,
+                                                          fontFamily: "SFCM",
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        "${rates[index]['price-details']['pst']}",
+                                                        style: TextStyle(
+                                                          fontSize: 15,
+                                                          fontFamily: "SFCM",
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                        "HST ",
+                                                        style: TextStyle(
+                                                          fontSize: 15,
+                                                          fontFamily: "SFCM",
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        "${rates[index]['price-details']['hst']}",
+                                                        style: TextStyle(
+                                                          fontSize: 15,
+                                                          fontFamily: "SFCM",
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Column(
+                                                    children: rates[index]
+                                                                ['price-details']
+                                                            ['adjustments']
+                                                        .map<Widget>(
+                                                      (adj) {
+                                                        return Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Text(
+                                                              "${adj['adjustment-name']} ",
+                                                              style: TextStyle(
+                                                                fontSize: 15,
+                                                                fontFamily:
+                                                                    "SFCM",
+                                                              ),
+                                                            ),
+                                                            Text(
+                                                              "${adj['adjustment-cost']}",
+                                                              style: TextStyle(
+                                                                fontSize: 15,
+                                                                fontFamily:
+                                                                    "SFCM",
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        );
+                                                      },
+                                                    ).toList(),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Text("Total ",
+                                                        style: TextStyle(
+                                                          fontSize: 18,
+                                                          fontFamily: "SFCM",
+                                                        ),
+                                                      ),
+                                                      Text("${rates[index]['price-details']['due']} CAD",
+                                                        style: TextStyle(
+                                                          fontSize: 18,
+                                                          fontFamily: "SFCM",
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  SizedBox(height: 24.0),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    children: [
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(context);
+                                                          setState(() {
+                                                            _indexOfSelected = index;
+                                                          });
+                                                          buyShippingLabel();
+                                                        },
+                                                        child: Text("Purchase"),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(context);
+                                                        },
+                                                        child: Text("Cancel"),
+                                                      ),
+                                                    ],
+                                                  ),
+                                              ],
+                                            ),
+                                                ));
+                                          })
                                     },
-                                child: postageRateWidget(
-                                    rates[index], context, widget._token));
+                                child: postageRateWidget(rates[index], context, widget._token));
                           },
                           itemCount: rates.length,
                         ),
@@ -208,298 +425,7 @@ class _CheckRateState extends State<CheckRate> {
               ],
             ),
           ),
-          Visibility(
-            visible: _showDialog && rates.length > 0,
-            child: Container(
-              padding: const EdgeInsets.all(20),
-              color: new Color(0x77000000),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: EdgeInsets.only(
-                      top: 15,
-                      bottom: 15,
-                      left: 15,
-                      right: 15,
-                    ),
-                    decoration: new BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(2),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 10.0,
-                          offset: const Offset(0.0, 10.0),
-                        ),
-                      ],
-                    ),
-                    child: rates.length > 0
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            mainAxisSize:
-                                MainAxisSize.max, // To make the card compact
-                            children: [
-                              Text(
-                                "${rates[_indexOfSelected]['service-name']}",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontFamily: "SFCM",
-                                ),
-                              ),
-                              Divider(
-                                color: Colors.grey,
-                                height: 6,
-                                thickness: 1,
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "Base ",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontFamily: "SFCM",
-                                    ),
-                                  ),
-                                  Text(
-                                    "${rates[_indexOfSelected]['price-details']['base']}",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontFamily: "SFCM",
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "GST ",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontFamily: "SFCM",
-                                    ),
-                                  ),
-                                  Text(
-                                    "${rates[_indexOfSelected]['price-details']['gst']}",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontFamily: "SFCM",
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "PST ",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontFamily: "SFCM",
-                                    ),
-                                  ),
-                                  Text(
-                                    "${rates[_indexOfSelected]['price-details']['pst']}",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontFamily: "SFCM",
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "HST ",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontFamily: "SFCM",
-                                    ),
-                                  ),
-                                  Text(
-                                    "${rates[_indexOfSelected]['price-details']['hst']}",
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontFamily: "SFCM",
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                children: rates[_indexOfSelected]
-                                        ['price-details']['adjustments']
-                                    .map<Widget>(
-                                  (adj) {
-                                    return Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          "${adj['adjustment-name']} ",
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                            fontFamily: "SFCM",
-                                          ),
-                                        ),
-                                        Text(
-                                          "${adj['adjustment-cost']}",
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                            fontFamily: "SFCM",
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                ).toList(),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "Total ",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontFamily: "SFCM",
-                                    ),
-                                  ),
-                                  Text(
-                                    "${rates[_indexOfSelected]['price-details']['due']} CAD",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontFamily: "SFCM",
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 24.0),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  FlatButton(
-                                    onPressed: () async {
-                                      var parcel, weight;
-                                      for (int i = 0;
-                                          i < _parcels.length;
-                                          i++) {
-                                        if (_parcels[i]['id'] == _parcelId) {
-                                          parcel = _parcels[i];
-                                          break;
-                                        }
-                                      }
-                                      weight = parcel['weight'] / 1000 +
-                                          (double.parse(
-                                                  _weightController.text) /
-                                              1000);
-                                      await postAuthData(
-                                          '$SERVER_IP/postage/buy/canadapost',
-                                          {
-                                            "name": "Fram",
-                                            "street": "113 springbeauty ave",
-                                            "city": "Ottawa",
-                                            "province_code": "ON",
-                                            "postal_code": "K2E7E8",
-                                            "country_code": "CA",
-                                            "phone": "6136003774",
-                                            "service_code":
-                                                rates[_indexOfSelected]
-                                                    ['service-code'],
-                                            'weight': weight.toStringAsFixed(2),
-                                            'length':
-                                                parcel['length'].toString(),
-                                            'width': parcel['width'].toString(),
-                                            'height':
-                                                parcel['height'].toString()
-                                          },
-                                          widget._token);
-                                    },
-                                    child: Text("Purchase"),
-                                  ),
-                                  FlatButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        _showDialog = false;
-                                        _indexOfSelected = 0;
-                                      });
-                                    },
-                                    child: Text("Cancel"),
-                                  ),
-                                  Visibility(
-                                    visible: _purchaseResponse == 200,
-                                    child: SizedBox(
-                                        height: 80, child: DotLoading()),
-                                  ),
-                                  Visibility(
-                                    visible: _purchaseResponse == 200,
-                                    child: SizedBox(
-                                      height: 80,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Icons.check_circle,
-                                            color: new Color(0xffbbd984),
-                                            size: 60.0,
-                                          ),
-                                          Text(
-                                            "Label Purchased",
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 30,
-                                              fontFamily: "SFCM",
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Visibility(
-                                    visible: _purchaseResponse == 500,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.error,
-                                          color: Colors.red,
-                                          size: 20.0,
-                                        ),
-                                        Text(
-                                          "Error Purchasing Label",
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 15,
-                                            fontFamily: "SFCM",
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          )
-                        : Text("Error"),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          ProcessLoading(responseStatus: _purchaseResponse, message: _purchaseMessage,),
         ],
       ),
     );

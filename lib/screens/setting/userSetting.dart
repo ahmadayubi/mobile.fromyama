@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fromyama/data/user.dart';
 import 'package:fromyama/screens/boot.dart';
 import 'package:fromyama/utils/cColor.dart';
+import 'package:fromyama/utils/fyButton.dart';
 import 'package:fromyama/utils/requests.dart';
 
 class UserSetting extends StatefulWidget {
@@ -82,8 +84,7 @@ class _UserSettingState extends State<UserSetting> {
                   ),
                   Align(
                     alignment: Alignment.centerRight,
-                    child: RaisedButton(
-                      color: blue(),
+                    child: FYButton(
                       onPressed: () async {
                         if (!editText) {
                           setState(() {
@@ -103,15 +104,9 @@ class _UserSettingState extends State<UserSetting> {
                           }));
                         }
                       },
-                      child: Text(
-                        editText ? "Update" : "Edit",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 17,
-                            fontFamily: "SFCM"),
+                      text: editText ? "Update" : "Edit",
                       ),
                     ),
-                  ),
                 ],
               ),
             ),
@@ -140,15 +135,39 @@ class _UserSettingState extends State<UserSetting> {
                       fontSize: 17,
                     ),
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "ID: ${widget._user.id}",
+                        style: TextStyle(
+                          color: Colors.grey[800],
+                          fontFamily: "SFCR",
+                        ),
+                      ),
+                      Container(
+                        width: 40,
+                        child: TextButton(
+                          onPressed: () {
+                            Clipboard.setData(ClipboardData(text: widget._user.id));
+                          },
+                          child: Icon(
+                            Icons.copy,
+                            size: 18,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                   Text(
-                    "ID: ${widget._user.id}",
+                    "Role: ${widget._user.is_head ? "Head":"Employee"}",
                     style: TextStyle(
                       color: Colors.grey[800],
                       fontFamily: "SFCR",
                     ),
                   ),
                   Text(
-                    "Head of Company: ${widget._user.is_head}",
+                    "Approval Status: ${widget._user.is_approved ? "Approved":"Pending"}",
                     style: TextStyle(
                       color: Colors.grey[800],
                       fontFamily: "SFCR",

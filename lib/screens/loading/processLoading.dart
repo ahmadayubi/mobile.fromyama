@@ -44,20 +44,20 @@ class ProcessLoading extends StatelessWidget {
                 MainAxisSize.min, // To make the card compact
                 children: <Widget>[
                   SizedBox(
-                      height: 25,
+                      height: 30,
                       child: (responseStatus >= 200 && responseStatus < 300) ?
                       Icon(
                         Icons.check_circle,
                         color: new Color(0xffbbd984),
-                        size: 30.0,
+                        size: 25.0,
                       ) :  responseStatus == 500 ?
                       Icon(
                         Icons.error,
                         color: red(),
-                        size: 30.0,
+                        size: 25.0,
                       ) : DotLoading()),
                   SizedBox(
-                    height: 40,
+                    height: 30,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -68,7 +68,7 @@ class ProcessLoading extends StatelessWidget {
                             message,
                             style: TextStyle(
                               color: Colors.black,
-                              fontSize: 20,
+                              fontSize: 18,
                               fontFamily: "SFCM",
                             ),
                           ),
@@ -82,7 +82,7 @@ class ProcessLoading extends StatelessWidget {
                       onPressed: (responseStatus >= 200 && responseStatus < 300) || responseStatus == 500 ? () {
                         Navigator.of(context).pop();
                       } : null,
-                      child: Text("Go Back To Main Dash"),
+                      child: Text("Go Back To Main Dashboard"),
                     ),
                   ),
                 ],

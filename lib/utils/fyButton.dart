@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:fromyama/utils/cColor.dart';
 
 class FYButton extends StatelessWidget {
-  const FYButton({this.onPressed, this.text});
+  const FYButton(
+      {this.onPressed,
+        this.text,
+        this.fontSize = 15.0});
 
   final GestureTapCallback onPressed;
   final String text;
+  final double fontSize;
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +24,7 @@ class FYButton extends StatelessWidget {
         child: Text(
           text,
           style: TextStyle(
-              color: Colors.white,
-              fontSize: 15,
-              fontFamily: "SFCM"),
+          color: Colors.white,fontSize: fontSize, fontFamily: "SFCM"),
         ),
       ),
     );

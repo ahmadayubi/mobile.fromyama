@@ -192,7 +192,22 @@ class _SignUpCompanyState extends State<SignUpCompany> {
                         ),
                         Text(
                             "Register Your Company To Start \nFulfilling Orders In One Place",
-                            style: TextStyle(fontFamily: "SFCM"))
+                            style: TextStyle(fontFamily: "SFCM")),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginForm()));
+                          },
+                          child: Text(
+                            "Already Registered? Login",
+                            style: TextStyle(fontFamily: "SFCM"),
+                          ),
+                        ),
                       ],
                     ),
                     Column(
@@ -280,21 +295,7 @@ class _SignUpCompanyState extends State<SignUpCompany> {
                             }
                           },
                           text: "Register",
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LoginForm()));
-                          },
-                          child: Text(
-                            "Already Registered? Login",
-                            style: TextStyle(fontFamily: "SFCM"),
-                          ),
+                          fontSize: 18,
                         ),
                       ],
                     ),

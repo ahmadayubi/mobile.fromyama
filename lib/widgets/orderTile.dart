@@ -31,15 +31,6 @@ class OrderTile extends StatelessWidget {
               CupertinoPageRoute(
                 builder: (_) {
                   return OrderDetails(order, token, callback);
-                  if (order is ShopifyOrder) {
-                    return ShopifyOrderDetails(order, token, callback);
-                  } else if (order is AmazonOrder) {
-                    return AmazonOrderDetails(order, token);
-                  } else if (order is EtsyOrder) {
-                    return EtsyOrderDetails(order, token);
-                  } else {
-                    return Text("Error");
-                  }
                 },
               ),
             )

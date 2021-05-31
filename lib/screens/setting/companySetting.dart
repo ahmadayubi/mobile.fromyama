@@ -15,7 +15,7 @@ class CompanySetting extends StatefulWidget {
 class _CompanySettingState extends State<CompanySetting> {
   @override
   void initState() {
-    print(widget._isHead);
+    super.initState();
   }
 
   @override
@@ -54,7 +54,7 @@ class _CompanySettingState extends State<CompanySetting> {
 /*                     enabled: editText,
                     controller: _nameController, */
                     decoration: InputDecoration(
-                      labelText: 'Name',
+                      labelText: 'Company Name',
                       labelStyle: TextStyle(
                           color: Colors.grey[800], fontFamily: "SFCR"),
                       focusColor: Colors.grey[500],
@@ -62,7 +62,7 @@ class _CompanySettingState extends State<CompanySetting> {
                     ),
                   ),
                   Visibility(
-                    visible: widget._isHead == true,
+                    visible: widget._isHead,
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: RaisedButton(
