@@ -59,6 +59,7 @@ class _OrderDetailsState extends State<OrderDetails> {
         iconTheme: IconThemeData(color: Colors.black),
         backgroundColor: Colors.white,
         titleSpacing: 0.0,
+        toolbarHeight: 45,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -66,15 +67,15 @@ class _OrderDetailsState extends State<OrderDetails> {
               children: [
                 Image(
                   image: AssetImage(widget._order.imagePath),
-                  width: 35,
-                  height: 35,
+                  width: 25,
+                  height: 25,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 10),
                   child: Text(
                     "${widget._order.name}",
                     style: TextStyle(
-                      fontSize: 25,
+                      fontSize: 17,
                       fontFamily: "SFCM",
                       color: Colors.grey[800],
                     ),
@@ -99,7 +100,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                     widget._order.was_paid ? "PAID" : "PENDING",
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 15,
+                      fontSize: 13,
                       fontFamily: "SFCM",
                     ),
                   ),

@@ -83,11 +83,13 @@ class _MainDashState extends State<MainDash> {
           titleSpacing: 0.0,
           backgroundColor: Colors.white,
           iconTheme: IconThemeData(color: Colors.black),
+          toolbarHeight: 45,
           title: Text(
             'Unfulfilled Orders ($_numOrders)',
             style: TextStyle(
               color: Colors.black,
               fontFamily: "SFM",
+              fontSize: 17,
             ),
           ),
         ),

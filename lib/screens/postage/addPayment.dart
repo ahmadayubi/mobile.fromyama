@@ -55,9 +55,14 @@ class _AddPaymentState extends State<AddPayment> {
         iconTheme: IconThemeData(color: Colors.black),
         backgroundColor: Colors.white,
         titleSpacing: 0.0,
+        toolbarHeight: 45,
         title: Text(
           "Add Payment Method",
-          style: TextStyle(color: Colors.grey[800], fontFamily: "SFCR"),
+          style: TextStyle(
+            color: Colors.grey[800],
+            fontFamily: "SFCR",
+            fontSize: 17,
+          ),
         ),
       ),
       backgroundColor: beige(),
