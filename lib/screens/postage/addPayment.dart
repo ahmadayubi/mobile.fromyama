@@ -5,7 +5,6 @@ import 'package:fromyama/screens/loading/processLoading.dart';
 import 'package:fromyama/utils/cColor.dart';
 import 'package:fromyama/utils/fyButton.dart';
 import 'package:fromyama/utils/requests.dart';
-import 'package:stripe_payment/stripe_payment.dart';
 import 'package:flutter_credit_card/credit_card_form.dart';
 import 'package:flutter_credit_card/credit_card_model.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
@@ -42,10 +41,10 @@ class _AddPaymentState extends State<AddPayment> {
   @override
   initState() {
     super.initState();
-
-    StripePayment.setOptions(StripeOptions(
-        publishableKey:
-            "pk_test_51H9FwQBfJqQ07beR9EGPYn1WHyeUzVSJIxHa1pGFPMtCyRhEUpKSOhXWUrVvDRApoacMxUxeTFDJR6pC2DXHC0p700gYbFkUMz"));
+    //
+    // StripePayment.setOptions(StripeOptions(
+    //     publishableKey:
+    //         "pk_test_51H9FwQBfJqQ07beR9EGPYn1WHyeUzVSJIxHa1pGFPMtCyRhEUpKSOhXWUrVvDRApoacMxUxeTFDJR6pC2DXHC0p700gYbFkUMz"));
   }
 
   @override
@@ -102,57 +101,57 @@ class _AddPaymentState extends State<AddPayment> {
                       CreditCardForm(
                         onCreditCardModelChange: onCreditCardModelChange,
                       ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: FYButton(
-                          text: "Add Payment Method",
-                          onPressed: () {
-                            CreditCard card;
-                            try {
-                              var date = expiryDate.split("/");
-                              card = CreditCard(
-                                number: cardNumber,
-                                expMonth: int.parse(date[0]),
-                                expYear: int.parse(date[1]),
-                                cvc: cvvCode,
-                              );
-                            } catch (err) {
-                              print(err);
-                            }
-                            StripePayment.createTokenWithCard(card).then((token) {
-                              setState(() {
-                                cardResponse = 0;
-                                _responseMessage = "Adding payment method.";
-                                cardAdded = true;
-                              });
-                              postAuthData(
-                                      '$SERVER_IP/company/add/payment/method',
-                                      {'payment_token': token.tokenId},
-                                      widget._token)
-                                  .then((response) {
-                                if (response['status_code'] == 200) {
-                                  setState(() {
-                                    cardResponse = 200;
-                                    _responseMessage = "Payment method added.";
-                                  });
-                                }
-                              }).catchError((error) {
-                                setState(() {
-                                  cardResponse = 500;
-                                  _responseMessage = "Error adding payment method.";
-                                });
-                                print(error);
-                              });
-                            }).catchError((error) {
-                              setState(() {
-                                cardResponse = 500;
-                                _responseMessage = "Error adding payment method.";
-                              });
-                              print(error);
-                            });
-                          },
-                        ),
-                      )
+                      // Align(
+                      //   alignment: Alignment.centerRight,
+                      //   child: FYButton(
+                      //     text: "Add Payment Method",
+                      //     onPressed: () {
+                      //       CreditCard card;
+                      //       try {
+                      //         var date = expiryDate.split("/");
+                      //         card = CreditCard(
+                      //           number: cardNumber,
+                      //           expMonth: int.parse(date[0]),
+                      //           expYear: int.parse(date[1]),
+                      //           cvc: cvvCode,
+                      //         );
+                      //       } catch (err) {
+                      //         print(err);
+                      //       }
+                      //       StripePayment.createTokenWithCard(card).then((token) {
+                      //         setState(() {
+                      //           cardResponse = 0;
+                      //           _responseMessage = "Adding payment method.";
+                      //           cardAdded = true;
+                      //         });
+                      //         postAuthData(
+                      //                 '$SERVER_IP/company/add/payment/method',
+                      //                 {'payment_token': token.tokenId},
+                      //                 widget._token)
+                      //             .then((response) {
+                      //           if (response['status_code'] == 200) {
+                      //             setState(() {
+                      //               cardResponse = 200;
+                      //               _responseMessage = "Payment method added.";
+                      //             });
+                      //           }
+                      //         }).catchError((error) {
+                      //           setState(() {
+                      //             cardResponse = 500;
+                      //             _responseMessage = "Error adding payment method.";
+                      //           });
+                      //           print(error);
+                      //         });
+                      //       }).catchError((error) {
+                      //         setState(() {
+                      //           cardResponse = 500;
+                      //           _responseMessage = "Error adding payment method.";
+                      //         });
+                      //         print(error);
+                      //       });
+                      //     },
+                      //   ),
+                      // )
                     ],
                   ),
                 ),

@@ -21,18 +21,18 @@ Map<String, dynamic> formatRes(res) {
 }
 
 Future<Map<String, dynamic>> getData(String url) async {
-  var res = await http.get(url);
+  var res = await http.get(Uri.parse(url));
   return formatRes(res);
 }
 
 Future<Map<String, dynamic>> postData(String url, Map data) async {
-  var res = await http.post(url,
+  var res = await http.post(Uri.parse(url),
       headers: {"Content-Type": "application/json"}, body: jsonEncode(data));
   return formatRes(res);
 }
 
 Future<Map<String, dynamic>> getAuthData(String url, String token) async {
-  var res = await http.get(url, headers: {
+  var res = await http.get(Uri.parse(url), headers: {
     "Authorization": 'Bearer $token',
     "Content-Type": "application/json"
   });
@@ -41,7 +41,7 @@ Future<Map<String, dynamic>> getAuthData(String url, String token) async {
 
 Future<Map<String, dynamic>> postAuthData(
     String url, Map data, String token) async {
-  var res = await http.post(url, body: jsonEncode(data), headers: {
+  var res = await http.post(Uri.parse(url), body: jsonEncode(data), headers: {
     "Authorization": 'Bearer $token',
     "Content-Type": "application/json"
   });
@@ -51,7 +51,7 @@ Future<Map<String, dynamic>> postAuthData(
 
 Future<Map<String, dynamic>> putAuthData(
     String url, Map data, String token) async {
-  var res = await http.put(url, body: jsonEncode(data), headers: {
+  var res = await http.put(Uri.parse(url), body: jsonEncode(data), headers: {
     "Authorization": 'Bearer $token',
     "Content-Type": "application/json"
   });

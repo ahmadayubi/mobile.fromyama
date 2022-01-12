@@ -120,7 +120,7 @@ class _AddParcelState extends State<AddParcel> {
                               labelText: 'Length'),
                           keyboardType: TextInputType.number,
                           inputFormatters: <TextInputFormatter>[
-                            WhitelistingTextInputFormatter.digitsOnly
+                            FilteringTextInputFormatter.digitsOnly
                           ],
                         ),
                         TextField(
@@ -147,7 +147,7 @@ class _AddParcelState extends State<AddParcel> {
                               labelText: 'Width'),
                           keyboardType: TextInputType.number,
                           inputFormatters: <TextInputFormatter>[
-                            WhitelistingTextInputFormatter.digitsOnly
+                            FilteringTextInputFormatter.digitsOnly
                           ],
                         ),
                         TextField(
@@ -174,7 +174,7 @@ class _AddParcelState extends State<AddParcel> {
                               labelText: 'Height'),
                           keyboardType: TextInputType.number,
                           inputFormatters: <TextInputFormatter>[
-                            WhitelistingTextInputFormatter.digitsOnly
+                            FilteringTextInputFormatter.digitsOnly
                           ],
                         ),
                         TextField(
@@ -201,7 +201,7 @@ class _AddParcelState extends State<AddParcel> {
                               labelText: 'Weight'),
                           keyboardType: TextInputType.number,
                           inputFormatters: <TextInputFormatter>[
-                            WhitelistingTextInputFormatter.digitsOnly
+                            FilteringTextInputFormatter.digitsOnly
                           ],
                         ),
                         Align(

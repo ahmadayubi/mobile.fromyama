@@ -180,7 +180,7 @@ class _CheckRateState extends State<CheckRate> {
                             labelText: 'Item Weight'),
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter>[
-                          WhitelistingTextInputFormatter.digitsOnly
+                          FilteringTextInputFormatter.digitsOnly
                         ],
                       ),
                       Align(
